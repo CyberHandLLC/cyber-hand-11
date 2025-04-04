@@ -26,7 +26,7 @@ export const caseStudies: CaseStudyProps[] = [
       "Professional Online Presence that didn't exist before. The client now appears reputable and established to potential local customers."
     ],
     testimonial: "We went from zero online presence to a professional website and top local ranking in a matter of weeks, thanks to CyberHand. Now, customers find us right away—and our 5-star ratings speak for themselves!",
-    imageUrl: "/images/hvac-case-study.jpg",
+    imageUrl: "/images/cyberhand-bg.jpg",
     slug: "hvac-local-seo-success"
   }
 ];
