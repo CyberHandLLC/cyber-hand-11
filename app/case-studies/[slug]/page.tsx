@@ -1,13 +1,16 @@
 "use client";
 
-// Import necessary components and utilities
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+
+// Components
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, ArrowRightIcon, CheckIcon } from "@/components/ui/icons";
+
+// Data and utilities
 import { caseStudies } from "@/data/case-studies";
 import { CaseStudyProps } from "@/components/custom/case-study-card";
 import { useTheme } from "@/lib/theme-context";
@@ -129,7 +132,7 @@ const DiagonalSplitHeader = ({ caseStudy, theme }: { caseStudy: CaseStudyProps, 
     {/* Navigation bar with cyber-style highlight */}
     <div className="relative z-20 pt-24 pb-4">
       <SectionContainer>
-        <div className="flex justify-between items-center">
+        <div className="flex flex-wrap justify-between items-center gap-4">
           <Link 
             href="/case-studies" 
             className="inline-flex items-center bg-black/40 border border-gray-700/30 hover:border-cyan-500/50 px-4 py-2 rounded-md text-sm font-medium text-white/90 hover:text-white transition-all duration-300 backdrop-blur-sm"
@@ -145,10 +148,10 @@ const DiagonalSplitHeader = ({ caseStudy, theme }: { caseStudy: CaseStudyProps, 
       </SectionContainer>
     </div>
     
-    {/* Split diagonal design */}
-    <div className="relative">
-      {/* Content side */}
-      <div className="relative z-10 pb-12 pt-6">
+    {/* Split diagonal design - restructured for better mobile display */}
+    <div className="relative flex flex-col md:block">
+      {/* Content side - stacked on mobile, side-by-side on desktop */}
+      <div className="relative z-10 pb-12 pt-6 order-2 md:order-1">
         <SectionContainer>
           <div className="max-w-2xl">
             <AnimatedElement animation="fadeInUp" delay={0.1}>
@@ -156,10 +159,10 @@ const DiagonalSplitHeader = ({ caseStudy, theme }: { caseStudy: CaseStudyProps, 
                 {caseStudy.title}
               </h1>
               
-              <div className="flex items-center mb-8 text-white/90">
-                <span className="text-lg mr-4">{caseStudy.clientName}</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
-                <span className="text-lg ml-4">{caseStudy.location}</span>
+              <div className="flex flex-wrap items-center mb-8 text-white/90 gap-4">
+                <span className="text-lg">{caseStudy.clientName}</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 hidden md:block"></span>
+                <span className="text-lg">{caseStudy.location}</span>
               </div>
               
               <div className="bg-gradient-to-r from-cyan-500/20 to-transparent p-6 rounded-lg border-l-2 border-cyan-500 mb-8">
@@ -171,18 +174,23 @@ const DiagonalSplitHeader = ({ caseStudy, theme }: { caseStudy: CaseStudyProps, 
         </SectionContainer>
       </div>
       
-      {/* Image side - positioned with clip-path for diagonal effect */}
-      <div className="absolute top-0 right-0 w-full md:w-1/2 h-full bg-black z-0 clip-diagonal">
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent z-10"></div>
-        <div className="h-full w-full relative">
-          <Image
-            src={caseStudy.imageUrl}
-            alt={caseStudy.title}
-            fill
-            className="object-contain"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            priority
-          />
+      {/* Image side - full width on mobile, diagonal on desktop */}
+      <div className="relative w-full md:absolute md:top-0 md:right-0 md:w-1/2 md:h-full bg-black z-0 order-1 md:order-2">
+        <div className="w-full aspect-video md:h-full relative">
+          {/* Gradient overlay - visible on all screens */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-transparent z-10 md:bg-gradient-to-r md:from-black/90 md:to-transparent"></div>
+          
+          {/* Diagonal clip only on desktop */}
+          <div className="h-full w-full relative md:clip-diagonal">
+            <Image
+              src={caseStudy.imageUrl}
+              alt={caseStudy.title}
+              fill
+              className="object-contain"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              priority
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -193,11 +201,11 @@ const DiagonalSplitHeader = ({ caseStudy, theme }: { caseStudy: CaseStudyProps, 
 const ServicesBand = ({ services, theme }: { services: string[], theme: Theme }) => (
   <div className={`${getThemeStyle('bg-secondary', theme)} py-6 border-y border-gray-800/50`}>
     <SectionContainer>
-      <div className="flex flex-wrap gap-4 justify-center">
+      <div className="flex flex-wrap gap-3 justify-center px-2">
         {services.map((service, index) => (
           <div 
             key={index} 
-            className="px-4 py-2 rounded-md border border-gray-700/30 bg-black/30 backdrop-blur-sm text-sm font-medium text-white/80"
+            className="px-3 py-1.5 rounded-md border border-gray-700/30 bg-black/30 backdrop-blur-sm text-xs sm:text-sm font-medium text-white/80"
           >
             {service}
           </div>
@@ -240,13 +248,13 @@ const RelatedCaseStudies = ({ currentStudyId, theme }: { currentStudyId: string,
 
 // Component for bottom CTA section
 const CallToAction = ({ router, theme }: { router: any, theme: Theme }) => (
-  <div className="relative py-16 overflow-hidden">
+  <div className="relative py-12 md:py-16 overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-r from-blue-900/20 to-cyan-900/20"></div>
     
     <SectionContainer className="relative z-10">
-      <div className="max-w-2xl mx-auto text-center">
+      <div className="max-w-2xl mx-auto text-center px-4">
         <AnimatedElement animation="fadeInUp">
-          <h2 className={`text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent`}>
+          <h2 className={`text-xl md:text-2xl lg:text-3xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent`}>
             Ready to achieve similar results?
           </h2>
           <p className={`mb-8 ${getThemeStyle('text-secondary', theme)}`}>
@@ -256,7 +264,7 @@ const CallToAction = ({ router, theme }: { router: any, theme: Theme }) => (
             variant="primary"
             size="lg"
             onClick={() => router.push("/contact")}
-            className="px-8 py-3"
+            className="w-full sm:w-auto px-6 sm:px-8 py-3"
           >
             Start Your Success Story
           </Button>
@@ -310,22 +318,22 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
       <ServicesBand services={caseStudy.services} theme={theme} />
       
       {/* Main content with hexagonal accents */}
-      <div className="py-16 relative overflow-hidden">
-        {/* Hexagonal accent shapes */}
-        <div className="absolute -left-20 top-40 w-40 h-40 border border-cyan-500/20 transform rotate-45 opacity-30"></div>
-        <div className="absolute -right-20 bottom-40 w-60 h-60 border border-cyan-500/20 transform rotate-12 opacity-20"></div>
+      <div className="py-10 md:py-16 relative overflow-hidden">
+        {/* Hexagonal accent shapes - hidden on mobile for cleaner layout */}
+        <div className="absolute -left-20 top-40 w-40 h-40 border border-cyan-500/20 transform rotate-45 opacity-30 hidden md:block"></div>
+        <div className="absolute -right-20 bottom-40 w-60 h-60 border border-cyan-500/20 transform rotate-12 opacity-20 hidden md:block"></div>
         
-        <SectionContainer className="relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <SectionContainer className="relative z-10 px-4 md:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
             {/* Main content column */}
             <div className="lg:col-span-8">
               <StaggeredGroup>
                 {/* Our Approach section with numbered steps */}
                 <StaggeredItem>
-                  <div className="mb-16">
+                  <div className="mb-12 md:mb-16">
                     <SectionHeader title="Our Approach" theme={theme} />
                     
-                    <div className="space-y-8 pl-4 border-l border-gray-800/50">
+                    <div className="space-y-6 md:space-y-8 pl-4 border-l border-gray-800/50">
                       {caseStudy.approach.map((step, index) => (
                         <ApproachStep 
                           key={index} 
@@ -340,10 +348,10 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
                 
                 {/* Results section with highlight cards */}
                 <StaggeredItem>
-                  <div className="mb-16">
+                  <div className="mb-12 md:mb-16">
                     <SectionHeader title="The Results" theme={theme} />
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                       {caseStudy.results.map((result, index) => (
                         <ResultItem 
                           key={index} 
@@ -368,9 +376,9 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
               </StaggeredGroup>
             </div>
             
-            {/* Sidebar column */}
-            <div className="lg:col-span-4">
-              <div className="sticky top-24">
+            {/* Sidebar column - moves to bottom on mobile */}
+            <div className="lg:col-span-4 mt-8 lg:mt-0">
+              <div className="lg:sticky lg:top-24 space-y-6 md:space-y-8">
                 {/* Get similar results card */}
                 <SidebarCard
                   title="Want Similar Results?"
@@ -400,7 +408,7 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
         
         @media (max-width: 768px) {
           .clip-diagonal {
-            clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 30%);
+            clip-path: none;
           }
         }
       `}</style>
