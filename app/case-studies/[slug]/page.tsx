@@ -163,21 +163,35 @@ const DiagonalSplitHeader = ({ caseStudy, theme }: { caseStudy: CaseStudyProps, 
       </SectionContainer>
     </div>
     
-    {/* Split diagonal design */}
+    {/* Different layouts for mobile and desktop */}
     <div className="relative">
-      {/* Content side */}
-      <div className="relative z-10 pb-12 pt-6">
-        <SectionContainer>
-          <div className="max-w-2xl">
+      {/* Mobile layout - stacked design (image on top, content below) */}
+      <div className="md:hidden">
+        {/* Image container */}
+        <div className="relative w-full h-[30vh] mb-8">
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/20 z-10"></div>
+          <Image
+            src={caseStudy.imageUrl}
+            alt={caseStudy.title}
+            fill
+            className="object-cover"
+            sizes="100vw"
+            priority
+          />
+        </div>
+        
+        {/* Content below image on mobile */}
+        <SectionContainer className="relative z-10 pb-8">
+          <div className="w-full">
             <AnimatedElement animation="fadeInUp" delay={0.1}>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent mb-6">
+              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent mb-6">
                 {caseStudy.title}
               </h1>
               
               <div className="flex items-center mb-8 text-white/90">
-                <span className="text-lg mr-4">{caseStudy.clientName}</span>
+                <span className="text-base mr-4">{caseStudy.clientName}</span>
                 <span className={`w-1.5 h-1.5 rounded-full ${STYLES.accent}`}></span>
-                <span className="text-lg ml-4">{caseStudy.location}</span>
+                <span className="text-base ml-4">{caseStudy.location}</span>
               </div>
               
               <div className={`bg-gradient-to-r from-cyan-500/20 to-transparent p-6 rounded-lg border-l-2 ${STYLES.borderAccent} mb-8`}>
@@ -189,18 +203,45 @@ const DiagonalSplitHeader = ({ caseStudy, theme }: { caseStudy: CaseStudyProps, 
         </SectionContainer>
       </div>
       
-      {/* Image side - positioned with clip-path for diagonal effect */}
-      <div className="absolute top-0 right-0 w-full md:w-1/2 h-full bg-black z-0 clip-diagonal">
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent z-10"></div>
-        <div className="h-full w-full relative">
-          <Image
-            src={caseStudy.imageUrl}
-            alt={caseStudy.title}
-            fill
-            className="object-contain"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            priority
-          />
+      {/* Desktop layout - diagonal split design */}
+      <div className="hidden md:block relative">
+        {/* Content side */}
+        <div className="relative z-10 pb-12 pt-6">
+          <SectionContainer>
+            <div className="max-w-2xl">
+              <AnimatedElement animation="fadeInUp" delay={0.1}>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent mb-6">
+                  {caseStudy.title}
+                </h1>
+                
+                <div className="flex items-center mb-8 text-white/90">
+                  <span className="text-lg mr-4">{caseStudy.clientName}</span>
+                  <span className={`w-1.5 h-1.5 rounded-full ${STYLES.accent}`}></span>
+                  <span className="text-lg ml-4">{caseStudy.location}</span>
+                </div>
+                
+                <div className={`bg-gradient-to-r from-cyan-500/20 to-transparent p-6 rounded-lg border-l-2 ${STYLES.borderAccent} mb-8`}>
+                  <h2 className="text-xl font-semibold text-white mb-3">The Challenge</h2>
+                  <p className="text-white/80">{caseStudy.challenge}</p>
+                </div>
+              </AnimatedElement>
+            </div>
+          </SectionContainer>
+        </div>
+        
+        {/* Image side with diagonal effect - desktop only */}
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-black z-0 clip-diagonal">
+          <div className="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent z-10"></div>
+          <div className="h-full w-full relative">
+            <Image
+              src={caseStudy.imageUrl}
+              alt={caseStudy.title}
+              fill
+              className="object-contain"
+              sizes="50vw"
+              priority
+            />
+          </div>
         </div>
       </div>
     </div>
