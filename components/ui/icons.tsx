@@ -200,6 +200,16 @@ export function SettingsIcon(props: IconProps) {
   );
 }
 
+// Add CheckCircleIcon for the contact form success state
+export function CheckCircleIcon(props: IconProps) {
+  return (
+    <BaseIcon {...props}>
+      <circle cx="12" cy="12" r="10" fill="none" strokeWidth="2" />
+      <path d="M9 12l2 2 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </BaseIcon>
+  );
+}
+
 // Export all icons as a collection for easier imports
 export const Icons = {
   Check: CheckIcon,
@@ -218,4 +228,5 @@ export const Icons = {
   Phone: PhoneIcon,
   Search: SearchIcon,
   Settings: SettingsIcon,
+  CheckCircle: CheckCircleIcon,
 };
