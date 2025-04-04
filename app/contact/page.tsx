@@ -183,7 +183,6 @@ export default function ContactPage() {
                               <Button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="w-full"
                               >
                                 {isSubmitting ? "Sending..." : "Send Message"}
                                 {!isSubmitting && <Icons.ArrowRight className="ml-2 h-4 w-4" />}

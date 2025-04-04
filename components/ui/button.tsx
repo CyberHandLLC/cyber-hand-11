@@ -50,7 +50,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        <span className="inline-block">{props.children}</span>
+        <span className="flex items-center justify-center">{props.children}</span>
       </Comp>
     )
   }
