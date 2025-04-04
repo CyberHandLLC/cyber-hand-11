@@ -4,6 +4,72 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { CyberLogo } from "@/components/custom/cyber-logo";
 
+// Define types for circuit elements
+interface CircuitLineProps {
+  width: string;
+  animation: string;
+  position: {
+    top: string;
+    left: string;
+  };
+}
+
+interface GlowingDotProps {
+  animation: string;
+  position: {
+    top: string;
+    left: string;
+  };
+}
+
+// Component for circuit line
+const CircuitLine = ({ width, animation, position }: CircuitLineProps) => (
+  <div 
+    className={`absolute h-px bg-cyan-500 animate-${animation}`} 
+    style={{ 
+      width, 
+      top: position.top, 
+      left: position.left 
+    }} 
+  />
+);
+
+// Component for glowing dot
+const GlowingDot = ({ animation, position }: GlowingDotProps) => (
+  <div 
+    className={`absolute w-1 h-1 rounded-full bg-cyan-400 shadow-glow animate-${animation}`} 
+    style={{ 
+      top: position.top, 
+      left: position.left 
+    }} 
+  />
+);
+
+// Circuit elements data
+const circuitLines: CircuitLineProps[] = [
+  { width: '24px', animation: 'pulse-1', position: { top: '20%', left: '10%' } },
+  { width: '36px', animation: 'pulse-2', position: { top: '65%', left: '75%' } },
+  { width: '20px', animation: 'pulse-3', position: { top: '40%', left: '85%' } },
+  { width: '28px', animation: 'pulse-1', position: { top: '80%', left: '25%' } },
+  { width: '32px', animation: 'pulse-2', position: { top: '30%', left: '60%' } },
+  { width: '16px', animation: 'pulse-3', position: { top: '70%', left: '15%' } },
+  { width: '40px', animation: 'pulse-1', position: { top: '50%', left: '50%' } },
+  { width: '24px', animation: 'pulse-2', position: { top: '15%', left: '40%' } },
+  { width: '20px', animation: 'pulse-3', position: { top: '90%', left: '70%' } },
+  { width: '36px', animation: 'pulse-1', position: { top: '25%', left: '25%' } },
+];
+
+const glowingDots: GlowingDotProps[] = [
+  { animation: 'pulse-glow', position: { top: '45%', left: '30%' } },
+  { animation: 'pulse-glow-2', position: { top: '75%', left: '65%' } },
+  { animation: 'pulse-glow', position: { top: '25%', left: '70%' } },
+  { animation: 'pulse-glow-2', position: { top: '55%', left: '15%' } },
+  { animation: 'pulse-glow', position: { top: '85%', left: '45%' } },
+  { animation: 'pulse-glow-2', position: { top: '15%', left: '85%' } },
+  { animation: 'pulse-glow', position: { top: '35%', left: '50%' } },
+  { animation: 'pulse-glow-2', position: { top: '65%', left: '35%' } },
+];
+
 export default function Home() {
   const router = useRouter();
 
@@ -63,28 +129,26 @@ export default function Home() {
           </Button>
         </div>
 
-        {/* Circuit elements */}
+        {/* Circuit elements container */}
         <div className="absolute inset-0 z-5 opacity-30 pointer-events-none">
-          <div className="absolute h-px w-24 bg-cyan-500 animate-pulse-1" style={{ top: '20%', left: '10%' }} />
-          <div className="absolute h-px w-36 bg-cyan-500 animate-pulse-2" style={{ top: '65%', left: '75%' }} />
-          <div className="absolute h-px w-20 bg-cyan-500 animate-pulse-3" style={{ top: '40%', left: '85%' }} />
-          <div className="absolute h-px w-28 bg-cyan-500 animate-pulse-1" style={{ top: '80%', left: '25%' }} />
-          <div className="absolute h-px w-32 bg-cyan-500 animate-pulse-2" style={{ top: '30%', left: '60%' }} />
-          <div className="absolute h-px w-16 bg-cyan-500 animate-pulse-3" style={{ top: '70%', left: '15%' }} />
-          <div className="absolute h-px w-40 bg-cyan-500 animate-pulse-1" style={{ top: '50%', left: '50%' }} />
-          <div className="absolute h-px w-24 bg-cyan-500 animate-pulse-2" style={{ top: '15%', left: '40%' }} />
-          <div className="absolute h-px w-20 bg-cyan-500 animate-pulse-3" style={{ top: '90%', left: '70%' }} />
-          <div className="absolute h-px w-36 bg-cyan-500 animate-pulse-1" style={{ top: '25%', left: '25%' }} />
+          {/* Circuit lines */}
+          {circuitLines.map((line, index) => (
+            <CircuitLine
+              key={`line-${index}`}
+              width={line.width}
+              animation={line.animation}
+              position={line.position}
+            />
+          ))}
           
           {/* Glowing dots */}
-          <div className="absolute w-1 h-1 rounded-full bg-cyan-400 shadow-glow animate-pulse-glow" style={{ top: '45%', left: '30%' }} />
-          <div className="absolute w-1 h-1 rounded-full bg-cyan-400 shadow-glow animate-pulse-glow-2" style={{ top: '75%', left: '65%' }} />
-          <div className="absolute w-1 h-1 rounded-full bg-cyan-400 shadow-glow animate-pulse-glow" style={{ top: '25%', left: '70%' }} />
-          <div className="absolute w-1 h-1 rounded-full bg-cyan-400 shadow-glow animate-pulse-glow-2" style={{ top: '55%', left: '15%' }} />
-          <div className="absolute w-1 h-1 rounded-full bg-cyan-400 shadow-glow animate-pulse-glow" style={{ top: '85%', left: '45%' }} />
-          <div className="absolute w-1 h-1 rounded-full bg-cyan-400 shadow-glow animate-pulse-glow-2" style={{ top: '15%', left: '85%' }} />
-          <div className="absolute w-1 h-1 rounded-full bg-cyan-400 shadow-glow animate-pulse-glow" style={{ top: '35%', left: '50%' }} />
-          <div className="absolute w-1 h-1 rounded-full bg-cyan-400 shadow-glow animate-pulse-glow-2" style={{ top: '65%', left: '35%' }} />
+          {glowingDots.map((dot, index) => (
+            <GlowingDot
+              key={`dot-${index}`}
+              animation={dot.animation}
+              position={dot.position}
+            />
+          ))}
         </div>
       </div>
     </main>

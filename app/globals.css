@@ -86,6 +86,71 @@ a:hover {
   color: rgb(103, 232, 249); /* cyan-300 */
 }
 
+/* Reusable theme-based classes - Apply with @apply in Tailwind */
+@layer components {
+  /* Text color variations based on theme */
+  .text-theme-primary {
+    @apply text-white dark:text-gray-900;
+  }
+  
+  .text-theme-secondary {
+    @apply text-gray-300 dark:text-gray-600;
+  }
+  
+  .text-theme-accent {
+    @apply text-cyan-300 dark:text-cyan-500;
+  }
+  
+  /* Background color variations */
+  .bg-theme-primary {
+    @apply bg-[#1a2c38] dark:bg-white;
+  }
+  
+  .bg-theme-secondary {
+    @apply bg-slate-900 dark:bg-slate-50;
+  }
+  
+  .bg-theme-accent {
+    @apply bg-cyan-500 dark:bg-cyan-50;
+  }
+  
+  .bg-theme-transparent {
+    @apply bg-transparent backdrop-blur-sm;
+  }
+  
+  /* Border color variations */
+  .border-theme-primary {
+    @apply border-gray-800/30 dark:border-gray-200/30;
+  }
+  
+  .border-theme-secondary {
+    @apply border-gray-800 dark:border-gray-200;
+  }
+  
+  .border-theme-accent {
+    @apply border-cyan-500;
+  }
+  
+  /* Active state variations */
+  .active-theme-item {
+    @apply text-white bg-black/20 dark:text-black dark:bg-white/20;
+  }
+  
+  .inactive-theme-item {
+    @apply text-gray-200 hover:text-white dark:text-gray-800 dark:hover:text-black;
+  }
+  
+  /* Card variations */
+  .card-theme-default {
+    @apply bg-[#161e29] border border-gray-800 hover:border-cyan-400 dark:bg-white dark:border-gray-200 dark:hover:border-cyan-400;
+  }
+  
+  /* Toggle button styles */
+  .toggle-theme-button {
+    @apply p-2 rounded-full bg-gray-800 text-gray-200 dark:bg-gray-200 dark:text-gray-800;
+  }
+}
+
 /* Component classes */
 .cyber-gradient-text {
   background-clip: text;
@@ -135,6 +200,15 @@ a:hover {
   z-index: -1;
 }
 
+/* Common utility components */
+.circuit-line {
+  @apply absolute h-px bg-cyan-500;
+}
+
+.glowing-dot {
+  @apply absolute w-1 h-1 rounded-full bg-cyan-400 shadow-glow;
+}
+
 /* Custom animations */
 @keyframes pulse-glow {
   0%, 100% {
@@ -161,6 +235,18 @@ a:hover {
 
 .animate-pulse-glow {
   animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-pulse-1 {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-pulse-2 {
+  animation: pulse-glow 4s ease-in-out infinite 0.5s;
+}
+
+.animate-pulse-3 {
+  animation: pulse-glow 3.5s ease-in-out infinite 1s;
 }
 
 .animate-text-flicker {

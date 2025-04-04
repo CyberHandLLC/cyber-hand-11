@@ -5,6 +5,25 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "@/lib/theme-context";
 import { Button } from "@/components/ui/button";
+import { getThemeStyle } from "@/lib/theme-utils";
+import { AnimatedElement } from "@/lib/animation-utils";
+import { MenuIcon, XIcon, MoonIcon, SunIcon } from "@/components/ui/icons";
+
+// Define reusable types
+type NavItem = {
+  path: string;
+  label: string;
+};
+
+// Define reusable styled components
+type NavLinkProps = {
+  href: string;
+  active: boolean;
+  onClick?: () => void;
+  children: React.ReactNode;
+  className?: string;
+  mobile?: boolean;
+};
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,167 +34,146 @@ export function Navbar() {
   const closeMenu = () => setIsMenuOpen(false);
   const isActive = (path: string) => pathname === path;
   
-  // Theme-based styles with transparent background
-  const navBgClass = theme === 'light' 
-    ? "bg-transparent backdrop-blur-sm border-b border-gray-200/30" 
-    : "bg-transparent backdrop-blur-sm border-b border-gray-800/30";
-    
-  const navLinkActiveClass = theme === 'light'
-    ? 'text-black bg-white/20'
-    : 'text-white bg-black/20';
-    
-  const navLinkClass = theme === 'light'
-    ? 'text-gray-800 hover:text-black'
-    : 'text-gray-200 hover:text-white';
-    
-  const hamburgerClass = theme === 'light'
-    ? 'text-gray-800 hover:text-black'
-    : 'text-gray-200 hover:text-white';
+  // Navigation items array to avoid repetition
+  const navigationItems: NavItem[] = [
+    { path: '/services', label: 'Services' },
+    { path: '/case-study', label: 'Case Study' },
+    { path: '/resources', label: 'Resources' },
+    { path: '/contact', label: 'Contact' },
+  ];
   
-  return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 ${navBgClass}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          {/* Brand name instead of logo as requested */}
-          <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0 font-bold text-xl" onClick={closeMenu}>
-              CyberHand
-            </Link>
-          </div>
-          
-          {/* Mobile menu button - 48px touch target for mobile */}
-          <div className="flex items-center sm:hidden">
-            <button
-              type="button"
-              className={`inline-flex items-center justify-center w-12 h-12 rounded-md ${hamburgerClass} focus:outline-none`}
-              onClick={toggleMenu}
-              aria-label="Toggle menu"
-            >
-              {isMenuOpen ? (
-                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              )}
-            </button>
-          </div>
-          
-          {/* Desktop menu */}
-          <div className="hidden sm:flex sm:items-center sm:space-x-4">
-            <Link 
-              href="/services" 
-              className={`px-3 py-2 text-sm font-medium rounded-md ${isActive('/services') ? navLinkActiveClass : navLinkClass}`}
-            >
-              Services
-            </Link>
-            <Link 
-              href="/case-study" 
-              className={`px-3 py-2 text-sm font-medium rounded-md ${isActive('/case-study') ? navLinkActiveClass : navLinkClass}`}
-            >
-              Case Study
-            </Link>
-            <Link 
-              href="/resources" 
-              className={`px-3 py-2 text-sm font-medium rounded-md ${isActive('/resources') ? navLinkActiveClass : navLinkClass}`}
-            >
-              Resources
-            </Link>
-            <Link 
-              href="/contact" 
-              className={`px-3 py-2 text-sm font-medium rounded-md ${isActive('/contact') ? navLinkActiveClass : navLinkClass}`}
-            >
-              Contact
-            </Link>
-            
-            {/* Theme toggle button */}
-            <button 
-              onClick={toggleTheme}
-              className={`ml-4 p-2 rounded-full ${theme === 'light' ? 'bg-gray-200 text-gray-800' : 'bg-gray-800 text-gray-200'}`}
-              aria-label="Toggle theme"
-            >
-              {theme === 'light' ? (
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                </svg>
-              ) : (
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd"></path>
-                </svg>
-              )}
-            </button>
-            
-            {/* Get Started button */}
-            <Button
-              variant="primary"
-              size="sm"
-              className="ml-4"
-              onClick={() => window.location.href = '/get-started'}
-            >
-              Get Started
-            </Button>
-          </div>
+  // NavLink component to avoid repetition
+  const NavLink = ({ href, active, onClick, children, className = "", mobile = false }: NavLinkProps) => {
+    // Get theme styles based on mobile vs desktop
+    const activeStyle = getThemeStyle(mobile ? 'nav-link-active' : 'nav-link-active', theme);
+    const inactiveStyle = getThemeStyle(mobile ? 'nav-link-inactive' : 'nav-link-inactive', theme);
+    const baseStyle = mobile 
+      ? "block py-2 px-4 rounded-md text-sm font-medium transition-colors"
+      : "text-sm font-medium transition-colors";
+    
+    return (
+      <Link 
+        href={href} 
+        className={`${baseStyle} ${active ? activeStyle : inactiveStyle} ${className}`}
+        onClick={onClick}
+      >
+        {children}
+      </Link>
+    );
+  };
+  
+  // Theme toggle button component to avoid repetition
+  const ThemeToggleButton = ({ className = "" }) => (
+    <button 
+      onClick={toggleTheme}
+      className={`toggle-theme-button ${className}`}
+      aria-label="Toggle theme"
+    >
+      {theme === 'light' ? (
+        <MoonIcon size="sm" />
+      ) : (
+        <SunIcon size="sm" />
+      )}
+    </button>
+  );
+  
+  // Login/Sign Up buttons
+  const AuthButtons = () => (
+    <div className="flex items-center">
+      <Link href="/login" className="px-5 py-2 rounded-full text-sm font-medium text-gray-300 hover:text-white transition-colors mr-2">
+        Log In
+      </Link>
+      <Link href="/signup" className="px-5 py-2 rounded-full text-sm font-medium bg-white hover:bg-gray-100 text-gray-900 transition-colors">
+        Sign up
+      </Link>
+    </div>
+  );
+  
+  // Logo component
+  const Logo = () => (
+    <Link href="/" className="flex items-center" onClick={closeMenu}>
+      <div className="w-8 h-8 grid place-items-center">
+        <div className="flex flex-wrap gap-1">
+          <div className="w-1.5 h-1.5 rounded-full bg-white"></div>
+          <div className="w-1.5 h-1.5 rounded-full bg-white"></div>
+          <div className="w-1.5 h-1.5 rounded-full bg-white"></div>
+          <div className="w-1.5 h-1.5 rounded-full bg-white"></div>
         </div>
       </div>
+    </Link>
+  );
+  
+  return (
+    <AnimatedElement
+      animation="fadeInDown"
+      className="fixed top-4 left-0 right-0 z-50 flex justify-center"
+    >
+      <nav className="flex items-center rounded-full px-4 py-2 backdrop-blur-md bg-black/30 border border-gray-700/30 shadow-xl">
+        {/* Logo/Brand */}
+        <div className="flex items-center pr-4">
+          <Logo />
+        </div>
+        
+        {/* Desktop Navigation Links */}
+        <div className="hidden md:flex items-center space-x-8 mr-6">
+          {navigationItems.map((item) => (
+            <NavLink 
+              key={item.path}
+              href={item.path} 
+              active={isActive(item.path)}
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </div>
+        
+        {/* Mobile menu button */}
+        <div className="md:hidden">
+          <button
+            onClick={toggleMenu}
+            className="text-gray-300 hover:text-white"
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? <XIcon size="md" /> : <MenuIcon size="md" />}
+          </button>
+        </div>
+        
+        {/* Auth Buttons */}
+        <div className="hidden md:block ml-auto">
+          <AuthButtons />
+        </div>
+        
+        {/* Theme toggle button */}
+        <div className="ml-4">
+          <ThemeToggleButton />
+        </div>
+      </nav>
       
-      {/* Mobile menu */}
+      {/* Mobile menu dropdown */}
       {isMenuOpen && (
-        <div className="sm:hidden">
-          <div className={`px-2 pt-2 pb-3 space-y-1 ${theme === 'light' ? 'bg-white border-t border-gray-200' : 'bg-[#1a2c38] border-t border-gray-800'}`}>
-            <Link 
-              href="/services" 
-              className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/services') ? navLinkActiveClass : navLinkClass}`}
-              onClick={closeMenu}
-            >
-              Services
-            </Link>
-            <Link 
-              href="/case-study" 
-              className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/case-study') ? navLinkActiveClass : navLinkClass}`}
-              onClick={closeMenu}
-            >
-              Case Study
-            </Link>
-            <Link 
-              href="/resources" 
-              className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/resources') ? navLinkActiveClass : navLinkClass}`}
-              onClick={closeMenu}
-            >
-              Resources
-            </Link>
-            <Link 
-              href="/contact" 
-              className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/contact') ? navLinkActiveClass : navLinkClass}`}
-              onClick={closeMenu}
-            >
-              Contact
-            </Link>
-            
-            <div className="flex items-center justify-between px-3 py-2">
-              <button 
-                onClick={toggleTheme}
-                className={`p-2 rounded-full ${theme === 'light' ? 'bg-gray-200 text-gray-800' : 'bg-gray-800 text-gray-200'}`}
-                aria-label="Toggle theme"
-              >
-                {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
-              </button>
+        <div className="fixed inset-0 z-40 md:hidden">
+          <div className="absolute inset-0 bg-black/50" onClick={closeMenu}></div>
+          <div className="absolute top-20 left-0 right-0 mx-auto w-11/12 max-w-sm rounded-lg bg-gray-900 shadow-lg">
+            <div className="p-4 space-y-4">
+              {navigationItems.map((item) => (
+                <NavLink 
+                  key={item.path}
+                  href={item.path} 
+                  active={isActive(item.path)}
+                  onClick={closeMenu}
+                  mobile={true}
+                >
+                  {item.label}
+                </NavLink>
+              ))}
               
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => {
-                  closeMenu();
-                  window.location.href = '/get-started';
-                }}
-              >
-                Get Started
-              </Button>
+              <div className="pt-4 border-t border-gray-700">
+                <AuthButtons />
+              </div>
             </div>
           </div>
         </div>
       )}
-    </nav>
+    </AnimatedElement>
   );
 }
