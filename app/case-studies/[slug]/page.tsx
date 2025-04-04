@@ -54,12 +54,12 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
         </SectionContainer>
       </div>
       
-      {/* Hero section */}
+      {/* Hero section - reduced height */}
       <div className="w-full relative">
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent z-10"></div>
         <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-black/50 to-transparent z-10"></div>
         
-        <div className="relative w-full h-[50vh] md:h-[60vh]">
+        <div className="relative w-full h-[30vh] md:h-[40vh]">
           <Image
             src={caseStudy.imageUrl}
             alt={caseStudy.title}
@@ -70,20 +70,20 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
         </div>
         
         <div className="absolute top-0 left-0 w-full h-full z-20 flex items-center">
-          <SectionContainer className="py-16 mt-12">
+          <SectionContainer className="py-10 mt-8">
             <AnimatedElement animation="fadeInUp" className="max-w-3xl">
               {/* Industry badge with clear spacing */}
-              <div className="mb-6">
+              <div className="mb-4">
                 <span className="px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/80 text-white inline-block">
                   {caseStudy.industry}
                 </span>
               </div>
               
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
                 {caseStudy.title}
               </h1>
               
-              <p className="text-lg md:text-xl text-white/90">
+              <p className="text-base md:text-lg text-white/90">
                 {caseStudy.clientName} • {caseStudy.location}
               </p>
             </AnimatedElement>
