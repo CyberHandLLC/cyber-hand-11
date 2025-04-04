@@ -32,10 +32,26 @@ const STYLES = {
   },
   grid: {
     twoColumn: "grid grid-cols-1 md:grid-cols-2 gap-6",
+  },
+  headings: {
+    h1: "font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent",
+    h2: "font-bold",
+    h3: "font-semibold",
   }
 };
 
-// Types for our components
+// Extended types for our components
+type CaseStudyHeaderProps = {
+  caseStudy: CaseStudyProps;
+  theme: Theme;
+};
+
+type CaseStudyContentProps = {
+  caseStudy: CaseStudyProps;
+  theme: Theme;
+  router: any;
+};
+
 type ApproachStepProps = {
   step: string;
   index: number;
@@ -71,7 +87,7 @@ type SectionHeaderProps = {
 const SectionHeader = ({ title, theme }: SectionHeaderProps) => (
   <div className="flex items-center mb-6">
     <div className={`w-12 h-2 ${STYLES.accent}`}></div>
-    <h2 className={`text-2xl font-bold ml-4 ${getThemeStyle('text-primary', theme)}`}>
+    <h2 className={`text-2xl ${STYLES.headings.h2} ml-4 ${getThemeStyle('text-primary', theme)}`}>
       {title}
     </h2>
   </div>
@@ -124,7 +140,7 @@ const Testimonial = ({ quote, author, theme }: TestimonialProps) => (
 // Component for sidebar cards
 const SidebarCard = ({ title, description, buttonText, buttonIcon, onClick, theme }: SidebarCardProps) => (
   <div className={`p-6 ${STYLES.card} mb-8`}>
-    <h3 className="text-xl font-semibold mb-4 text-white">
+    <h3 className={`text-xl ${STYLES.headings.h3} mb-4 text-white`}>
       {title}
     </h3>
     <p className={`mb-6 ${getThemeStyle('text-secondary', theme)}`}>
@@ -141,112 +157,129 @@ const SidebarCard = ({ title, description, buttonText, buttonIcon, onClick, them
   </div>
 );
 
-// Component for header with diagonal split
-const DiagonalSplitHeader = ({ caseStudy, theme }: { caseStudy: CaseStudyProps, theme: Theme }) => (
-  <div className="relative overflow-hidden">
-    {/* Navigation bar with cyber-style highlight */}
-    <div className="relative z-20 pt-24 pb-4">
-      <SectionContainer>
-        <div className="flex justify-between items-center">
-          <Link 
-            href="/case-studies" 
-            className={STYLES.button}
-          >
-            <ArrowLeftIcon className="mr-2 h-4 w-4" />
-            Back to Case Studies
-          </Link>
-          
-          <span className={STYLES.pill}>
-            {caseStudy.industry}
-          </span>
-        </div>
-      </SectionContainer>
-    </div>
-    
-    {/* Different layouts for mobile and desktop */}
-    <div className="relative">
-      {/* Mobile layout - stacked design (image on top, content below) */}
-      <div className="md:hidden">
-        {/* Image container */}
-        <div className="relative w-full h-[30vh] mb-8">
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/20 z-10"></div>
-          <Image
-            src={caseStudy.imageUrl}
-            alt={caseStudy.title}
-            fill
-            className="object-cover"
-            sizes="100vw"
-            priority
-          />
-        </div>
-        
-        {/* Content below image on mobile */}
-        <SectionContainer className="relative z-10 pb-8">
-          <div className="w-full">
-            <AnimatedElement animation="fadeInUp" delay={0.1}>
-              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent mb-6">
-                {caseStudy.title}
-              </h1>
-              
-              <div className="flex items-center mb-8 text-white/90">
-                <span className="text-base mr-4">{caseStudy.clientName}</span>
-                <span className={`w-1.5 h-1.5 rounded-full ${STYLES.accent}`}></span>
-                <span className="text-base ml-4">{caseStudy.location}</span>
-              </div>
-              
-              <div className={`bg-gradient-to-r from-cyan-500/20 to-transparent p-6 rounded-lg border-l-2 ${STYLES.borderAccent} mb-8`}>
-                <h2 className="text-xl font-semibold text-white mb-3">The Challenge</h2>
-                <p className="text-white/80">{caseStudy.challenge}</p>
-              </div>
-            </AnimatedElement>
+// The challenge section - reusable across case studies
+const ChallengeSection = ({ challenge, theme }: { challenge: string, theme: Theme }) => (
+  <div className={`bg-gradient-to-r from-cyan-500/20 to-transparent p-6 rounded-lg border-l-2 ${STYLES.borderAccent} mb-8`}>
+    <h2 className={`text-xl ${STYLES.headings.h3} text-white mb-3`}>The Challenge</h2>
+    <p className="text-white/80">{challenge}</p>
+  </div>
+);
+
+// Client info section - reusable across case studies
+const ClientInfo = ({ clientName, location }: { clientName: string, location: string }) => (
+  <div className="flex items-center mb-8 text-white/90">
+    <span className="text-base md:text-lg mr-4">{clientName}</span>
+    <span className={`w-1.5 h-1.5 rounded-full ${STYLES.accent}`}></span>
+    <span className="text-base md:text-lg ml-4">{location}</span>
+  </div>
+);
+
+// Reusable header for case studies with mobile/desktop responsive design
+const CaseStudyHeader = ({ caseStudy, theme }: CaseStudyHeaderProps) => {
+  return (
+    <div className="relative overflow-hidden">
+      {/* Navigation bar with cyber-style highlight */}
+      <div className="relative z-20 pt-24 pb-4">
+        <SectionContainer>
+          <div className="flex justify-between items-center">
+            <Link 
+              href="/case-studies" 
+              className={STYLES.button}
+            >
+              <ArrowLeftIcon className="mr-2 h-4 w-4" />
+              Back to Case Studies
+            </Link>
+            
+            <span className={STYLES.pill}>
+              {caseStudy.industry}
+            </span>
           </div>
         </SectionContainer>
       </div>
       
-      {/* Desktop layout - diagonal split design */}
-      <div className="hidden md:block relative">
-        {/* Content side */}
-        <div className="relative z-10 pb-12 pt-6">
-          <SectionContainer>
-            <div className="max-w-2xl">
+      {/* Different layouts for mobile and desktop */}
+      <div className="relative">
+        {/* Mobile layout - stacked design (image on top, content below) */}
+        <div className="md:hidden">
+          {/* Image container */}
+          <div className="relative w-full h-[30vh] mb-8">
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/20 z-10"></div>
+            <Image
+              src={caseStudy.imageUrl}
+              alt={caseStudy.title}
+              fill
+              className="object-cover"
+              sizes="100vw"
+              priority
+            />
+          </div>
+          
+          {/* Content below image on mobile */}
+          <SectionContainer className="relative z-10 pb-8">
+            <div className="w-full">
               <AnimatedElement animation="fadeInUp" delay={0.1}>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent mb-6">
+                <h1 className={`text-2xl sm:text-3xl ${STYLES.headings.h1} mb-6`}>
                   {caseStudy.title}
                 </h1>
                 
-                <div className="flex items-center mb-8 text-white/90">
-                  <span className="text-lg mr-4">{caseStudy.clientName}</span>
-                  <span className={`w-1.5 h-1.5 rounded-full ${STYLES.accent}`}></span>
-                  <span className="text-lg ml-4">{caseStudy.location}</span>
-                </div>
+                <ClientInfo 
+                  clientName={caseStudy.clientName} 
+                  location={caseStudy.location} 
+                />
                 
-                <div className={`bg-gradient-to-r from-cyan-500/20 to-transparent p-6 rounded-lg border-l-2 ${STYLES.borderAccent} mb-8`}>
-                  <h2 className="text-xl font-semibold text-white mb-3">The Challenge</h2>
-                  <p className="text-white/80">{caseStudy.challenge}</p>
-                </div>
+                <ChallengeSection 
+                  challenge={caseStudy.challenge} 
+                  theme={theme} 
+                />
               </AnimatedElement>
             </div>
           </SectionContainer>
         </div>
         
-        {/* Image side with diagonal effect - desktop only */}
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-black z-0 clip-diagonal">
-          <div className="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent z-10"></div>
-          <div className="h-full w-full relative">
-            <Image
-              src={caseStudy.imageUrl}
-              alt={caseStudy.title}
-              fill
-              className="object-contain"
-              sizes="50vw"
-              priority
-            />
+        {/* Desktop layout - diagonal split design */}
+        <div className="hidden md:block relative">
+          {/* Content side */}
+          <div className="relative z-10 pb-12 pt-6">
+            <SectionContainer>
+              <div className="max-w-2xl">
+                <AnimatedElement animation="fadeInUp" delay={0.1}>
+                  <h1 className={`text-3xl sm:text-4xl md:text-5xl ${STYLES.headings.h1} mb-6`}>
+                    {caseStudy.title}
+                  </h1>
+                  
+                  <ClientInfo 
+                    clientName={caseStudy.clientName} 
+                    location={caseStudy.location} 
+                  />
+                  
+                  <ChallengeSection 
+                    challenge={caseStudy.challenge} 
+                    theme={theme} 
+                  />
+                </AnimatedElement>
+              </div>
+            </SectionContainer>
+          </div>
+          
+          {/* Image side with diagonal effect - desktop only */}
+          <div className="absolute top-0 right-0 w-1/2 h-full bg-black z-0 clip-diagonal">
+            <div className="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent z-10"></div>
+            <div className="h-full w-full relative">
+              <Image
+                src={caseStudy.imageUrl}
+                alt={caseStudy.title}
+                fill
+                className="object-contain"
+                sizes="50vw"
+                priority
+              />
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 // Component for services band
 const ServicesBand = ({ services, theme }: { services: string[], theme: Theme }) => (
@@ -267,16 +300,21 @@ const ServicesBand = ({ services, theme }: { services: string[], theme: Theme })
 );
 
 // Component for related case studies in sidebar
-const RelatedCaseStudies = ({ currentStudyId, theme }: { currentStudyId: string, theme: Theme }) => (
-  <div className={`p-6 ${STYLES.card}`}>
-    <h3 className="text-lg font-semibold mb-4 text-white">
-      Explore More Case Studies
-    </h3>
-    <div className="space-y-2 mb-4">
-      {caseStudies
-        .filter(cs => cs.id !== currentStudyId)
-        .slice(0, 2)
-        .map(cs => (
+const RelatedCaseStudies = ({ currentStudyId, theme }: { currentStudyId: string, theme: Theme }) => {
+  const relatedStudies = caseStudies
+    .filter(cs => cs.id !== currentStudyId)
+    .slice(0, 2);
+    
+  // Don't render if there are no related studies
+  if (relatedStudies.length === 0) return null;
+  
+  return (
+    <div className={`p-6 ${STYLES.card}`}>
+      <h3 className={`text-lg ${STYLES.headings.h3} mb-4 text-white`}>
+        Explore More Case Studies
+      </h3>
+      <div className="space-y-2 mb-4">
+        {relatedStudies.map(cs => (
           <Link 
             key={cs.id}
             href={`/case-studies/${cs.slug}`}
@@ -286,15 +324,55 @@ const RelatedCaseStudies = ({ currentStudyId, theme }: { currentStudyId: string,
             <div className="text-xs">{cs.industry}</div>
           </Link>
         ))}
+      </div>
+      <Link 
+        href="/case-studies"
+        className={`inline-flex items-center text-sm ${STYLES.textAccent} hover:text-cyan-400 transition-colors`}
+      >
+        View all case studies
+        <ArrowRightIcon className="ml-1 h-3 w-3" />
+      </Link>
     </div>
-    <Link 
-      href="/case-studies"
-      className={`inline-flex items-center text-sm ${STYLES.textAccent} hover:text-cyan-400 transition-colors`}
-    >
-      View all case studies
-      <ArrowRightIcon className="ml-1 h-3 w-3" />
-    </Link>
-  </div>
+  );
+};
+
+// Component for approach section
+const ApproachSection = ({ approach, theme }: { approach: string[], theme: Theme }) => (
+  <StaggeredItem>
+    <div className={STYLES.section.spacing}>
+      <SectionHeader title="Our Approach" theme={theme} />
+      
+      <div className={`${STYLES.section.contentSpacing} pl-4 border-l border-gray-800/50`}>
+        {approach.map((step, index) => (
+          <ApproachStep 
+            key={index} 
+            step={step} 
+            index={index} 
+            theme={theme} 
+          />
+        ))}
+      </div>
+    </div>
+  </StaggeredItem>
+);
+
+// Component for results section
+const ResultsSection = ({ results, theme }: { results: string[], theme: Theme }) => (
+  <StaggeredItem>
+    <div className={STYLES.section.spacing}>
+      <SectionHeader title="The Results" theme={theme} />
+      
+      <div className={STYLES.grid.twoColumn}>
+        {results.map((result, index) => (
+          <ResultItem 
+            key={index} 
+            result={result} 
+            theme={theme} 
+          />
+        ))}
+      </div>
+    </div>
+  </StaggeredItem>
 );
 
 // Component for bottom CTA section
@@ -305,7 +383,7 @@ const CallToAction = ({ router, theme }: { router: any, theme: Theme }) => (
     <SectionContainer className="relative z-10">
       <div className="max-w-2xl mx-auto text-center">
         <AnimatedElement animation="fadeInUp">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          <h2 className={`text-2xl md:text-3xl ${STYLES.headings.h2} mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent`}>
             Ready to achieve similar results?
           </h2>
           <p className={`mb-8 ${getThemeStyle('text-secondary', theme)}`}>
@@ -332,39 +410,10 @@ const CallToAction = ({ router, theme }: { router: any, theme: Theme }) => (
   </div>
 );
 
-// Main Case Study Page component
-export default function CaseStudyPage({ params }: { params: { slug: string } }) {
-  const router = useRouter();
-  const { theme } = useTheme();
-  
-  // Find the case study by slug
-  const caseStudy = caseStudies.find(cs => cs.slug === params.slug);
-  
-  // If case study not found, redirect to case studies page
-  useEffect(() => {
-    if (!caseStudy) {
-      router.push("/case-studies");
-    }
-  }, [caseStudy, router]);
-  
-  // Return loading state if case study not found
-  if (!caseStudy) {
-    return (
-      <PageLayout>
-        <SectionContainer className="py-24">
-          <div className="text-center">
-            <p className={getThemeStyle('text-primary', theme)}>Loading...</p>
-          </div>
-        </SectionContainer>
-      </PageLayout>
-    );
-  }
-  
+// Main case study content
+const CaseStudyContent = ({ caseStudy, theme, router }: CaseStudyContentProps) => {
   return (
-    <PageLayout>
-      {/* Header with diagonal split design */}
-      <DiagonalSplitHeader caseStudy={caseStudy} theme={theme} />
-      
+    <>
       {/* Services band */}
       <ServicesBand services={caseStudy.services} theme={theme} />
       
@@ -380,39 +429,10 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
             <div className="lg:col-span-8">
               <StaggeredGroup>
                 {/* Our Approach section with numbered steps */}
-                <StaggeredItem>
-                  <div className={STYLES.section.spacing}>
-                    <SectionHeader title="Our Approach" theme={theme} />
-                    
-                    <div className={`${STYLES.section.contentSpacing} pl-4 border-l border-gray-800/50`}>
-                      {caseStudy.approach.map((step, index) => (
-                        <ApproachStep 
-                          key={index} 
-                          step={step} 
-                          index={index} 
-                          theme={theme} 
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </StaggeredItem>
+                <ApproachSection approach={caseStudy.approach} theme={theme} />
                 
                 {/* Results section with highlight cards */}
-                <StaggeredItem>
-                  <div className={STYLES.section.spacing}>
-                    <SectionHeader title="The Results" theme={theme} />
-                    
-                    <div className={STYLES.grid.twoColumn}>
-                      {caseStudy.results.map((result, index) => (
-                        <ResultItem 
-                          key={index} 
-                          result={result} 
-                          theme={theme} 
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </StaggeredItem>
+                <ResultsSection results={caseStudy.results} theme={theme} />
                 
                 {/* Testimonial with modern highlight design */}
                 {caseStudy.testimonial && (
@@ -450,6 +470,45 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
       
       {/* Call to action section with diagonal design */}
       <CallToAction router={router} theme={theme} />
+    </>
+  );
+};
+
+// Main Case Study Page component
+export default function CaseStudyPage({ params }: { params: { slug: string } }) {
+  const router = useRouter();
+  const { theme } = useTheme();
+  
+  // Find the case study by slug
+  const caseStudy = caseStudies.find(cs => cs.slug === params.slug);
+  
+  // If case study not found, redirect to case studies page
+  useEffect(() => {
+    if (!caseStudy) {
+      router.push("/case-studies");
+    }
+  }, [caseStudy, router]);
+  
+  // Return loading state if case study not found
+  if (!caseStudy) {
+    return (
+      <PageLayout>
+        <SectionContainer className="py-24">
+          <div className="text-center">
+            <p className={getThemeStyle('text-primary', theme)}>Loading...</p>
+          </div>
+        </SectionContainer>
+      </PageLayout>
+    );
+  }
+  
+  return (
+    <PageLayout>
+      {/* Header section */}
+      <CaseStudyHeader caseStudy={caseStudy} theme={theme} />
+      
+      {/* Main content section */}
+      <CaseStudyContent caseStudy={caseStudy} theme={theme} router={router} />
       
       {/* Inject custom styles for the diagonal clip-path */}
       <style jsx global>{`
