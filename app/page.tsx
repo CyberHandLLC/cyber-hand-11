@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { CyberLogo } from "@/components/custom/cyber-logo";
+import dynamic from "next/dynamic";
+import { Suspense, useState, useEffect } from "react";
 
 // Define types for circuit elements
 interface CircuitLineProps {
@@ -22,56 +24,20 @@ interface GlowingDotProps {
   };
 }
 
-// Component for circuit line
-const CircuitLine = ({ width, animation, position }: CircuitLineProps) => (
-  <div 
-    className={`absolute h-px bg-cyan-500 animate-${animation}`} 
-    style={{ 
-      width, 
-      top: position.top, 
-      left: position.left 
-    }} 
-  />
-);
-
-// Component for glowing dot
-const GlowingDot = ({ animation, position }: GlowingDotProps) => (
-  <div 
-    className={`absolute w-1 h-1 rounded-full bg-cyan-400 shadow-glow animate-${animation}`} 
-    style={{ 
-      top: position.top, 
-      left: position.left 
-    }} 
-  />
-);
-
-// Circuit elements data
-const circuitLines: CircuitLineProps[] = [
-  { width: '24px', animation: 'pulse-1', position: { top: '20%', left: '10%' } },
-  { width: '36px', animation: 'pulse-2', position: { top: '65%', left: '75%' } },
-  { width: '20px', animation: 'pulse-3', position: { top: '40%', left: '85%' } },
-  { width: '28px', animation: 'pulse-1', position: { top: '80%', left: '25%' } },
-  { width: '32px', animation: 'pulse-2', position: { top: '30%', left: '60%' } },
-  { width: '16px', animation: 'pulse-3', position: { top: '70%', left: '15%' } },
-  { width: '40px', animation: 'pulse-1', position: { top: '50%', left: '50%' } },
-  { width: '24px', animation: 'pulse-2', position: { top: '15%', left: '40%' } },
-  { width: '20px', animation: 'pulse-3', position: { top: '90%', left: '70%' } },
-  { width: '36px', animation: 'pulse-1', position: { top: '25%', left: '25%' } },
-];
-
-const glowingDots: GlowingDotProps[] = [
-  { animation: 'pulse-glow', position: { top: '45%', left: '30%' } },
-  { animation: 'pulse-glow-2', position: { top: '75%', left: '65%' } },
-  { animation: 'pulse-glow', position: { top: '25%', left: '70%' } },
-  { animation: 'pulse-glow-2', position: { top: '55%', left: '15%' } },
-  { animation: 'pulse-glow', position: { top: '85%', left: '45%' } },
-  { animation: 'pulse-glow-2', position: { top: '15%', left: '85%' } },
-  { animation: 'pulse-glow', position: { top: '35%', left: '50%' } },
-  { animation: 'pulse-glow-2', position: { top: '65%', left: '35%' } },
-];
+// Lazy-loaded circuit components for better performance
+const CircuitEffects = dynamic(() => import('@/components/custom/circuit-effects').then(mod => mod.CircuitEffects), {
+  ssr: false,
+  loading: () => <div className="absolute inset-0 z-5 opacity-30 pointer-events-none" />
+});
 
 export default function Home() {
   const router = useRouter();
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Simulate content being fully loaded
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
 
   const handleGetStarted = () => {
     router.push("/get-started");
@@ -83,13 +49,14 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen flex items-center justify-center overflow-hidden cyber-circuit-bg">
-      {/* Background image with overlay */}
+      {/* Background image with priority loading */}
       <div 
-        className="absolute inset-0 bg-black" 
+        className="absolute inset-0 bg-black bg-opacity-50 z-0" 
         style={{
           backgroundImage: "url('/images/cyberhand-bg.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
+          backgroundRepeat: "no-repeat"
         }}
       />
       
@@ -98,7 +65,7 @@ export default function Home() {
 
       {/* Content container */}
       <div className="relative z-20 px-4 py-16 sm:px-6 lg:px-8 w-full max-w-4xl text-center">
-        {/* CyberHand Logo */}
+        {/* CyberHand Logo with priority */}
         <CyberLogo size="md" className="mb-6 animate-fade-in" />
 
         {/* Headline */}
@@ -129,27 +96,12 @@ export default function Home() {
           </Button>
         </div>
 
-        {/* Circuit elements container */}
-        <div className="absolute inset-0 z-5 opacity-30 pointer-events-none">
-          {/* Circuit lines */}
-          {circuitLines.map((line, index) => (
-            <CircuitLine
-              key={`line-${index}`}
-              width={line.width}
-              animation={line.animation}
-              position={line.position}
-            />
-          ))}
-          
-          {/* Glowing dots */}
-          {glowingDots.map((dot, index) => (
-            <GlowingDot
-              key={`dot-${index}`}
-              animation={dot.animation}
-              position={dot.position}
-            />
-          ))}
-        </div>
+        {/* Circuit elements loaded after initial content */}
+        {isLoaded && (
+          <Suspense fallback={null}>
+            <CircuitEffects />
+          </Suspense>
+        )}
       </div>
     </main>
   );
