@@ -53,7 +53,7 @@ export default function Home() {
       <div 
         className="absolute inset-0 bg-black bg-opacity-50 z-0" 
         style={{
-          backgroundImage: "url('/images/cyberhand-bg.jpg')",
+          backgroundImage: "url('/images/protech-ohio-tran.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat"

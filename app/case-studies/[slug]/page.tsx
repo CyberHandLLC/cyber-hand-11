@@ -61,7 +61,7 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
             <AnimatedElement animation="fadeInUp" className="max-w-3xl">
               <Link 
                 href="/case-studies" 
-                className={`inline-flex items-center text-sm font-medium text-white/80 hover:text-white mb-6 transition-colors`}
+                className={`inline-flex items-center text-sm font-medium text-white/80 hover:text-white mb-8 transition-colors`}
               >
                 <ArrowLeftIcon className="mr-2 h-4 w-4" />
                 Back to Case Studies

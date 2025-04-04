@@ -25,9 +25,9 @@ export default function RootLayout({
         {/* Preload critical assets */}
         <link 
           rel="preload"
-          href="/images/cyberhand-bg.jpg"
+          href="public/images/protech-ohio-tran.png"
           as="image"
-          type="image/jpg"
+          type="image/png"
         />
         {/* Add preconnect for potential third-party domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
