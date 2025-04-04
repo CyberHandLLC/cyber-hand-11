@@ -14,17 +14,8 @@ export default function ResourcesPage() {
   return (
     <PageLayout>
       {/* Hero section with coming soon messaging */}
-      <div className="relative overflow-hidden py-24 md:py-32">
-        {/* Background decorative elements */}
-        <div className="absolute inset-0 grid grid-cols-6 gap-4 opacity-5 pointer-events-none">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-full w-px bg-cyan-500 justify-self-center"></div>
-          ))}
-        </div>
-        <div className="absolute -left-20 top-40 w-40 h-40 border border-cyan-500/20 transform rotate-45 opacity-30"></div>
-        <div className="absolute -right-20 bottom-40 w-60 h-60 border border-cyan-500/20 transform rotate-12 opacity-20"></div>
-        
-        <SectionContainer className="relative z-10">
+      <section className="py-24 md:py-32">
+        <SectionContainer>
           <div className="max-w-3xl mx-auto text-center">
             <AnimatedElement animation="fadeInUp" delay={0.1}>
               <h1 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent mb-6">
@@ -101,7 +92,7 @@ export default function ResourcesPage() {
             </AnimatedElement>
           </div>
         </SectionContainer>
-      </div>
+      </section>
     </PageLayout>
   );
 }
