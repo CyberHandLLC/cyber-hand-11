@@ -1,17 +1,18 @@
 "use client";
 
+// Import necessary components and utilities
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
+import { Button } from "@/components/ui/button";
+import { ArrowLeftIcon, ArrowRightIcon, CheckIcon } from "@/components/ui/icons";
 import { caseStudies } from "@/data/case-studies";
 import { CaseStudyProps } from "@/components/custom/case-study-card";
 import { useTheme } from "@/lib/theme-context";
 import { getThemeStyle } from "@/lib/theme-utils";
 import { AnimatedElement, StaggeredGroup, StaggeredItem } from "@/lib/animation-utils";
-import { ArrowLeftIcon, ArrowRightIcon, CheckIcon } from "@/components/ui/icons";
-import { Button } from "@/components/ui/button";
 
 // Define the Theme type locally to match theme-context.tsx
 type Theme = "light" | "dark";
