@@ -82,10 +82,11 @@ export default function Services() {
         <div className="relative z-10 px-4 max-w-7xl mx-auto">
           {/* Desktop Service Grid */}
           <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-8">
-            {services.map((service) => (
+            {services.map((service, index) => (
               <ServiceCard
                 key={service.id}
                 {...service}
+                index={index}
                 onSelect={handleSelectService}
               />
             ))}
