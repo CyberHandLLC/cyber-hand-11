@@ -39,14 +39,16 @@ export const CaseStudyHeader = ({ caseStudy, theme }: CaseStudyHeaderProps) => {
           {/* Image container */}
           <div className="relative w-full h-[30vh] mb-8">
             <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/20 z-10"></div>
-            <Image
-              src={caseStudy.imageUrl}
-              alt={caseStudy.title}
-              fill
-              className="object-cover"
-              sizes="100vw"
-              priority
-            />
+            {caseStudy.imageUrl && (
+              <Image
+                src={caseStudy.imageUrl}
+                alt={caseStudy.title}
+                fill
+                className="object-cover"
+                sizes="100vw"
+                priority
+              />
+            )}
           </div>
           
           {/* Content below image on mobile */}
@@ -100,14 +102,16 @@ export const CaseStudyHeader = ({ caseStudy, theme }: CaseStudyHeaderProps) => {
           <div className="absolute top-0 right-0 w-1/2 h-full bg-black z-0 clip-diagonal">
             <div className="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent z-10"></div>
             <div className="h-full w-full relative">
-              <Image
-                src={caseStudy.imageUrl}
-                alt={caseStudy.title}
-                fill
-                className="object-contain"
-                sizes="50vw"
-                priority
-              />
+              {caseStudy.imageUrl && (
+                <Image
+                  src={caseStudy.imageUrl}
+                  alt={caseStudy.title}
+                  fill
+                  className="object-contain"
+                  sizes="50vw"
+                  priority
+                />
+              )}
             </div>
           </div>
         </div>

@@ -10,6 +10,7 @@ import { ArrowRightIcon } from '@/components/ui/icons';
 
 export interface CaseStudyProps {
   id: string;
+  slug?: string; // Optional slug for URL-friendly identifiers
   title: string;
   clientName: string;
   industry: string;
@@ -19,8 +20,7 @@ export interface CaseStudyProps {
   approach: string[];
   results: string[];
   testimonial?: string;
-  imageUrl: string;
-  slug: string;
+  imageUrl?: string; // Optional image URL for case study visuals
 }
 
 interface CaseStudyCardProps {
@@ -40,14 +40,16 @@ export function CaseStudyCard({ caseStudy, index }: CaseStudyCardProps) {
     >
       {/* Image container with overlay */}
       <div className="relative w-full pt-[56.25%]"> {/* 16:9 aspect ratio */}
-        <Image 
-          src={caseStudy.imageUrl}
-          alt={caseStudy.clientName}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          priority={index < 2} // Prioritize loading the first two images
-        />
+        {caseStudy.imageUrl && (
+          <Image 
+            src={caseStudy.imageUrl}
+            alt={caseStudy.clientName}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={index < 2} // Prioritize loading the first two images
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
         
         {/* Industry badge */}
