@@ -14,9 +14,9 @@ const nextConfig = {
   poweredByHeader: false,
   productionBrowserSourceMaps: false, // Disable source maps in production for smaller bundle
   
-  // Experimental features for improved performance
+  // Safer experimental features that won't break the build
   experimental: {
-    optimizeCss: true,        // Optimize CSS
+    // Remove optimizeCss as it requires specific setup
     optimizePackageImports: ['framer-motion'], // Reduce bundle size for specific packages
   },
   

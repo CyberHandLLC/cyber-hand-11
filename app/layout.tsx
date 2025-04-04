@@ -31,7 +31,7 @@ export default function RootLayout({
         />
         {/* Add preconnect for potential third-party domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       </head>
       <ThemeProvider>
         <body className={`${inter.className} antialiased`}>
