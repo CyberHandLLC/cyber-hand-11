@@ -1,10 +1,15 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { CyberLogo } from "@/components/custom/cyber-logo";
-import dynamic from "next/dynamic";
-import { Suspense, useState, useEffect } from "react";
+import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
+import { getThemeStyle } from "@/lib/theme-utils";
+import { useTheme } from "@/lib/theme-context";
+import { AnimatedElement } from "@/lib/animation-utils";
+import { Suspense } from 'react';
 
 // Define types for circuit elements
 interface CircuitLineProps {
