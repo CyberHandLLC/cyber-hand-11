@@ -25,7 +25,7 @@ export default function RootLayout({
         {/* Preload critical assets */}
         <link 
           rel="preload"
-          href="public/images/protech-ohio-tran.png"
+          href="/images/bg-website-design-seo-marketing-ai-intergration-hosting-cyberhand.png"
           as="image"
           type="image/png"
         />
