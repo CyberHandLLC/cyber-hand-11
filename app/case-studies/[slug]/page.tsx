@@ -41,9 +41,22 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
   
   return (
     <PageLayout>
+      {/* Back navigation - positioned above the hero for consistent navigation */}
+      <div className="bg-gradient-to-b from-black/70 to-transparent pt-24 pb-6">
+        <SectionContainer>
+          <Link 
+            href="/case-studies" 
+            className="inline-flex items-center text-sm font-medium text-white/80 hover:text-white transition-colors"
+          >
+            <ArrowLeftIcon className="mr-2 h-4 w-4" />
+            Back to Case Studies
+          </Link>
+        </SectionContainer>
+      </div>
+      
       {/* Hero section */}
       <div className="w-full relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-transparent z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent z-10"></div>
         <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-black/50 to-transparent z-10"></div>
         
         <div className="relative w-full h-[50vh] md:h-[60vh]">
@@ -57,19 +70,8 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
         </div>
         
         <div className="absolute top-0 left-0 w-full h-full z-20 flex items-center">
-          <SectionContainer className="py-16">
+          <SectionContainer className="py-16 mt-12">
             <AnimatedElement animation="fadeInUp" className="max-w-3xl">
-              {/* Navigation element with plenty of spacing */}
-              <div className="mb-16">
-                <Link 
-                  href="/case-studies" 
-                  className="inline-flex items-center text-sm font-medium text-white/80 hover:text-white transition-colors bg-black/30 px-4 py-2 rounded-full"
-                >
-                  <ArrowLeftIcon className="mr-2 h-4 w-4" />
-                  Back to Case Studies
-                </Link>
-              </div>
-              
               {/* Industry badge with clear spacing */}
               <div className="mb-6">
                 <span className="px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/80 text-white inline-block">
