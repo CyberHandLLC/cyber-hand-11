@@ -37,7 +37,7 @@ export function Navbar() {
   // Navigation items array to avoid repetition
   const navigationItems: NavItem[] = [
     { path: '/services', label: 'Services' },
-    { path: '/case-study', label: 'Case Study' },
+    { path: '/case-studies', label: 'Case Studies' },
     { path: '/resources', label: 'Resources' },
     { path: '/contact', label: 'Contact' },
   ];
