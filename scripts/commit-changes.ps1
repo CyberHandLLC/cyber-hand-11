@@ -58,13 +58,37 @@ function Get-ChangedComponents {
     return ""
 }
 
+function Get-FileChangeSummary {
+    $output = git diff --cached --name-status
+    $changeDetails = @()
+    
+    foreach ($line in $output -split "`n") {
+        if ($line -match "^([A-Z])\s+(.+)$") {
+            $status = $matches[1]
+            $file = $matches[2]
+            
+            $statusDesc = switch ($status) {
+                "A" { "Added" }
+                "M" { "Modified" }
+                "D" { "Deleted" }
+                "R" { "Renamed" }
+                default { "Changed" }
+            }
+            
+            $changeDetails += "- ${statusDesc}: $file"
+        }
+    }
+    
+    return $changeDetails -join "`n"
+}
+
 function Get-FileTypeChanges {
     $fileTypes = @{
-        "CSS" = @(".css", ".scss", ".module.css", ".module.scss")
-        "TypeScript" = @(".ts", ".tsx")
-        "JavaScript" = @(".js", ".jsx")
-        "Config" = @(".json", ".yml", ".yaml", ".config.js")
-        "Documentation" = @(".md", ".mdx")
+        "CSS" = @(".css", ".scss", ".module.css", ".module.scss");
+        "TypeScript" = @(".ts", ".tsx");
+        "JavaScript" = @(".js", ".jsx");
+        "Config" = @(".json", ".yml", ".yaml", ".config.js");
+        "Documentation" = @(".md", ".mdx");
     }
     
     $changedFiles = git diff --cached --name-only
@@ -109,6 +133,7 @@ try {
     $commitSummary = Get-CommitSummary
     $changedComponents = Get-ChangedComponents
     $fileTypeChanges = Get-FileTypeChanges
+    $changeDetails = Get-FileChangeSummary
     
     # Build commit message
     $commitMessage = "Update ${date}: $commitSummary"
@@ -123,6 +148,12 @@ try {
         $commitMessage += "`n`nChanged files: $fileTypeChanges"
     }
     
+    # Add detailed changes
+    if ($changeDetails) {
+        $commitMessage += "`n`nDetails:
+$changeDetails"
+    }
+    
     # Add user's additional message if provided
     if ($args.Count -gt 0) {
         $additionalMessage = $args -join " "
@@ -134,11 +165,25 @@ try {
     Write-Host $commitMessage
     git commit -m $commitMessage
     
-    # Push changes
+    # Show detailed changes
+    Write-ColorOutput "`nDetailed changes:" $CYAN
+    git diff --cached --stat
+
+    # Push changes with upstream configuration if needed
     Write-ColorOutput "`nPushing changes to remote repository..." $CYAN
-    git push
+    $pushResult = git push 2>&1
     
-    Write-ColorOutput "Successfully committed and pushed changes!" $GREEN
+    # Check if push failed due to no upstream branch
+    if ($LASTEXITCODE -ne 0 -and $pushResult -match 'no upstream branch') {
+        Write-ColorOutput "Setting upstream branch and pushing..." $YELLOW
+        git push --set-upstream origin main
+    }
+    
+    if ($LASTEXITCODE -eq 0) {
+        Write-ColorOutput "Successfully committed and pushed changes!" $GREEN
+    } else {
+        Write-ColorOutput "Commit successful but push failed. Changes are saved locally." $YELLOW
+    }
 } catch {
     Write-ColorOutput "Error: $_" $RED
     exit 1
