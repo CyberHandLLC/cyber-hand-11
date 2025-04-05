@@ -16,38 +16,26 @@ const nextConfig = {
   // This ensures that we can properly work with the Shadcn-UI components
   transpilePackages: [],
   
-  // Content Security Policy
+  // Security headers with relaxed CSP for Next.js compatibility
   async headers() {
-    // Determine if we're in development or production
-    const isDev = process.env.NODE_ENV === 'development';
-    
     return [
       {
         source: '/(.*)',
         headers: [
           {
+            // Allow necessary content for Next.js to function properly
             key: 'Content-Security-Policy',
-            value: isDev
-              ? [
-                  // Development CSP - more permissive for hot reloading and debugging
-                  "default-src 'self'",
-                  "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
-                  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-                  "img-src 'self' blob: data: https://images.unsplash.com",
-                  "font-src 'self' https://fonts.gstatic.com",
-                  "connect-src 'self' ws: https://vitals.vercel-insights.com",
-                  "frame-src 'self'"
-                ].join('; ')
-              : [
-                  // Production CSP - still needs some flexibility for Next.js to work properly
-                  "default-src 'self'",
-                  "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // Next.js requires these
-                  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-                  "img-src 'self' blob: data: https://images.unsplash.com",
-                  "font-src 'self' https://fonts.gstatic.com",
-                  "connect-src 'self' https://vitals.vercel-insights.com",
-                  "frame-src 'self'"
-                ].join('; ')
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // Required for Next.js
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com", 
+              "img-src 'self' blob: data: https://images.unsplash.com",
+              "font-src 'self' data: https://fonts.gstatic.com",
+              "connect-src 'self' ws: wss: https://vitals.vercel-insights.com",
+              "frame-src 'self'",
+              "base-uri 'self'",
+              "form-action 'self'"
+            ].join('; ')
           },
           {
             key: 'X-Content-Type-Options',

@@ -8,6 +8,9 @@ import { ThemeProvider } from "@/lib/theme-context";
 
 // Add structured metadata for better SEO
 export const metadata: Metadata = {
+  // Base URL for resolving relative URLs for social media images
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://cyberhand.com'),
+  
   title: "CyberHand | Next-Gen Digital Agency",
   description: "Transforming digital experiences with cutting-edge solutions",
   keywords: "digital agency, web development, SEO, digital marketing, UI/UX design",
