@@ -1,85 +1,62 @@
-"use client";
+/**
+ * Case Studies Page - Server Component
+ * 
+ * This approach uses React Server Components to: 
+ * - Fetch data on the server
+ * - Render static content on the server
+ * - Only send interactive filtering UI to the client
+ */
 
-import { useState } from "react";
+import { Suspense } from 'react';
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
-import { CaseStudyCard } from "@/components/custom/case-study-card";
-import { caseStudies } from "@/data/case-studies";
-import { useTheme } from "@/lib/theme-context";
-import { getThemeStyle } from "@/lib/theme-utils";
-import { AnimatedElement, StaggeredGroup } from "@/lib/animation-utils";
+import { CaseStudyCardServer } from "@/components/case-studies/case-study-card-server";
+import { getCaseStudies } from "@/lib/data/case-studies";
+import { CaseStudiesFilter } from "./components/case-studies-filter";
+import { CaseStudiesClientWrapper } from "./components/case-studies-client-wrapper";
 
-export default function CaseStudiesPage() {
-  const { theme } = useTheme();
-  const [filter, setFilter] = useState<string | null>(null);
+// Metadata for the page
+export const metadata = {
+  title: 'Case Studies | CyberHand',
+  description: 'Explore how we\'ve helped businesses achieve digital success through innovative solutions and strategic expertise.',
+};
+
+/**
+ * Server Component - Main page function
+ * This demonstrates the async data fetching pattern in RSC
+ */
+export default async function CaseStudiesPage() {
+  // Fetch case studies data on the server
+  // This uses the React cache() mechanism for efficient data fetching
+  const caseStudies = await getCaseStudies();
   
-  // Get unique industries for filter
+  // Get unique industries for filter - done on the server
   const industries = Array.from(new Set(caseStudies.map(cs => cs.industry)));
-  
-  // Filter case studies based on selection
-  const filteredCaseStudies = filter 
-    ? caseStudies.filter(cs => cs.industry === filter)
-    : caseStudies;
   
   return (
     <PageLayout>
       <SectionContainer className="py-24 px-4 md:px-6">
-        <AnimatedElement animation="fadeInUp" className="text-center max-w-3xl mx-auto mb-16">
-          <h1 className={`text-4xl md:text-5xl font-bold mb-4 ${getThemeStyle('text-primary', theme)}`}>
+        {/* Static header content rendered entirely on the server */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-primary-dark">
             Case Studies
           </h1>
-          <p className={`text-lg ${getThemeStyle('text-secondary', theme)}`}>
+          <p className="text-lg text-secondary-dark">
             See how we've helped businesses like yours achieve digital success through innovative solutions and strategic expertise.
           </p>
-        </AnimatedElement>
+        </div>
         
-        {/* Filter buttons */}
-        {industries.length > 1 && (
-          <div className="flex flex-wrap justify-center gap-2 mb-12">
-            <button
-              onClick={() => setFilter(null)}
-              className={`px-4 py-2 rounded-full text-sm transition-colors ${
-                filter === null 
-                  ? 'bg-cyan-500 text-white' 
-                  : `${getThemeStyle('bg-secondary', theme)} ${getThemeStyle('text-secondary', theme)}`
-              }`}
-            >
-              All
-            </button>
-            {industries.map(industry => (
-              <button
-                key={industry}
-                onClick={() => setFilter(industry)}
-                className={`px-4 py-2 rounded-full text-sm transition-colors ${
-                  filter === industry 
-                    ? 'bg-cyan-500 text-white' 
-                    : `${getThemeStyle('bg-secondary', theme)} ${getThemeStyle('text-secondary', theme)}`
-                }`}
-              >
-                {industry}
-              </button>
-            ))}
-          </div>
-        )}
+        {/* Client component boundary for interactive filtering */}
+        <Suspense fallback={<div className="text-center">Loading filters...</div>}>
+          <CaseStudiesFilter industries={industries} />
+        </Suspense>
         
-        {/* Case study grid */}
-        <StaggeredGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredCaseStudies.map((caseStudy, index) => (
-            <CaseStudyCard 
-              key={caseStudy.id}
-              caseStudy={caseStudy}
-              index={index}
-            />
-          ))}
-        </StaggeredGroup>
-        
-        {/* Empty state */}
-        {filteredCaseStudies.length === 0 && (
-          <div className="text-center py-16">
-            <p className={`text-lg ${getThemeStyle('text-secondary', theme)}`}>
-              No case studies found matching your criteria.
-            </p>
-          </div>
-        )}
+        {/* Client wrapper component to handle filtered display */}
+        <Suspense fallback={<div className="text-center py-8">Loading case studies...</div>}>
+          <CaseStudiesClientWrapper 
+            caseStudies={caseStudies} 
+            industries={industries}
+          />
+        </Suspense>
       </SectionContainer>
     </PageLayout>
   );
