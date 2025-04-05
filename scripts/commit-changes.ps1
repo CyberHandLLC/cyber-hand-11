@@ -171,12 +171,16 @@ $changeDetails"
 
     # Push changes with upstream configuration if needed
     Write-ColorOutput "`nPushing changes to remote repository..." $CYAN
-    $pushResult = git push 2>&1
+    $pushResult = & { git push 2>&1 } | Out-String
     
     # Check if push failed due to no upstream branch
-    if ($LASTEXITCODE -ne 0 -and $pushResult -match 'no upstream branch') {
-        Write-ColorOutput "Setting upstream branch and pushing..." $YELLOW
-        git push --set-upstream origin main
+    if ($LASTEXITCODE -ne 0) {
+        if ($pushResult -match 'no upstream branch') {
+            Write-ColorOutput "Setting upstream branch and pushing..." $YELLOW
+            git push --set-upstream origin main
+        } else {
+            Write-ColorOutput "Push failed with error: $pushResult" $RED
+        }
     }
     
     if ($LASTEXITCODE -eq 0) {
