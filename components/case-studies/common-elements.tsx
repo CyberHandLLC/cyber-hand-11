@@ -53,8 +53,8 @@ export const ResultItem = ({ result, theme }: ResultItemProps) => (
 // Component for testimonial
 export const Testimonial = ({ quote, author, theme }: TestimonialProps) => (
   <div className={CASE_STUDY_STYLES.section.spacing + " relative"}>
-    <div className="absolute -top-6 -left-6 text-6xl text-cyan-500/20 font-serif">"</div>
-    <div className="absolute -bottom-6 -right-6 text-6xl text-cyan-500/20 font-serif">"</div>
+    <div className="absolute -top-6 -left-6 text-6xl text-cyan-500/20 font-serif">&ldquo;</div>
+    <div className="absolute -bottom-6 -right-6 text-6xl text-cyan-500/20 font-serif">&rdquo;</div>
     
     <div className={`relative z-10 p-8 rounded-lg ${getThemeStyle('bg-secondary', theme)} border-l-2 ${CASE_STUDY_STYLES.borderAccent}`}>
       <blockquote className={`italic text-lg ${getThemeStyle('text-secondary', theme)} mb-6`}>

@@ -117,7 +117,7 @@ const CallToAction = ({ router, theme }: { router: any, theme: any }) => (
             Ready to achieve similar results?
           </h2>
           <p className={`mb-8 ${getThemeStyle('text-secondary', theme)}`}>
-            Let's discuss how we can help your business establish a strong online presence and achieve your digital marketing goals.
+            Let&apos;s discuss how we can help your business establish a strong online presence and achieve your digital marketing goals.
           </p>
           <Button
             variant="primary"

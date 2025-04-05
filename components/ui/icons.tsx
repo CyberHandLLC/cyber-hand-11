@@ -1,7 +1,13 @@
 /**
  * Icon component library for common SVG icons
+ * 
+ * Server Component: This is a static UI component that renders SVG icons.
+ * It doesn't use any client-side features like useState, useEffect, or event handlers,
+ * making it an ideal candidate for a Server Component.
  */
 import React from "react";
+
+// No "use client" directive is needed since this is a Server Component
 
 interface IconProps {
   className?: string;

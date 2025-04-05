@@ -25,12 +25,15 @@ const sendToVercelAnalytics: SendToAnalytics = (metric) => {
     href: window.location.href,
     event_name: metric.name,
     value: metric.value.toString(),
-    speed: 'connection' in navigator && 
-      navigator['connection'] && 
-      // @ts-ignore
-      'effectiveType' in navigator['connection'] ? 
-      // @ts-ignore
-      navigator['connection']['effectiveType'] : '',
+    // Use a proper type guard for the Navigator connection API
+    speed: (() => {
+      if (!('connection' in navigator)) return '';
+      const conn = navigator['connection'] as any; // Cast to any for deprecated/experimental API
+      if (conn && 'effectiveType' in conn) {
+        return conn.effectiveType;
+      }
+      return '';
+    })(),
   };
 
   // Use `navigator.sendBeacon()` if available

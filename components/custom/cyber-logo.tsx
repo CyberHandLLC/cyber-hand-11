@@ -1,5 +1,10 @@
-"use client";
-
+/**
+ * Cyber Logo Component - Server Component
+ * 
+ * This component renders the Cyber Hand logo with styling.
+ * It uses only CSS animations and doesn't require client-side React features,
+ * making it an ideal candidate for a Server Component.
+ */
 import React from "react";
 import { cn } from "@/lib/utils";
 

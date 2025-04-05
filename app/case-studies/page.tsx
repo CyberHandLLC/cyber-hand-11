@@ -9,7 +9,7 @@
 
 import { Suspense } from 'react';
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
-import { CaseStudyCardServer } from "@/components/case-studies/case-study-card-server";
+// Removed unused import: CaseStudyCardServer
 import { getCaseStudies } from "@/lib/data/case-studies";
 import { CaseStudiesFilter } from "./components/case-studies-filter";
 import { CaseStudiesClientWrapper } from "./components/case-studies-client-wrapper";
@@ -17,7 +17,7 @@ import { CaseStudiesClientWrapper } from "./components/case-studies-client-wrapp
 // Metadata for the page
 export const metadata = {
   title: 'Case Studies | CyberHand',
-  description: 'Explore how we\'ve helped businesses achieve digital success through innovative solutions and strategic expertise.',
+  description: 'Explore how we&apos;ve helped businesses achieve digital success through innovative solutions and strategic expertise.',
 };
 
 /**
@@ -41,7 +41,7 @@ export default async function CaseStudiesPage() {
             Case Studies
           </h1>
           <p className="text-lg text-secondary-dark">
-            See how we've helped businesses like yours achieve digital success through innovative solutions and strategic expertise.
+            See how we&apos;ve helped businesses like yours achieve digital success through innovative solutions and strategic expertise.
           </p>
         </div>
         
@@ -54,7 +54,7 @@ export default async function CaseStudiesPage() {
         <Suspense fallback={<div className="text-center py-8">Loading case studies...</div>}>
           <CaseStudiesClientWrapper 
             caseStudies={caseStudies} 
-            industries={industries}
+            _industries={industries}
           />
         </Suspense>
       </SectionContainer>

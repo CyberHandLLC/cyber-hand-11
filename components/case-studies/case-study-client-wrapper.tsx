@@ -51,7 +51,7 @@ export function CaseStudyClientWrapper({ caseStudy }: CaseStudyClientWrapperProp
       <CaseStudyContent caseStudy={caseStudy} theme={theme} router={router} />
       
       {/* Inject custom styles for the diagonal clip-path */}
-      <style jsx global>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .clip-diagonal {
           clip-path: polygon(100% 0, 100% 100%, 0 100%, 30% 0);
         }
@@ -61,7 +61,7 @@ export function CaseStudyClientWrapper({ caseStudy }: CaseStudyClientWrapperProp
             clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 30%);
           }
         }
-      `}</style>
+      `}} />
     </PageLayout>
   );
 }

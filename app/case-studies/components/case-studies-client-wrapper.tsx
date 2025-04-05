@@ -14,12 +14,12 @@ import { getThemeStyle } from "@/lib/theme-utils";
 
 interface CaseStudiesClientWrapperProps {
   caseStudies: CaseStudyProps[];
-  industries: string[];
+  _industries: string[]; // Renamed to match parameter usage
 }
 
 export function CaseStudiesClientWrapper({ 
   caseStudies, 
-  industries 
+  _industries // Prefixed with underscore as it's not currently used
 }: CaseStudiesClientWrapperProps) {
   const { theme } = useTheme();
   const [filter, setFilter] = useState<string | null>(null);

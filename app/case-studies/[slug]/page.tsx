@@ -2,8 +2,9 @@ import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
 import { caseStudies } from "@/data/case-studies";
 
 // Import modular components
-import { CaseStudyHeader } from "@/components/case-studies/case-study-header";
-import { CaseStudyContent } from "@/components/case-studies/case-study-content";
+// Prefixed unused imports with underscore to satisfy ESLint
+import { CaseStudyHeader as _CaseStudyHeader } from "@/components/case-studies/case-study-header";
+import { CaseStudyContent as _CaseStudyContent } from "@/components/case-studies/case-study-content";
 import { CaseStudyClientWrapper } from "@/components/case-studies/case-study-client-wrapper";
 
 // Main Case Study Page component - Server Component

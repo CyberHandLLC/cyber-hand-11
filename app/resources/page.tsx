@@ -25,7 +25,7 @@ export default function ResourcesPage() {
               <div className="mb-8 w-24 h-1 bg-cyan-500 mx-auto"></div>
               
               <p className={`text-lg md:text-xl mb-8 ${getThemeStyle('text-secondary', theme)}`}>
-                We're building a comprehensive library of resources to help you excel in digital marketing and web development.
+                We&#39;re building a comprehensive library of resources to help you excel in digital marketing and web development.
               </p>
               
               <div className="rounded-lg border border-gray-800/30 bg-gradient-to-br from-black/60 to-transparent backdrop-blur-sm p-8 mb-12">
