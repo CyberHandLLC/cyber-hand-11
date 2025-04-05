@@ -107,9 +107,9 @@ Next.js 15 provides enhanced support for React Server Components (RSC), offering
    - Maintain data fetching logic in Server Components
    - Use React context selectively and primarily in Client Components
 
-## Performance Considerations
+## Performance Optimization
 
-To optimize Core Web Vitals and overall performance:
+To achieve exceptional Core Web Vitals scores, special attention will be paid to:
 
 1. **Largest Contentful Paint (LCP)**:
    - Implement priority loading for critical content
@@ -117,6 +117,36 @@ To optimize Core Web Vitals and overall performance:
    - Optimize image delivery with Next.js Image component
    - Implement proper font loading strategies with font-display: swap
    - Preload critical resources in document head
+
+## Image Optimization Strategy
+
+A comprehensive image optimization strategy has been implemented with the following components and approaches:
+
+1. **Component Architecture**:
+   - `OptimizedImage`: A client component built on Next.js Image with progressive loading, blur placeholders, and responsive sizing
+   - `StaticImage`: A server component for static image rendering that doesn't require client interactivity
+   - `CaseStudyImage`: A specialized component for case studies with context-aware optimizations
+
+2. **Responsive Image Approach**:
+   - Standardized size presets in the `image-utils.ts` module for consistent implementation
+   - Automatic sizing based on viewport with the `sizes` attribute
+   - Appropriate `deviceSizes` and `imageSizes` configured in Next.js config
+
+3. **Progressive Loading Techniques**:
+   - SVG-based color placeholders for instant visual feedback
+   - Blur-up technique with smooth transitions between placeholder and final image
+   - Priority loading for LCP (Largest Contentful Paint) images above the fold
+   - Custom `useProgressiveImage` hook for advanced loading scenarios
+
+4. **Format Optimization**:
+   - WebP and AVIF automatic format delivery based on browser support
+   - Appropriate quality settings for the right balance of visual fidelity and performance
+   - Proper CDN configuration with remote patterns in Next.js config
+
+5. **Art Direction**:
+   - Context-dependent image sizing and cropping based on usage (hero, card, etc.)
+   - Industry-specific placeholder colors for improved user experience
+   - Proper aspect ratio management to prevent layout shifts
 
 2. **Total Blocking Time (TBT)**:
    - Minimize JavaScript bundle size by leveraging Server Components
@@ -206,7 +236,7 @@ The implementation will account for future growth:
 | Risk | Impact | Mitigation |
 |------|--------|------------|
 | Complex animations affecting performance | Medium | Use hardware-accelerated properties, measure performance impact |
-| Image optimization challenges | High | Implement proper sizing, formats, and lazy loading |
+| Image optimization challenges | High | ✓ Implemented standardized components with automatic WebP/AVIF delivery, responsive sizing, and blur placeholders |
 | State management complexity | Medium | Clearly define state boundaries, use local state where appropriate |
 | Cross-browser compatibility | Low | Use feature detection, provide fallbacks |
 
