@@ -1,6 +1,6 @@
 "use client";
 
-import Image from 'next/image';
+import { CaseStudyImage } from '@/components/case-studies/case-study-image';
 import Link from 'next/link';
 import { useTheme } from '@/lib/theme-context';
 import { getThemeStyle } from '@/lib/theme-utils';
@@ -40,13 +40,18 @@ export function CaseStudyCard({ caseStudy, index }: CaseStudyCardProps) {
       {/* Image container with overlay */}
       <div className="relative w-full pt-[56.25%]"> {/* 16:9 aspect ratio */}
         {caseStudy.imageUrl && (
-          <Image 
+          <CaseStudyImage 
             src={caseStudy.imageUrl}
             alt={caseStudy.clientName}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority={index < 2} // Prioritize loading the first two images
+            variant="card"
+            position={index}
+            objectFit="cover"
+            objectPosition="center"
+            // Use the client's industry to determine placeholder color
+            placeholderColor={caseStudy.industry.includes('Tech') ? "#164e63" : 
+              caseStudy.industry.includes('Health') ? "#166534" :
+              caseStudy.industry.includes('Finance') ? "#1e3a8a" :
+              "#0f172a"}
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>

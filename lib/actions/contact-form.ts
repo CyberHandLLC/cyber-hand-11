@@ -63,7 +63,9 @@ export async function submitContactForm(formData: FormData): Promise<FormRespons
       success: true,
       message: 'Thank you for your message! We will get back to you soon.',
     };
-  } catch (_error) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    // Error is intentionally not used but kept for potential future logging
     // Log error to server-side logging system in production
     // In development, we'd use error monitoring like Sentry
     

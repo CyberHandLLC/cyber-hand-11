@@ -4,7 +4,7 @@ import { CaseStudyHeaderProps } from "./case-study-types";
 import { CASE_STUDY_STYLES } from "@/lib/case-study-styles";
 import { AnimatedElement } from "@/lib/animation-utils";
 import { ArrowLeftIcon } from "@/components/ui/icons";
-import Image from "next/image";
+import { CaseStudyImage } from "./case-study-image";
 import Link from "next/link";
 import { SectionContainer } from "@/components/custom/page-layout";
 import { ChallengeSection, ClientInfo } from "./common-elements";
@@ -40,13 +40,14 @@ export const CaseStudyHeader = ({ caseStudy, theme }: CaseStudyHeaderProps) => {
           <div className="relative w-full h-[30vh] mb-8">
             <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/20 z-10"></div>
             {caseStudy.imageUrl && (
-              <Image
+              <CaseStudyImage
                 src={caseStudy.imageUrl}
                 alt={caseStudy.title}
-                fill
-                className="object-cover"
-                sizes="100vw"
-                priority
+                variant="hero"
+                position={0}
+                objectFit="cover"
+                aspectRatio="16/9"
+                placeholderColor="#0f172a"
               />
             )}
           </div>
@@ -103,13 +104,13 @@ export const CaseStudyHeader = ({ caseStudy, theme }: CaseStudyHeaderProps) => {
             <div className="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent z-10"></div>
             <div className="h-full w-full relative">
               {caseStudy.imageUrl && (
-                <Image
+                <CaseStudyImage
                   src={caseStudy.imageUrl}
                   alt={caseStudy.title}
-                  fill
-                  className="object-contain"
-                  sizes="50vw"
-                  priority
+                  variant="hero"
+                  position={0}
+                  objectFit="contain"
+                  placeholderColor="#0f172a"
                 />
               )}
             </div>
