@@ -169,18 +169,28 @@ $changeDetails"
     Write-ColorOutput "`nDetailed changes:" $CYAN
     git diff --cached --stat
 
+    # Check if branch has upstream configured
+    $branchInfo = & { git status -sb 2>&1 } | Select-Object -First 1
+    $hasUpstream = $branchInfo -match '\[(.+?)\]'
+    
     # Push changes with upstream configuration if needed
     Write-ColorOutput "`nPushing changes to remote repository..." $CYAN
-    $pushResult = & { git push 2>&1 } | Out-String
     
-    # Check if push failed due to no upstream branch
-    if ($LASTEXITCODE -ne 0) {
-        if ($pushResult -match 'no upstream branch') {
-            Write-ColorOutput "Setting upstream branch and pushing..." $YELLOW
-            git push --set-upstream origin main
+    if (-not $hasUpstream) {
+        # No upstream, try to automatically configure it
+        $currentBranch = git rev-parse --abbrev-ref HEAD
+        Write-ColorOutput "No upstream branch configured. Setting up tracking for '$currentBranch'..." $YELLOW
+        $remoteName = git remote
+        if ($remoteName.Count -eq 0) {
+            Write-ColorOutput "No remote configured. Please add a remote first." $RED
         } else {
-            Write-ColorOutput "Push failed with error: $pushResult" $RED
+            $primaryRemote = $remoteName | Select-Object -First 1
+            git branch --set-upstream-to="$primaryRemote/$currentBranch" $currentBranch
+            git push
         }
+    } else {
+        # Normal push with tracking already set up
+        git push
     }
     
     if ($LASTEXITCODE -eq 0) {
