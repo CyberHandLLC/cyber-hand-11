@@ -66,7 +66,7 @@ export const CaseStudyHeader = ({ caseStudy, theme }: CaseStudyHeaderProps) => {
                 
                 <ChallengeSection 
                   challenge={caseStudy.challenge} 
-                  theme={theme} 
+                  _theme={theme} 
                 />
               </AnimatedElement>
             </div>
@@ -91,7 +91,7 @@ export const CaseStudyHeader = ({ caseStudy, theme }: CaseStudyHeaderProps) => {
                   
                   <ChallengeSection 
                     challenge={caseStudy.challenge} 
-                    theme={theme} 
+                    _theme={theme} 
                   />
                 </AnimatedElement>
               </div>

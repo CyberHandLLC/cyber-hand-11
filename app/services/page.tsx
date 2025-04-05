@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef as _useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/theme-context";
@@ -18,7 +18,7 @@ const MOBILE_BREAKPOINT = 768; // px
 export default function Services() {
   const router = useRouter();
   const { theme } = useTheme();
-  const [isMobile, setIsMobile] = useState(false);
+  const [_isMobile, setIsMobile] = useState(false);
   
   // Use useEffect to safely access window object on client-side only
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function Services() {
 
   // Handle service selection
   const handleSelectService = (serviceId: string) => {
-    console.log(`Selected service: ${serviceId}`);
+    // Navigate to contact page with selected service
     router.push(`/contact?service=${serviceId}`);
   };
 

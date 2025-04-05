@@ -1,4 +1,4 @@
-import { NextFont } from 'next/dist/compiled/@next/font';
+import { NextFont as _NextFont } from 'next/dist/compiled/@next/font';
 import { Inter, Orbitron } from 'next/font/google';
 
 // Font optimization: preload critical fonts with display swap

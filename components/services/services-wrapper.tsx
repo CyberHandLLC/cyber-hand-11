@@ -27,7 +27,7 @@ export function ServicesWrapper({ services }: ServicesWrapperProps) {
         >
           <ServiceCardServer 
             service={service}
-            index={index}
+            _index={index}
           />
         </AnimatedElement>
       ))}

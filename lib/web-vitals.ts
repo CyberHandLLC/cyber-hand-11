@@ -28,7 +28,18 @@ const sendToVercelAnalytics: SendToAnalytics = (metric) => {
     // Use a proper type guard for the Navigator connection API
     speed: (() => {
       if (!('connection' in navigator)) return '';
-      const conn = navigator['connection'] as any; // Cast to any for deprecated/experimental API
+      
+      /**
+       * NetworkInformation interface represents information about the connection a device is using to communicate with the network.
+       * Since this API is experimental and not fully standardized, we use a specific interface instead of 'any'.
+       * @see https://developer.mozilla.org/en-US/docs/Web/API/NetworkInformation
+       */
+      interface NetworkInformation {
+        effectiveType?: string;
+        [key: string]: unknown;
+      }
+      
+      const conn = navigator['connection'] as NetworkInformation; // Cast to NetworkInformation for the experimental API
       if (conn && 'effectiveType' in conn) {
         return conn.effectiveType;
       }

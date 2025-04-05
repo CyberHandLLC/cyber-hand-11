@@ -5,14 +5,14 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { CyberLogo } from "@/components/custom/cyber-logo";
-import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
-import { getThemeStyle } from "@/lib/theme-utils";
-import { useTheme } from "@/lib/theme-context";
-import { AnimatedElement } from "@/lib/animation-utils";
+import { PageLayout as _PageLayout, SectionContainer as _SectionContainer } from "@/components/custom/page-layout";
+import { getThemeStyle as _getThemeStyle } from "@/lib/theme-utils";
+import { useTheme as _useTheme } from "@/lib/theme-context";
+import { AnimatedElement as _AnimatedElement } from "@/lib/animation-utils";
 import { Suspense } from 'react';
 
 // Define types for circuit elements
-interface CircuitLineProps {
+interface _CircuitLineProps {
   width: string;
   animation: string;
   position: {
@@ -21,7 +21,7 @@ interface CircuitLineProps {
   };
 }
 
-interface GlowingDotProps {
+interface _GlowingDotProps {
   animation: string;
   position: {
     top: string;

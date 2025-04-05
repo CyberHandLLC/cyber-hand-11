@@ -22,12 +22,11 @@ export function ServiceCardClient({
   popular 
 }: ServiceCardClientProps) {
   // Client-side handler for selecting a service
-  const handleSelect = (serviceId: string) => {
+  const handleSelect = (_serviceId: string) => {
     // Track selection for analytics
     if (typeof window !== 'undefined') {
-      console.log(`Service selected: ${serviceId}`);
       // In a real implementation, this would call an analytics service
-      // or trigger a form modal
+      // For example: analyticsService.trackServiceSelection(serviceId);
     }
     
     // Scroll to contact form

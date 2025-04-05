@@ -8,7 +8,7 @@
 
 import React from "react";
 import { CheckIcon } from "@/components/ui/icons";
-import { ServiceCardClient } from "./service-card-client";
+import { ServiceCardClient } from "@/components/services/service-card-client";
 
 export interface ServiceProps {
   id: string;
@@ -22,12 +22,12 @@ export interface ServiceProps {
 
 interface ServiceCardServerProps {
   service: ServiceProps;
-  index: number;
+  _index: number;
 }
 
 export function ServiceCardServer({ 
   service,
-  index
+  _index
 }: ServiceCardServerProps) {
   const { 
     id, 

@@ -18,8 +18,8 @@ export default function GetStarted() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Here you would handle authentication
-    console.log("Form submitted", { email, password, name });
-    // For now, just redirect to home
+    // Form data would be processed here in a production environment
+    // For development, we're redirecting without actual authentication
     router.push('/');
   };
 

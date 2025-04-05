@@ -59,11 +59,11 @@ export const transitions = {
 interface AnimatedElementProps {
   children: React.ReactNode;
   animation: keyof typeof animations;
-  transition?: any;
+  transition?: typeof transitions[keyof typeof transitions] | Record<string, unknown>;
   delay?: number;
   className?: string;
   once?: boolean;
-  custom?: any;
+  custom?: unknown;
 }
 
 /**
@@ -72,11 +72,11 @@ interface AnimatedElementProps {
 export const AnimatedElement: React.FC<AnimatedElementProps> = ({
   children,
   animation,
-  transition = transitions.medium,
-  delay = 0,
+  transition: _transition = transitions.medium,
+  delay: _delay = 0,
   className = "",
-  once = true,
-  custom = null,
+  once: _once = true,
+  custom: _custom = null,
 }) => {
   const selectedAnimation = animations[animation];
   
@@ -101,7 +101,7 @@ export const StaggeredGroup: React.FC<{
   children: React.ReactNode;
   className?: string;
   staggerDelay?: number;
-}> = ({ children, className = "", staggerDelay = 0.1 }) => {
+}> = ({ children, className = "", staggerDelay: _staggerDelay = 0.1 }) => {
   return (
     <div className={className}>
       {children}
@@ -116,7 +116,7 @@ export const StaggeredItem: React.FC<{
   children: React.ReactNode;
   animation?: keyof typeof animations;
   className?: string;
-}> = ({ children, animation = "fadeInUp", className = "" }) => {
+}> = ({ children, animation: _animation = "fadeInUp", className = "" }) => {
   return (
     <div
       className={className}

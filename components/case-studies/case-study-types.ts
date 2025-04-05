@@ -1,4 +1,5 @@
 import { CaseStudyProps } from "@/components/custom/case-study-card";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 // Define the Theme type locally to match theme-context.tsx
 export type Theme = "light" | "dark";
@@ -12,7 +13,7 @@ export type CaseStudyHeaderProps = {
 export type CaseStudyContentProps = {
   caseStudy: CaseStudyProps;
   theme: Theme;
-  router: any;
+  router: AppRouterInstance;
 };
 
 export type ApproachStepProps = {

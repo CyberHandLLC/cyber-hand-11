@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatedElement } from "@/lib/animation-utils";
+import { AnimatedElement as _AnimatedElement } from "@/lib/animation-utils";
 import { getThemeStyle } from "@/lib/theme-utils";
 import { CASE_STUDY_STYLES } from "@/lib/case-study-styles";
 import { 
@@ -11,7 +11,7 @@ import {
   SidebarCardProps,
   Theme
 } from "./case-study-types";
-import { ArrowRightIcon, CheckIcon } from "@/components/ui/icons";
+import { ArrowRightIcon as _ArrowRightIcon, CheckIcon } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
 // Component for section headers with consistent styling
@@ -89,7 +89,7 @@ export const SidebarCard = ({ title, description, buttonText, buttonIcon, onClic
 );
 
 // The challenge section - reusable across case studies
-export const ChallengeSection = ({ challenge, theme }: { challenge: string, theme: Theme }) => (
+export const ChallengeSection = ({ challenge, _theme }: { challenge: string, _theme: Theme }) => (
   <div className={`bg-gradient-to-r from-cyan-500/20 to-transparent p-6 rounded-lg border-l-2 ${CASE_STUDY_STYLES.borderAccent} mb-8`}>
     <h2 className={`text-xl ${CASE_STUDY_STYLES.headings.h3} text-white mb-3`}>The Challenge</h2>
     <p className="text-white/80">{challenge}</p>

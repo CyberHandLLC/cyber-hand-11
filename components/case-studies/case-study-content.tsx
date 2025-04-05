@@ -7,12 +7,14 @@ import { getThemeStyle } from "@/lib/theme-utils";
 import { StaggeredGroup, StaggeredItem, AnimatedElement } from "@/lib/animation-utils";
 import { SectionHeader, ApproachStep, ResultItem, Testimonial, SidebarCard } from "./common-elements";
 import { caseStudies } from "@/data/case-studies";
+import { useRouter } from "next/navigation";
+import { Theme } from "@/lib/theme-context";
 import Link from "next/link";
 import { ArrowRightIcon } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
 // Component for services band
-const ServicesBand = ({ services, theme }: { services: string[], theme: any }) => (
+const ServicesBand = ({ services, theme }: { services: string[], theme: Theme }) => (
   <div className={`${getThemeStyle('bg-secondary', theme)} py-6 border-y border-gray-800/50`}>
     <SectionContainer>
       <div className="flex flex-wrap gap-4 justify-center">
@@ -30,7 +32,7 @@ const ServicesBand = ({ services, theme }: { services: string[], theme: any }) =
 );
 
 // Component for related case studies in sidebar
-const RelatedCaseStudies = ({ currentStudyId, theme }: { currentStudyId: string, theme: any }) => {
+const RelatedCaseStudies = ({ currentStudyId, theme }: { currentStudyId: string, theme: Theme }) => {
   const relatedStudies = caseStudies
     .filter(cs => cs.id !== currentStudyId)
     .slice(0, 2);
@@ -67,7 +69,7 @@ const RelatedCaseStudies = ({ currentStudyId, theme }: { currentStudyId: string,
 };
 
 // Component for approach section
-const ApproachSection = ({ approach, theme }: { approach: string[], theme: any }) => (
+const ApproachSection = ({ approach, theme }: { approach: string[], theme: Theme }) => (
   <StaggeredItem>
     <div className={CASE_STUDY_STYLES.section.spacing}>
       <SectionHeader title="Our Approach" theme={theme} />
@@ -87,7 +89,7 @@ const ApproachSection = ({ approach, theme }: { approach: string[], theme: any }
 );
 
 // Component for results section
-const ResultsSection = ({ results, theme }: { results: string[], theme: any }) => (
+const ResultsSection = ({ results, theme }: { results: string[], theme: Theme }) => (
   <StaggeredItem>
     <div className={CASE_STUDY_STYLES.section.spacing}>
       <SectionHeader title="The Results" theme={theme} />
@@ -106,7 +108,7 @@ const ResultsSection = ({ results, theme }: { results: string[], theme: any }) =
 );
 
 // Component for bottom CTA section
-const CallToAction = ({ router, theme }: { router: any, theme: any }) => (
+const CallToAction = ({ router, theme }: { router: ReturnType<typeof useRouter>, theme: Theme }) => (
   <div className="relative py-16 overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-r from-blue-900/20 to-cyan-900/20"></div>
     

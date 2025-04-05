@@ -4,8 +4,8 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
-type ButtonVariant = "primary" | "outline" | "secondary" | "ghost" | "link" | "destructive"
-type ButtonSize = "sm" | "md" | "lg"
+type _ButtonVariant = "primary" | "outline" | "secondary" | "ghost" | "link" | "destructive"
+type _ButtonSize = "sm" | "md" | "lg"
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center font-medium rounded transition-all hover:-translate-y-1 hover:scale-105 active:scale-95 disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/50",

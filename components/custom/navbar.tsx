@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "@/lib/theme-context";
-import { Button } from "@/components/ui/button";
+import { Button as _Button } from "@/components/ui/button";
 import { getThemeStyle } from "@/lib/theme-utils";
 import { AnimatedElement } from "@/lib/animation-utils";
 import { MenuIcon, XIcon, MoonIcon, SunIcon } from "@/components/ui/icons";

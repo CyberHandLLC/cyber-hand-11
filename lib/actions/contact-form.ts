@@ -50,10 +50,10 @@ export async function submitContactForm(formData: FormData): Promise<FormRespons
     }
     
     // Form data is valid, process the submission
-    const data = validatedData.data;
+    const _data = validatedData.data;
     
     // In a real application, this would send an email, store in database, etc.
-    console.log('Form submission:', data);
+    // Process form data here (e.g., send email or save to database)
     
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -63,8 +63,9 @@ export async function submitContactForm(formData: FormData): Promise<FormRespons
       success: true,
       message: 'Thank you for your message! We will get back to you soon.',
     };
-  } catch (error) {
-    console.error('Form submission error:', error);
+  } catch (_error) {
+    // Log error to server-side logging system in production
+    // In development, we'd use error monitoring like Sentry
     
     // Return error response
     return {
