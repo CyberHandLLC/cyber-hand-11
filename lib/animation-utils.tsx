@@ -1,7 +1,6 @@
 /**
  * Animation utilities for centralized animation definitions
  */
-import { motion, Variant, Variants } from "framer-motion";
 import React from "react";
 
 // Common animation variants that can be reused across components
@@ -87,18 +86,11 @@ export const AnimatedElement: React.FC<AnimatedElementProps> = ({
   }
   
   return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      exit="hidden"
-      variants={selectedAnimation}
-      transition={{ ...transition, delay }}
-      viewport={{ once }}
+    <div
       className={className}
-      custom={custom}
     >
       {children}
-    </motion.div>
+    </div>
   );
 };
 
@@ -111,21 +103,9 @@ export const StaggeredGroup: React.FC<{
   staggerDelay?: number;
 }> = ({ children, className = "", staggerDelay = 0.1 }) => {
   return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      className={className}
-      variants={{
-        visible: { 
-          transition: { 
-            staggerChildren: staggerDelay,
-            delayChildren: 0.1
-          } 
-        }
-      }}
-    >
+    <div className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 };
 
@@ -138,11 +118,10 @@ export const StaggeredItem: React.FC<{
   className?: string;
 }> = ({ children, animation = "fadeInUp", className = "" }) => {
   return (
-    <motion.div
-      variants={animations[animation]}
+    <div
       className={className}
     >
       {children}
-    </motion.div>
+    </div>
   );
 };

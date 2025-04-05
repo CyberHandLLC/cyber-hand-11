@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/theme-context";
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
-import { motion } from "framer-motion";
+ 
 
 export default function GetStarted() {
   const router = useRouter();
@@ -51,11 +51,8 @@ export default function GetStarted() {
   return (
     <PageLayout>
       <SectionContainer className="min-h-screen flex items-center justify-center py-20">
-        <motion.div 
+        <div 
           className={`rounded-xl p-8 w-full max-w-md ${cardClass}`}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
         >
           <div className="text-center mb-8">
             <h1 className={`text-2xl sm:text-3xl font-bold ${textClass} mb-2`}>
@@ -140,7 +137,7 @@ export default function GetStarted() {
               Back to Home
             </Button>
           </div>
-        </motion.div>
+        </div>
       </SectionContainer>
     </PageLayout>
   );

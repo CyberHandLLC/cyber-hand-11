@@ -2,7 +2,14 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['localhost'],
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '',
+        pathname: '/**',
+      },
+    ],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60,
   },
@@ -13,12 +20,6 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: false, // Disable source maps in production for smaller bundle
-  
-  // Safer experimental features that won't break the build
-  experimental: {
-    // Remove optimizeCss as it requires specific setup
-    optimizePackageImports: ['framer-motion'], // Reduce bundle size for specific packages
-  },
   
   // Configure webpack for better performance
   webpack: (config, { dev, isServer }) => {

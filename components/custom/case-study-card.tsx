@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { useTheme } from '@/lib/theme-context';
 import { getThemeStyle } from '@/lib/theme-utils';
 import { AnimatedElement } from '@/lib/animation-utils';

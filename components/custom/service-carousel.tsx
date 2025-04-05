@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { useTheme } from "@/lib/theme-context";
-import { motion } from "framer-motion";
 import { ServiceCard } from "./service-card";
 import { type ServiceProps } from "@/data/services";
 

@@ -3,9 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 // Generate an SVG placeholder with the category name
 export async function GET(
   request: NextRequest,
-  { params }: { params: { category: string } }
+  { params }: { params: Promise<{ category: string }> }
 ) {
-  const category = params.category || 'placeholder';
+  // Await and destructure the params Promise
+  const { category: categoryValue } = await params;
+  const category = categoryValue || 'placeholder';
   const colors: Record<string, { bg: string, text: string }> = {
     'surf-school': { bg: '#1e7a9d', text: '#ffffff' },
     'ev-charging': { bg: '#3d5467', text: '#ffffff' },

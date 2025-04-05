@@ -1,5 +1,5 @@
 import "./globals.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { inter, orbitron } from "./font";
 import { ThemeProvider } from "@/lib/theme-context";
 
@@ -7,7 +7,13 @@ import { ThemeProvider } from "@/lib/theme-context";
 export const metadata: Metadata = {
   title: "CyberHand | Next-Gen Digital Agency",
   description: "Transforming digital experiences with cutting-edge solutions",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=5",
+};
+
+// Viewport configuration (moved from metadata per Next.js 15 requirements)
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#0c1117" },
