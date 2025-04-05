@@ -39,10 +39,10 @@ const nextConfig = {
                   "frame-src 'self'"
                 ].join('; ')
               : [
-                  // Production CSP - more restrictive
+                  // Production CSP - still needs some flexibility for Next.js to work properly
                   "default-src 'self'",
-                  "script-src 'self'", // No unsafe-inline in production
-                  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com", // Inline styles still needed
+                  "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // Next.js requires these
+                  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
                   "img-src 'self' blob: data: https://images.unsplash.com",
                   "font-src 'self' https://fonts.gstatic.com",
                   "connect-src 'self' https://vitals.vercel-insights.com",
