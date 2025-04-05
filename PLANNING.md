@@ -24,7 +24,6 @@ The frontend development will focus on:
 | **State Management** | React Context + Hooks | Aligns with existing theme context implementation |
 | **Deployment** | Vercel | Native platform for Next.js with optimized deployment pipeline |
 | **Image Optimization** | Next.js Image Component | Built-in lazy loading and automatic format detection |
-| **Animation** | Framer Motion | Lightweight, declarative animations that work with existing animation-utils |
 
 ## Architectural Alignment
 
@@ -58,6 +57,7 @@ Next.js 15 provides enhanced support for React Server Components (RSC), offering
    - Leverage React Server Components as the default rendering method
    - Selectively use Client Components only when client-side interactivity is required
    - Implement a proper boundary between Server and Client components
+   - Use the `'use client'` directive only in components that actually need client-side functionality
 
 2. **Performance Benefits**:
    - Reduced JavaScript payload sent to the client
@@ -73,6 +73,9 @@ Next.js 15 provides enhanced support for React Server Components (RSC), offering
    - Implement parallel data fetching in Server Components
    - Use React's cache() for efficient data request deduplication
    - Structure components to fetch only their required data
+   - Leverage Next.js fetch API with automatic request deduplication
+   - Implement proper error handling for data fetching operations
+   - Use { next: { revalidate: timeInSeconds } } for time-based revalidation
 
 5. **State Management Approach**:
    - Keep UI state in Client Components
@@ -87,12 +90,15 @@ To optimize Core Web Vitals and overall performance:
    - Implement priority loading for critical content
    - Use Server Components for faster initial rendering
    - Optimize image delivery with Next.js Image component
+   - Implement proper font loading strategies with font-display: swap
+   - Preload critical resources in document head
 
 2. **Total Blocking Time (TBT)**:
    - Minimize JavaScript bundle size by leveraging Server Components
    - Keep interactive components small and focused
    - Defer non-critical JavaScript execution
    - Use selective hydration for interactive components
+   - Implement real user monitoring with web-vitals library
 
 3. **Cumulative Layout Shift (CLS)**:
    - Pre-define space for dynamic content
@@ -104,9 +110,10 @@ To optimize Core Web Vitals and overall performance:
 To improve search engine visibility:
 
 1. **Metadata Optimization**:
-   - Implement structured metadata on all pages
+   - Implement structured metadata using Next.js Metadata API
    - Add OpenGraph and Twitter card metadata
    - Create dynamic meta descriptions based on page content
+   - Utilize the viewport export for proper mobile optimization
 
 2. **Structured Data**:
    - Implement JSON-LD for relevant content types
@@ -151,6 +158,7 @@ The implementation will account for future growth:
 1. **Internationalization Readiness**:
    - Structure content to facilitate future language additions
    - Use translation-friendly component patterns
+   - Prepare for Next.js i18n integration using the app router
 
 2. **Feature Expansion**:
    - Design components with extensibility in mind
@@ -161,6 +169,7 @@ The implementation will account for future growth:
 1. **Browser Support**:
    - Support modern evergreen browsers (Chrome, Firefox, Safari, Edge)
    - Provide graceful degradation for older browsers
+   - Implement content security policies that differentiate between development and production environments
 
 2. **Performance Budgets**:
    - Initial load < 3s on 3G connections

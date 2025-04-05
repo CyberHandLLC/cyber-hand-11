@@ -17,15 +17,22 @@
     "react-dom": "^19.0.0",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "web-vitals": "^4.2.4"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.14.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@typescript-eslint/eslint-plugin": "^8.29.0",
+    "@typescript-eslint/parser": "^8.29.0",
     "autoprefixer": "^10",
     "critters": "^0.0.23",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "postcss": "^8",
+    "prettier": "^3.5.3",
     "tailwindcss": "^3",
     "typescript": "^5"
   }

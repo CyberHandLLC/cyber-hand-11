@@ -5,23 +5,23 @@ This document outlines the specific tasks required to implement the frontend dev
 ## Phase 1: Setup and Configuration
 
 1. **Update Next.js Configuration**
-   - [ ] Upgrade to Next.js 15.2.4 with React 19
-   - [ ] Configure content security policy
-   - [ ] Set up module path aliases for cleaner imports
-   - [ ] Configure image optimization settings
-   - [ ] Review and optimize server component configuration
+   - [x] Upgrade to Next.js 15.2.4 with React 19
+   - [x] Configure content security policy
+   - [x] Set up module path aliases for cleaner imports
+   - [x] Configure image optimization settings
+   - [x] Review and optimize server component configuration
 
 2. **Performance Monitoring Setup**
-   - [ ] Configure Core Web Vitals monitoring
-   - [ ] Set up Lighthouse CI integration
-   - [ ] Create performance budgets in Next.js config
-   - [ ] Implement real user monitoring (RUM)
+   - [x] Configure Core Web Vitals monitoring
+   - [x] Set up Lighthouse CI integration
+   - [x] Create performance budgets in Next.js config
+   - [x] Implement real user monitoring (RUM)
 
 3. **Development Environment**
-   - [ ] Set up ESLint rules for React best practices
-   - [ ] Configure Prettier for consistent code formatting
-   - [ ] Add TypeScript strict mode settings
-   - [ ] Create component templates for faster development
+   - [x] Set up ESLint rules for React best practices
+   - [x] Configure Prettier for consistent code formatting
+   - [x] Add TypeScript strict mode settings
+   - [x] Create component templates for faster development
 
 ## Phase 2: React Server Components Implementation
 
@@ -30,12 +30,15 @@ This document outlines the specific tasks required to implement the frontend dev
    - [ ] Add 'use client' directive to components requiring client-side interactivity
    - [ ] Refactor components to properly separate server and client concerns
    - [ ] Implement proper data loading patterns in Server Components
+   - [ ] Follow Next.js recommendation to keep Client Components at the leaves of the component tree
 
 2. **Data Fetching Optimization**
    - [ ] Implement parallel data fetching in Server Components
    - [ ] Use React's cache() function for request deduplication
    - [ ] Move API calls from client components to server components
    - [ ] Implement streaming for larger data-dependent UI sections
+   - [ ] Add proper error handling for all data fetching operations
+   - [ ] Implement revalidation strategies using { next: { revalidate: timeInSeconds } }
 
 3. **Component Boundaries**
    - [ ] Create clear boundaries between Server and Client Components
@@ -157,6 +160,34 @@ This document outlines the specific tasks required to implement the frontend dev
 
 ## Phase 8: Deployment and Monitoring
 
+## Discovered During Work (Added 2025-04-05)
+
+1. **Dependency Management**
+   - [x] Remove Framer Motion due to React 19 compatibility issues
+   - [ ] Evaluate alternative animation solutions compatible with React 19
+   - [x] Update TypeScript definitions for React 19
+   - [x] Install web-vitals for performance monitoring
+
+2. **Image Optimization**
+   - [ ] Create standardized image component with automatic WebP/AVIF support
+   - [ ] Implement responsive image sizes based on viewport
+   - [ ] Set up image placeholder system for better LCP
+
+3. **Server Component Migration**
+   - [ ] Audit existing components for server vs. client classification
+   - [ ] Create migration plan for converting applicable components to RSC
+   - [x] Document patterns for data fetching in Server Components
+
+4. **Environment-specific Configurations**
+   - [x] Implement separate CSP rules for development and production
+   - [x] Configure accurate browser detection for web vitals
+   - [ ] Set up environment variable documentation
+
+5. **Linting and Type Safety**
+   - [x] Configure ESLint with Next.js specific rules
+   - [x] Enhance TypeScript strict mode settings
+   - [x] Add React Server Component aware ESLint rules
+
 1. **Deployment Pipeline**
    - [ ] Configure Vercel deployment settings
    - [ ] Set up staging environment
@@ -199,9 +230,9 @@ For immediate implementation, prioritize these tasks:
    - [ ] Enhance mobile navigation experience
    - [ ] Add theme preference detection and persistence
 
-4. **Development Setup**
-   - [ ] Configure ESLint and Prettier
+4. **Development Environment**
+   - [x] Configure ESLint and Prettier
    - [ ] Set up testing framework
-   - [ ] Create component templates (Server and Client variants)
-   - [ ] Implement Lighthouse CI
-   - [ ] Set up RSC-aware debugging configuration
+   - [x] Create component templates (Server and Client variants)
+   - [x] Implement Lighthouse CI
+   - [x] Set up RSC-aware debugging configuration
