@@ -1,15 +1,17 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import { inter, orbitron } from "./font";
+import { inter, orbitron, fontVariables, fontFallbacks } from "./font";
 import { ThemeProvider } from "@/lib/theme-context";
+import { PerformanceWrapper } from "./performance-wrapper";
+import { getFallbackFontStack } from "@/lib/font-optimization";
 
-// Web Vitals reporting will be implemented in a client component
+// Web Vitals reporting is implemented in the PerformanceWrapper client component
 // to avoid build errors with the app router
 
 // Add structured metadata for better SEO
 export const metadata: Metadata = {
   // Base URL for resolving relative URLs for social media images
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://cyberhand.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com'),
   
   title: "CyberHand | Next-Gen Digital Agency",
   description: "Transforming digital experiences with cutting-edge solutions",
@@ -67,7 +69,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${orbitron.variable} ${inter.variable}`}>
+    <html lang="en" className={`${fontVariables.orbitron} ${fontVariables.inter}`}>
       <head>
         {/* Preload critical assets */}
         <link 
@@ -76,14 +78,69 @@ export default function RootLayout({
           as="image"
           type="image/png"
         />
-        {/* Add preconnect for potential third-party domains */}
+        
+        {/* Font optimization: Preconnect to font domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        
+        {/* Font display optimization - Add font-display settings for fallback fonts */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          /* Font fallback optimization to reduce CLS */
+          :root {
+            --font-sans: ${fontFallbacks.sans};
+            --font-display: ${fontFallbacks.display};
+            --font-mono: ${fontFallbacks.mono};
+          }
+          
+          /* Font loading optimization */
+          @font-face {
+            font-family: 'Inter Fallback';
+            src: local('Arial');
+            ascent-override: 90%;
+            descent-override: 25%;
+            line-gap-override: normal;
+            size-adjust: 107%;
+          }
+          
+          @font-face {
+            font-family: 'Orbitron Fallback';
+            src: local('Arial');
+            ascent-override: 85%;
+            descent-override: 22%;
+            line-gap-override: normal;
+            size-adjust: 115%;
+          }
+          
+          /* Apply optimizations to prevent layout shifts */
+          .font-adjustment-active .text-body {
+            font-family: 'Inter', 'Inter Fallback', var(--font-sans);
+          }
+          
+          .font-adjustment-active .text-heading {
+            font-family: 'Orbitron', 'Orbitron Fallback', var(--font-display);
+          }
+        ` }} />
+        
+        {/* Preload critical CSS */}
+        <link 
+          rel="preload" 
+          href="/styles/critical.css" 
+          as="style"
+        />
+        
+        {/* Add resource hints for other important resources */}
+        <link rel="prefetch" href="/images/logo.svg" />
+        
+        {/* DNS prefetch for common external domains */}
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
       </head>
       <ThemeProvider>
-        <body className={`${inter.className} antialiased`}>
-          {/* No Navbar on homepage, it will be included in each page except the landing page */}
-          {children}
+        <body className="font-adjustment-active antialiased text-body">
+          {/* Apply performance optimizations at the root level */}
+          <PerformanceWrapper>
+            {/* No Navbar on homepage, it will be included in each page except the landing page */}
+            {children}
+          </PerformanceWrapper>
         </body>
       </ThemeProvider>
     </html>

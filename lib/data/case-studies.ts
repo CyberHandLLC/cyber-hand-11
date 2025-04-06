@@ -29,13 +29,14 @@ const isServerBuild = process.env.NODE_ENV === 'production' && typeof window ===
  * regardless of how many components call it
  */
 export const getCaseStudies = cache(async (): Promise<CaseStudyProps[]> => {
-  // During build, use mock data to avoid API calls
-  if (isServerBuild) {
+  // Always use mock data in development mode or during build
+  // This prevents 404 errors when the API endpoints aren't implemented yet
+  if (process.env.NODE_ENV === 'development' || isServerBuild) {
     return mockCaseStudies;
   }
   
   try {
-    // In development or runtime, attempt to fetch from API
+    // In production runtime, attempt to fetch from API
     // Construct a proper absolute URL for the API
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     const apiUrl = new URL('/api/case-studies', baseUrl).toString();
@@ -55,13 +56,14 @@ export const getCaseStudies = cache(async (): Promise<CaseStudyProps[]> => {
  * Fetch a single case study by slug with caching
  */
 export const getCaseStudyBySlug = cache(async (slug: string): Promise<CaseStudyProps | null> => {
-  // During build, use mock data to avoid API calls
-  if (isServerBuild) {
+  // Always use mock data in development mode or during build
+  // This prevents 404 errors when the API endpoints aren't implemented yet
+  if (process.env.NODE_ENV === 'development' || isServerBuild) {
     return mockCaseStudies.find(study => study.slug === slug) || null;
   }
   
   try {
-    // In development or runtime, attempt to fetch from API
+    // In production runtime, attempt to fetch from API
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     const apiUrl = new URL(`/api/case-studies/${slug}`, baseUrl).toString();
     

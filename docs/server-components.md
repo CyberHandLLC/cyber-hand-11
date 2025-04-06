@@ -8,6 +8,7 @@ This document outlines our approach to implementing React Server Components (RSC
 2. **Client Component Boundaries**: Only use Client Components for interactive UI elements
 3. **Efficient Data Fetching**: Use React's `cache()` for optimized server-side data fetching
 4. **Component Splitting**: Split complex components into Server and Client parts
+5. **Performance Optimization**: Integrate performance strategies with Server/Client component architecture
 
 ## Implementation Patterns
 
@@ -128,9 +129,95 @@ When converting existing components:
 3. Update data fetching to use the `cache()` pattern
 4. Use proper error boundaries and suspense for better UX
 
+## Performance Optimization Integration
+
+### Code Splitting with Server Components
+
+We've implemented a structured approach to integrate performance optimization with Server Components:
+
+```tsx
+// Server Component (app/case-studies/page.tsx)
+import { Suspense } from 'react';
+import { CaseStudiesClientWrapper } from '@/app/case-studies/components/case-studies-client-wrapper';
+
+export default async function CaseStudiesPage() {
+  // Server-side data fetching
+  const caseStudies = await getCaseStudies();
+  const industries = getAllIndustries();
+  
+  return (
+    <main>
+      <h1>Case Studies</h1>
+      
+      {/* Client boundary with Suspense */}
+      <Suspense fallback={<div className="skeleton-loader">Loading...</div>}>
+        <CaseStudiesClientWrapper 
+          caseStudies={caseStudies} 
+          _industries={industries} 
+        />
+      </Suspense>
+    </main>
+  );
+}
+```
+
+```tsx
+// Client Component with Dynamic Import (app/case-studies/components/dynamic-case-study-grid.tsx)
+"use client";
+
+import dynamic from 'next/dynamic';
+
+// Dynamic import with loading state
+const DynamicCaseStudyGrid = dynamic(
+  () => import('@/app/case-studies/components/case-study-grid').then(mod => mod.CaseStudyGrid),
+  {
+    loading: () => <SkeletonLoaderGrid />,
+    ssr: false
+  }
+);
+
+export function DynamicCaseStudyGridWrapper({ caseStudies }) {
+  return <DynamicCaseStudyGrid caseStudies={caseStudies} />;
+}
+```
+
+### Performance Utilities Organization
+
+Performance-related utilities are organized in the `lib/performance` directory:
+
+```
+lib/performance/
+├── code-splitting.tsx     # Dynamic import utilities
+├── critical-css.ts        # Critical CSS extraction
+├── deferred-loading.tsx   # Prioritized component hydration
+├── performance-metrics.ts # Performance monitoring
+```
+
+### CSS Containment Strategy
+
+We implement CSS containment for better rendering performance with Server/Client boundaries:
+
+```tsx
+// Server Component renders the container with containment attribute
+<div className="contain-content">
+  <ClientComponent /> {/* Client component renders inside the contained area */}
+</div>
+
+// CSS applied to the container
+.contain-content {
+  contain: content; /* Isolates this subtree for better rendering performance */
+}
+```
+
 ## Common Pitfalls
 
 1. **Mixing Concerns**: Don't mix data fetching and interactive state in the same component
 2. **Over-clientization**: Don't make entire components client components when only small parts need interactivity
 3. **Props Serialization**: Remember that props passed from Server to Client Components must be serializable
 4. **Missing Suspense**: Always wrap Client Components that depend on data in Suspense boundaries
+5. **Performance Optimization Conflicts**: Be aware of how performance optimizations affect Server/Client boundaries:
+   - Avoid dynamically importing Server Components (they should be statically imported)
+   - Use `ssr: false` when dynamically importing Client Components that don't need SSR
+   - Ensure CSS containment doesn't interfere with dynamic layout requirements
+6. **Bundle Size Impact**: Monitor how your Server vs. Client component choices affect bundle size
+7. **Excessive Boundaries**: Too many Server/Client boundaries can lead to waterfall requests

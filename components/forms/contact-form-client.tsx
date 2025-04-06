@@ -15,7 +15,7 @@
 
 import React, { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
-import { FormData, FormResponse, submitContactForm } from "@/lib/actions/contact-form";
+import { FormData, FormResponse, submitContactForm } from "@/lib/actions/contact/contact-form";
 import { CheckCircleIcon } from "@/components/ui/icons";
 
 interface ContactFormProps {

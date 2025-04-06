@@ -3,14 +3,20 @@
 /**
  * Client Component Wrapper
  * Handles the interactive filtering logic for case studies
+ * 
+ * Performance optimized with:
+ * - Route-based code splitting using dynamic imports
+ * - CSS containment for better rendering performance
+ * - Performance monitoring for Core Web Vitals
  */
 
 import { useState, useEffect } from "react";
 import { CaseStudyProps } from "@/components/custom/case-study-card";
-import { CaseStudyCardServer } from "@/components/case-studies/case-study-card-server";
 import { AnimatedElement } from "@/lib/animation-utils";
 import { useTheme } from "@/lib/theme-context";
 import { getThemeStyle } from "@/lib/theme-utils";
+import { DynamicCaseStudyGridWrapper } from "./dynamic-case-study-grid";
+// Performance wrappers and optimizations applied directly in the component
 
 interface CaseStudiesClientWrapperProps {
   caseStudies: CaseStudyProps[];
@@ -68,21 +74,19 @@ export function CaseStudiesClientWrapper({
   }
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {/* Using the same staggered animation pattern as the original */}
-      {filteredStudies.map((caseStudy, index) => (
-        <AnimatedElement 
-          key={caseStudy.id} 
-          animation="fadeInUp"
-          delay={index * 0.1}
-          className="h-full transform transition-transform hover:-translate-y-2 duration-300"
-        >
-          <CaseStudyCardServer 
-            caseStudy={caseStudy}
-            index={index}
-          />
-        </AnimatedElement>
-      ))}
+    <div 
+      className="case-studies-container contain-content" 
+      id="filtered-case-studies"
+    >
+      {/* Dynamic import of the CaseStudyGrid component */}
+      <DynamicCaseStudyGridWrapper caseStudies={filteredStudies} />
+      
+      {/* Apply CSS containment for better rendering performance */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .case-studies-container {
+          contain: content;
+        }
+      `}} />
     </div>
   );
 }

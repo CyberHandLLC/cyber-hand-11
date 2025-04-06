@@ -9,7 +9,7 @@
 
 import React from "react";
 import { ContactFormClient } from "./contact-form-client";
-import { getAvailableServices } from "@/lib/actions/contact-form";
+import { getAvailableServices } from "@/lib/actions/contact/contact-form";
 
 interface ContactFormProps {
   initialService?: string;
