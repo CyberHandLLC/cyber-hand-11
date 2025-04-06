@@ -7,9 +7,9 @@
 
 // We use a custom interface to avoid TypeScript errors with NextFont's internal properties
 interface FontInfo {
-  variable?: string;
-  className?: string;
-  style?: Record<string, any>;
+  variable?: string | undefined;
+  className?: string | undefined;
+  style?: Record<string, unknown> | undefined;
 }
 
 /**
@@ -22,7 +22,7 @@ interface FontInfo {
  */
 export function getFallbackFontStack(primaryFont: string, category: 'serif' | 'sans-serif' | 'monospace' | 'cursive' | 'fantasy'): string {
   // System font stacks by category
-  const fallbacks = {
+  const fallbacks: Record<'serif' | 'sans-serif' | 'monospace' | 'cursive' | 'fantasy', string> = {
     'sans-serif': 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     'serif': 'Georgia, Cambria, "Times New Roman", Times, serif',
     'monospace': 'SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
@@ -61,15 +61,16 @@ export function createFontLoadingOptimization(fontNames: string[]): string {
  * @param fonts - Object containing NextFont instances
  * @returns Font optimization info for logging
  */
-export function getNextFontInfo(fonts: Record<string, any>): Record<string, FontInfo> {
+export function getNextFontInfo(fonts: Record<string, unknown>): Record<string, FontInfo> {
   // Safely extract properties that might be private/internal
   return Object.entries(fonts).reduce((acc, [name, font]) => {
     // Extract safely even if properties are not directly accessible
     // Most font properties are exposed through the object
+    const typedFont = font as Partial<FontInfo>;
     acc[name] = {
-      variable: font.variable || null,
-      className: font.className || null,
-      style: font.style || {},
+      variable: typedFont.variable,
+      className: typedFont.className,
+      style: typedFont.style || {},
     };
     return acc;
   }, {} as Record<string, FontInfo>);

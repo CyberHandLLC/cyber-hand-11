@@ -1,7 +1,6 @@
 'use client';
 
 import React, { ReactNode } from 'react';
-import { fontClasses } from '@/app/font';
 
 type TextVariant = 'body' | 'heading' | 'ui';
 type FontWeight = 'normal' | 'medium' | 'semibold' | 'bold';

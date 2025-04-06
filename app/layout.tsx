@@ -1,9 +1,8 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import { inter, orbitron, fontVariables, fontFallbacks } from "./font";
+import { fontVariables, fontFallbacks } from "./font";
 import { ThemeProvider } from "@/lib/theme-context";
 import { PerformanceWrapper } from "./performance-wrapper";
-import { getFallbackFontStack } from "@/lib/font-optimization";
 
 // Web Vitals reporting is implemented in the PerformanceWrapper client component
 // to avoid build errors with the app router
