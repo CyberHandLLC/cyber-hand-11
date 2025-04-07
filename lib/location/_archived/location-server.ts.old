@@ -1,0 +1,105 @@
+/**
+ * Location Server Utilities
+ * 
+ * Server-side utilities for handling location data and cookies.
+ * This file must ONLY be imported in Server Components or Route Handlers.
+ */
+
+import { cookies } from 'next/headers';
+import { 
+  LocationConsentStatus,
+  LocationPreferences
+} from '@/types/location';
+
+// Cookie names - must match client-side values
+const LOCATION_CONSENT_COOKIE = 'location-consent';
+const LOCATION_DATA_COOKIE = 'location-data';
+
+/**
+ * Server-side function to get location consent from cookies
+ * @returns The location preferences from cookies or default values
+ */
+export async function getLocationPreferencesServer(): Promise<LocationPreferences> {
+  try {
+    const cookieStore = await cookies();
+    const consentCookie = cookieStore.get(LOCATION_CONSENT_COOKIE);
+    
+    if (!consentCookie) {
+      return {
+        consentStatus: 'prompt',
+        consentTimestamp: Date.now(),
+        shouldPromptAgain: true
+      };
+    }
+    
+    return JSON.parse(consentCookie.value);
+  } catch (_error) {
+    // Silent error handling - ESLint compliant
+    return {
+      consentStatus: 'prompt',
+      consentTimestamp: Date.now(),
+      shouldPromptAgain: true
+    };
+  }
+}
+
+/**
+ * Set location consent cookie from server components or route handlers
+ */
+export async function setLocationConsentServer(
+  preferences: LocationPreferences,
+  expiryDays: number = 90
+): Promise<void> {
+  try {
+    const cookieStore = await cookies();
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + expiryDays);
+    
+    cookieStore.set({
+      name: LOCATION_CONSENT_COOKIE,
+      value: JSON.stringify(preferences),
+      expires: expiryDate,
+      path: '/',
+      sameSite: 'strict',
+      httpOnly: false // Allow client-side access to this cookie
+    });
+  } catch (_error) {
+    // Silent error handling - ESLint compliant
+  }
+}
+
+/**
+ * Get location consent status from server
+ */
+export async function getLocationConsentStatusServer(): Promise<LocationConsentStatus> {
+  try {
+    const preferences = await getLocationPreferencesServer();
+    return preferences.consentStatus;
+  } catch (_error) {
+    // Silent error handling - ESLint compliant
+    return 'prompt';
+  }
+}
+
+/**
+ * Clear location data cookies from server
+ */
+export async function clearLocationDataServer(): Promise<void> {
+  try {
+    const cookieStore = await cookies();
+    cookieStore.set({
+      name: LOCATION_CONSENT_COOKIE,
+      value: '',
+      expires: new Date(0),
+      path: '/'
+    });
+    cookieStore.set({
+      name: LOCATION_DATA_COOKIE,
+      value: '',
+      expires: new Date(0),
+      path: '/'
+    });
+  } catch (_error) {
+    // Silent error handling - ESLint compliant
+  }
+}

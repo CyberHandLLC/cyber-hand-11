@@ -25,32 +25,8 @@ export const metadata = createMetadata({
   canonicalUrl: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com'}/case-studies`,
 });
 
-/**
- * Skeleton loading state for case studies page header
- */
-function CaseStudiesHeaderSkeleton() {
-  return (
-    <div className="space-y-4 mb-12">
-      <Skeleton className="h-10 w-40 bg-cyan-500/20" />
-      <Skeleton className="h-5 w-full max-w-2xl bg-gray-200/20" />
-    </div>
-  );
-}
-
-/**
- * Static server-rendered header component
- */
-function CaseStudiesHeader() {
-  return (
-    <div className="mb-12 text-center">
-      <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">Case Studies</h1>
-      <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-16">
-        Explore our portfolio of successful client projects across various industries. 
-        Each case study showcases our approach, solutions, and the results we achieved.
-      </p>
-    </div>
-  );
-}
+// Removed unused components CaseStudiesHeaderSkeleton and CaseStudiesHeader
+// as we're now using inline elements in the main component
 
 /**
  * Main Case Studies Page Component

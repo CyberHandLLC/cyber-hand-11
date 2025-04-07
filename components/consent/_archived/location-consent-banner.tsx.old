@@ -1,0 +1,157 @@
+"use client";
+
+/**
+ * Location Consent Banner Component
+ * 
+ * A client-side component that displays a banner asking for the user's
+ * consent to access their location. Handles user interaction and stores
+ * preferences in cookies.
+ */
+
+import React, { useState, useEffect } from 'react';
+import { 
+  getLocationConsentStatus, 
+  setLocationConsentStatus 
+} from '@/lib/location/location-service';
+import { LocationConsentStatus } from '@/types/location';
+import { Button } from '@/components/ui/button';
+import { motion, AnimatePresence } from 'framer-motion';
+
+interface LocationConsentBannerProps {
+  /** Optional callback when user makes a choice */
+  onConsentChange?: (status: LocationConsentStatus) => void;
+  /** Whether to show detailed explanation about location usage */
+  showDetailedExplanation?: boolean;
+  /** Whether to auto-dismiss the banner after user selection (default: true) */
+  autoDismiss?: boolean;
+}
+
+/**
+ * Banner that asks for location permission with clear options
+ */
+export function LocationConsentBanner({
+  onConsentChange,
+  showDetailedExplanation = false,
+  autoDismiss = true
+}: LocationConsentBannerProps) {
+  const [isVisible, setIsVisible] = useState(false);
+  const [_status, setStatus] = useState<LocationConsentStatus>('pending');
+  
+  useEffect(() => {
+    // Check if we should show the banner based on existing cookie
+    const currentStatus = getLocationConsentStatus();
+    setStatus(currentStatus);
+    
+    // Only show the banner if status is 'prompt'
+    if (currentStatus === 'prompt') {
+      setIsVisible(true);
+    }
+  }, []);
+  
+  // Handle user response to permission request
+  const handleConsent = (allow: boolean, neverAskAgain: boolean = false) => {
+    const newStatus: LocationConsentStatus = allow ? 'granted' : 'denied';
+    
+    // Update the consent status in cookies
+    setLocationConsentStatus(newStatus, !neverAskAgain);
+    setStatus(newStatus);
+    
+    // Notify parent component if callback provided
+    if (onConsentChange) {
+      onConsentChange(newStatus);
+    }
+    
+    // Auto-dismiss the banner if enabled
+    if (autoDismiss) {
+      setIsVisible(false);
+    }
+  };
+  
+  // If banner shouldn't be visible, don't render anything
+  if (!isVisible) {
+    return null;
+  }
+  
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 50 }}
+        className="fixed bottom-4 left-4 right-4 md:max-w-md md:left-auto z-50 bg-black/90 backdrop-blur-sm border border-gray-700 rounded-lg shadow-xl p-4 text-white"
+      >
+        <div className="flex items-start">
+          <div className="mr-3 p-1.5 bg-cyan-900/50 rounded-full text-cyan-400">
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="h-5 w-5" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" 
+              />
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" 
+              />
+            </svg>
+          </div>
+          
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold mb-1">Share Your Location</h3>
+            
+            <p className="text-sm text-gray-300 mb-3">
+              We&apos;d like to use your location to provide more relevant content and services.
+            </p>
+            
+            {showDetailedExplanation && (
+              <div className="text-xs text-gray-400 mb-3 border-l-2 border-gray-700 pl-2">
+                <p className="mb-1">Your location data will be used to:</p>
+                <ul className="list-disc list-inside">
+                  <li>Show relevant local services</li>
+                  <li>Provide distance information</li>
+                  <li>Customize content to your region</li>
+                </ul>
+                <p className="mt-1">
+                  Your data stays secure and is stored according to our privacy policy.
+                </p>
+              </div>
+            )}
+            
+            <div className="flex flex-wrap gap-2 mt-4">
+              <Button 
+                variant="primary" 
+                size="sm" 
+                onClick={() => handleConsent(true)}
+              >
+                Allow
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => handleConsent(false)}
+              >
+                Not now
+              </Button>
+              
+              <button 
+                className="text-xs text-gray-400 hover:text-gray-300 underline ml-auto"
+                onClick={() => handleConsent(false, true)}
+              >
+                Never ask again
+              </button>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}

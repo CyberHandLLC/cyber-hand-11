@@ -15,8 +15,8 @@ import { CaseStudyProps } from "@/components/custom/case-study-card";
 import { AnimatedElement } from "@/lib/animation-utils";
 import { useTheme } from "@/lib/theme-context";
 import { getThemeStyle } from "@/lib/theme-utils";
-import { DynamicCaseStudyGridWrapper } from "./dynamic-case-study-grid";
-// Performance wrappers and optimizations applied directly in the component
+import { CaseStudyCardServer } from "@/components/case-studies/case-study-card-server";
+// Performance optimizations applied directly in the component
 
 interface CaseStudiesClientWrapperProps {
   caseStudies: CaseStudyProps[];
@@ -75,11 +75,25 @@ export function CaseStudiesClientWrapper({
   
   return (
     <div 
-      className="case-studies-container contain-layout w-full max-w-screen-xl mx-auto" 
+      className="case-studies-container w-full max-w-screen-xl mx-auto" 
       id="filtered-case-studies"
     >
-      {/* Dynamic import of the CaseStudyGrid component with improved containment */}
-      <DynamicCaseStudyGridWrapper caseStudies={filteredStudies} />
+      {/* Direct rendering of case study cards for better performance */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        {filteredStudies.map((caseStudy, index) => (
+          <AnimatedElement 
+            key={caseStudy.id} 
+            animation="fadeInUp"
+            delay={index * 0.1}
+            className="h-full transform transition-transform hover:-translate-y-2 duration-300"
+          >
+            <CaseStudyCardServer 
+              caseStudy={caseStudy} 
+              index={index} 
+            />
+          </AnimatedElement>
+        ))}
+      </div>
     </div>
   );
 }

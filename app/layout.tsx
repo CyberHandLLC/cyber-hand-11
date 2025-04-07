@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { fontVariables, fontFallbacks } from "./font";
-import { ThemeProvider } from "@/lib/theme-context";
+import { Providers } from "./providers";
 import { PerformanceWrapper } from "./performance-wrapper";
 import { BaseStructuredData } from "@/lib/seo/structured-data";
 
@@ -125,15 +125,15 @@ export default function RootLayout({
         {/* DNS prefetch for common external domains */}
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
       </head>
-      <ThemeProvider>
-        <body className="font-adjustment-active antialiased text-body">
-          {/* Apply performance optimizations at the root level */}
+      <body className="font-adjustment-active antialiased text-body">
+        {/* Apply performance optimizations and providers at the root level */}
+        <Providers>
           <PerformanceWrapper>
             {/* No Navbar on homepage, it will be included in each page except the landing page */}
             {children}
           </PerformanceWrapper>
-        </body>
-      </ThemeProvider>
+        </Providers>
+      </body>
     </html>
   );
 }

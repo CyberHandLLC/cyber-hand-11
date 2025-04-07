@@ -325,6 +325,7 @@ For immediate implementation, prioritize these tasks:
 3. **Enhanced User Experience**
    - [x] Create skeleton loading components for case studies
    - [x] Implement streaming responses for data-heavy pages
+   - [x] Implement GDPR-compliant location opt-in system with cookies
    - [ ] Implement smooth page transitions
    - [ ] Enhance mobile navigation experience
    - [ ] Add theme preference detection and persistence
