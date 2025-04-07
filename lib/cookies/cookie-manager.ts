@@ -154,6 +154,7 @@ export function storeLocationData(locationData: {
   latitude?: number; 
   longitude?: number; 
   ip?: string;
+  ipVersion?: string;
   ipProvider?: string;
   isIpBased?: boolean;
 }): boolean {

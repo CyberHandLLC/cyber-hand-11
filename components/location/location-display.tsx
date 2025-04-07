@@ -171,6 +171,11 @@ export function LocationDisplay({
                 </p>
                 <p>
                   <span className="opacity-75">IP:</span> {locationData.ip}
+                  {locationData.ipVersion && (
+                    <span className="ml-2 text-xs bg-gray-800/80 text-amber-400 px-1.5 py-0.5 rounded">
+                      {locationData.ipVersion}
+                    </span>
+                  )}
                 </p>
                 {locationData.ipProvider && (
                   <p>

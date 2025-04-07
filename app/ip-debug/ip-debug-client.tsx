@@ -19,6 +19,7 @@ interface IPLocationData {
   latitude?: number;
   longitude?: number;
   ip: string;
+  ipVersion?: string;
   ipProvider?: string;
   isIpBased: boolean;
   error?: string;
@@ -94,7 +95,14 @@ export function IPDebugClient() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6 bg-gray-900/60 p-4 rounded-md">
             <div>
               <span className="text-gray-400 text-sm">IP Address:</span>
-              <div className="font-mono text-cyan-300">{ipData.ip}</div>
+              <div className="font-mono text-cyan-300">
+                {ipData.ip}
+                {ipData.ipVersion && (
+                  <span className="ml-2 text-xs text-amber-400 rounded-full bg-amber-900/30 px-2 py-0.5">
+                    {ipData.ipVersion}
+                  </span>
+                )}
+              </div>
             </div>
             
             {ipData.ipProvider && (

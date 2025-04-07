@@ -37,6 +37,7 @@ interface LocationData {
   loading: boolean;
   error: string | null;
   ip?: string;
+  ipVersion?: string;
   ipProvider?: string;
   isIpBased?: boolean;
 }
@@ -218,6 +219,7 @@ export function LocationProvider({ children, autoRequest = true }: LocationProvi
             loading: false,
             error: ipLocation.isIpBased ? 'Using approximate location based on network address' : null,
             ip: ipLocation.ip,
+            ipVersion: ipLocation.ipVersion,
             ipProvider: ipLocation.ipProvider,
             isIpBased: ipLocation.isIpBased
           });
@@ -229,6 +231,7 @@ export function LocationProvider({ children, autoRequest = true }: LocationProvi
             latitude: ipLocation.latitude,
             longitude: ipLocation.longitude,
             ip: ipLocation.ip,
+            ipVersion: ipLocation.ipVersion,
             ipProvider: ipLocation.ipProvider,
             isIpBased: ipLocation.isIpBased
           });

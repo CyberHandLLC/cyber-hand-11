@@ -15,9 +15,16 @@ const ipRequests = new Map<string, { count: number, timestamp: number }>();
 
 export async function GET(request: NextRequest) {
   try {
-    // Rate limiting - In Next.js the IP is in the headers or connection info
+    // Extract IP address from request headers (supports both IPv4 and IPv6)
     const forwardedFor = request.headers.get('x-forwarded-for');
-    const ip = forwardedFor ? forwardedFor.split(',')[0] : 'unknown';
+    const rawIp = forwardedFor ? forwardedFor.split(',')[0].trim() : 'unknown';
+    
+    // Determine if it's IPv4 or IPv6 and format accordingly
+    const isIpv6 = rawIp.includes(':');
+    const ip = rawIp;
+    
+    console.log(`Client IP detected: ${ip} (${isIpv6 ? 'IPv6' : 'IPv4'})`);
+    const ipVersion = isIpv6 ? 'IPv6' : 'IPv4';
     const now = Date.now();
     const requestData = ipRequests.get(ip);
     
@@ -75,6 +82,7 @@ export async function GET(request: NextRequest) {
       country: data.country || 'Unknown',
       isIpBased: true,
       ip: ip,
+      ipVersion: ipVersion,
       ipProvider: data.org || 'Unknown'
     });
   } catch (error) {
