@@ -8,6 +8,9 @@
  * - Supabase auth session management (future integration)
  */
 
+// Mark this file as using the Edge Runtime - required for geolocation on Vercel
+export const runtime = 'experimental-edge';
+
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
@@ -88,12 +91,15 @@ export async function middleware(request: ExtendedNextRequest) {
 export const config = {
   matcher: [
     /*
-     * Match all paths except:
-     * 1. /api (API routes)
-     * 2. /_next (Next.js internals)
-     * 3. /static (static files)
-     * 4. /favicon.ico, /robots.txt (common static files)
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - robots.txt (robots file)
+     * 
+     * This simpler pattern ensures middleware runs on all page routes
+     * while still excluding static assets
      */
-    '/((?!api|_next|static|favicon.ico|robots.txt).*)',
+    '/((?!_next/static|_next/image|favicon.ico|robots.txt).*)',
   ],
 };
