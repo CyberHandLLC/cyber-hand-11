@@ -153,6 +153,9 @@ export function storeLocationData(locationData: {
   region: string; 
   latitude?: number; 
   longitude?: number; 
+  ip?: string;
+  ipProvider?: string;
+  isIpBased?: boolean;
 }): boolean {
   if (!hasConsent(ConsentType.LOCATION)) {
     console.warn('Attempted to store location without consent');

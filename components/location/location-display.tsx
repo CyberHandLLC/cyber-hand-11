@@ -160,11 +160,14 @@ export function LocationDisplay({
               </p>
             )}
             
-            {/* Show IP information when using IP-based fallback */}
-            {locationData.isIpBased && locationData.ip && (
+            {/* Show IP information - check if it exists without requiring isIpBased flag */}
+            {locationData.ip ? (
               <div className="mt-1 pt-1 border-t border-gray-700 text-xs">
                 <p>
-                  <span className="text-amber-400/70">Fallback Method:</span> IP-based location
+                  <span className="text-amber-400/70">
+                    {locationData.isIpBased ? "Fallback Method:" : "Debug Info:"}
+                  </span> 
+                  {locationData.isIpBased ? "IP-based location" : "Network details"}
                 </p>
                 <p>
                   <span className="opacity-75">IP:</span> {locationData.ip}
@@ -174,6 +177,11 @@ export function LocationDisplay({
                     <span className="opacity-75">Network:</span> {locationData.ipProvider}
                   </p>
                 )}
+              </div>
+            ) : (
+              <div className="mt-1 pt-1 border-t border-gray-700 text-xs text-amber-400/70">
+                <p>IP information not available</p>
+                <p>Try refreshing or using the location debugger tool</p>
               </div>
             )}
             

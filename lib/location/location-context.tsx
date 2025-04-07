@@ -148,7 +148,11 @@ export function LocationProvider({ children, autoRequest = true }: LocationProvi
         storeLocationData({
           ...locationInfo,
           latitude: position.latitude,
-          longitude: position.longitude
+          longitude: position.longitude,
+          // Include any IP data if it was previously available from existing state
+          ...(locationData?.ip && { ip: locationData.ip }),
+          ...(locationData?.ipProvider && { ipProvider: locationData.ipProvider }),
+          ...(locationData?.isIpBased && { isIpBased: locationData.isIpBased })
         });
       } catch (geocodingError) {
         console.error('Error during geocoding:', geocodingError);
@@ -223,7 +227,10 @@ export function LocationProvider({ children, autoRequest = true }: LocationProvi
             city: ipLocation.city,
             region: ipLocation.region,
             latitude: ipLocation.latitude,
-            longitude: ipLocation.longitude
+            longitude: ipLocation.longitude,
+            ip: ipLocation.ip,
+            ipProvider: ipLocation.ipProvider,
+            isIpBased: ipLocation.isIpBased
           });
           
           // Successfully used fallback, return early
