@@ -32,6 +32,8 @@ import {
 interface LocationData {
   city: string;
   region: string;
+  latitude?: number;
+  longitude?: number;
   loading: boolean;
   error: string | null;
 }
@@ -58,6 +60,8 @@ interface LocationContextType {
 const defaultLocationData: LocationData = {
   city: 'Unknown',
   region: 'Unknown',
+  latitude: undefined,
+  longitude: undefined,
   loading: false,
   error: null
 };
@@ -109,10 +113,12 @@ export function LocationProvider({ children, autoRequest = true }: LocationProvi
         position.longitude
       );
       
-      // Update state
+      // Update state with coordinates and location info
       setLocationData({
         city: locationInfo.city,
         region: locationInfo.region,
+        latitude: position.latitude,
+        longitude: position.longitude,
         loading: false,
         error: null
       });

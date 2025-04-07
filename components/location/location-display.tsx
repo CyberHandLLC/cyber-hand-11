@@ -129,7 +129,9 @@ export function LocationDisplay({
           </div>
           <p className="text-sm text-gray-300">
             {locationData.city === 'Unknown' 
-              ? 'Location information not available' 
+              ? locationData.latitude && locationData.longitude
+                ? `Coordinates: ${locationData.latitude.toFixed(4)}, ${locationData.longitude.toFixed(4)}` 
+                : 'Location information not available' 
               : `${locationData.city}, ${locationData.region}`
             }
           </p>

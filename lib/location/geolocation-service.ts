@@ -85,6 +85,7 @@ export async function getCurrentPosition(): Promise<GeolocationPosition> {
 
 /**
  * Get city and region based on coordinates using reverse geocoding
+ * Uses our server-side API route to avoid CORS and rate limiting issues
  * 
  * @param {number} latitude - Latitude coordinate
  * @param {number} longitude - Longitude coordinate
@@ -95,21 +96,26 @@ export async function getLocationFromCoordinates(
   longitude: number
 ): Promise<{city: string, region: string}> {
   try {
-    // Use a free, privacy-friendly geocoding service
+    // Use our server-side API instead of direct external service calls
+    // This solves CORS issues, handles rate limits, and adds caching
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10`,
-      { headers: { 'Accept-Language': 'en' } }
+      `/api/geocode?lat=${latitude}&lng=${longitude}`
     );
     
     if (!response.ok) {
-      throw new Error('Geocoding service unavailable');
+      // If our API fails, get the error details
+      const errorData = await response.json().catch(() => ({}));
+      console.error('Geocoding API error:', errorData);
+      throw new Error(errorData.message || 'Geocoding service unavailable');
     }
     
+    // Parse the response from our API
     const data = await response.json();
     
+    // Ensure we have city and region, with fallbacks
     return {
-      city: data.address.city || data.address.town || data.address.village || 'Unknown',
-      region: data.address.state || data.address.county || 'Unknown'
+      city: data.city || 'Unknown',
+      region: data.region || 'Unknown'
     };
   } catch (error) {
     console.error('Error getting location from coordinates:', error);
