@@ -19,6 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ContentErrorBoundary } from "@/app/components/error-boundary";
 import { createMetadata } from "@/lib/seo/metadata";
 import { WebPageSchema } from "@/lib/seo/structured-data";
+import { trackPageView } from "@/lib/analytics/geolocation-tracker";
 
 /**
  * Static Hero Content Component - Server Component
@@ -100,6 +101,9 @@ export const metadata = createMetadata({
  * Now enhanced with standardized skeleton components, error boundaries, and SEO optimization
  */
 export default function Home() {
+  // Track page view with server-side geolocation data
+  // Geolocation is captured by middleware and passed via request headers
+  trackPageView('/', 'homepage_view');
   return (
     <main className="relative min-h-screen flex items-center justify-center overflow-hidden cyber-circuit-bg">
       {/* Structured data for the homepage */}

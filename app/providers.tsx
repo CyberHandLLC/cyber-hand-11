@@ -9,7 +9,6 @@
 
 import React, { ReactNode } from 'react';
 import { ThemeProvider } from '@/lib/theme-context';
-import { CookieConsentBanner } from '@/components/consent/cookie-consent-banner';
 
 interface ProvidersProps {
   children: ReactNode;
@@ -19,7 +18,6 @@ export function Providers({ children }: ProvidersProps) {
   return (
     <ThemeProvider>
       {children}
-      <CookieConsentBanner />
     </ThemeProvider>
   );
 }
