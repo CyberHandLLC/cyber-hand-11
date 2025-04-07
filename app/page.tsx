@@ -19,7 +19,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ContentErrorBoundary } from "@/app/components/error-boundary";
 import { createMetadata } from "@/lib/seo/metadata";
 import { WebPageSchema } from "@/lib/seo/structured-data";
-import { LocationExample } from "./components/location-example";
 
 /**
  * Static Hero Content Component - Server Component
@@ -135,12 +134,7 @@ export default function Home() {
           </Suspense>
         </ContentErrorBoundary>
         
-        {/* Location services example with appropriate error boundary */}
-        <ContentErrorBoundary>
-          <Suspense fallback={<div className="mt-10 animate-pulse bg-gray-800/30 h-64 rounded-lg mx-auto max-w-xl"></div>}>
-            <LocationExample />
-          </Suspense>
-        </ContentErrorBoundary>
+
       </div>
     </main>
   );

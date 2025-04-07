@@ -3,14 +3,12 @@
 /**
  * Consent Providers
  * 
- * Wraps the application with all consent-related providers,
- * including location consent.
+ * Wraps the application with consent-related providers.
  * 
  * @file providers/consent-providers.tsx
  */
 
 import React from 'react';
-import { LocationProvider } from '@/lib/location/location-context';
 import { CookieConsentBanner } from '@/components/consent/cookie-consent-banner';
 
 export interface ConsentProvidersProps {
@@ -22,9 +20,9 @@ export interface ConsentProvidersProps {
  */
 export function ConsentProviders({ children }: ConsentProvidersProps) {
   return (
-    <LocationProvider>
+    <>
       {children}
       <CookieConsentBanner />
-    </LocationProvider>
+    </>
   );
 }

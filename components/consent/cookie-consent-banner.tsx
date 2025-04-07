@@ -4,7 +4,7 @@
  * Cookie Consent Banner Component
  * 
  * GDPR-compliant cookie consent banner that allows users to
- * manage their cookie preferences, including location data.
+ * manage their cookie preferences.
  * 
  * @file components/consent/cookie-consent-banner.tsx
  */
@@ -16,11 +16,8 @@ import {
   ConsentType, 
   DEFAULT_CONSENT,
   getConsentPreferences, 
-  saveConsentPreferences,
-  // Using underscore prefix for unused imports per coding standard
-  updateConsent as _updateConsent
+  saveConsentPreferences
 } from '@/lib/cookies/cookie-manager';
-import { useLocation } from '@/lib/location/location-context';
 import { Button } from '@/components/ui/button';
 
 /**
@@ -31,7 +28,6 @@ export function CookieConsentBanner() {
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
   const [preferences, setPreferences] = useState<ConsentPreferences>(DEFAULT_CONSENT);
   const [hasInteracted, setHasInteracted] = useState(false);
-  const { requestLocationPermission, clearLocationPermission } = useLocation();
   
   // Load saved preferences on mount
   useEffect(() => {
@@ -41,8 +37,7 @@ export function CookieConsentBanner() {
     // If user has already interacted with consent, don't show the banner
     setHasInteracted(
       savedPreferences.analytics !== ConsentStatus.PENDING ||
-      savedPreferences.marketing !== ConsentStatus.PENDING ||
-      savedPreferences.location !== ConsentStatus.PENDING
+      savedPreferences.marketing !== ConsentStatus.PENDING
     );
   }, []);
   
@@ -56,14 +51,7 @@ export function CookieConsentBanner() {
         ? ConsentStatus.DENIED 
         : ConsentStatus.GRANTED;
       
-      // Special handling for location consent
-      if (type === ConsentType.LOCATION) {
-        if (newStatus === ConsentStatus.GRANTED) {
-          // This will be handled after save
-        } else {
-          clearLocationPermission();
-        }
-      }
+
       
       return {
         ...prev,
@@ -78,15 +66,13 @@ export function CookieConsentBanner() {
       ...preferences,
       [ConsentType.ANALYTICS]: ConsentStatus.GRANTED,
       [ConsentType.MARKETING]: ConsentStatus.GRANTED,
-      [ConsentType.LOCATION]: ConsentStatus.GRANTED,
     };
     
     setPreferences(newPreferences);
     saveConsentPreferences(newPreferences);
     setHasInteracted(true);
     
-    // Request location permission 
-    requestLocationPermission();
+
   };
   
   // Handle declining all non-essential cookies
@@ -95,15 +81,13 @@ export function CookieConsentBanner() {
       ...preferences,
       [ConsentType.ANALYTICS]: ConsentStatus.DENIED,
       [ConsentType.MARKETING]: ConsentStatus.DENIED,
-      [ConsentType.LOCATION]: ConsentStatus.DENIED,
     };
     
     setPreferences(newPreferences);
     saveConsentPreferences(newPreferences);
     setHasInteracted(true);
     
-    // Clear location permission
-    clearLocationPermission();
+
   };
   
   // Handle saving preferences
@@ -112,12 +96,7 @@ export function CookieConsentBanner() {
     setHasInteracted(true);
     setShowAdvancedSettings(false);
     
-    // Handle location permission
-    if (preferences[ConsentType.LOCATION] === ConsentStatus.GRANTED) {
-      requestLocationPermission();
-    } else {
-      clearLocationPermission();
-    }
+
   };
   
   // Skip rendering if user has already interacted
@@ -222,22 +201,7 @@ export function CookieConsentBanner() {
                 </label>
               </div>
               
-              {/* Location data */}
-              <div className="flex items-center justify-between p-3 border border-gray-700 rounded-md bg-gray-800/50">
-                <div>
-                  <h3 className="font-medium">Location Services</h3>
-                  <p className="text-xs text-gray-400">Allow us to access your approximate location to provide localized content.</p>
-                </div>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input 
-                    type="checkbox" 
-                    checked={preferences[ConsentType.LOCATION] === ConsentStatus.GRANTED}
-                    onChange={() => handleToggleConsent(ConsentType.LOCATION)}
-                    className="sr-only peer"
-                  />
-                  <div className="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-600"></div>
-                </label>
-              </div>
+
             </div>
             
             {/* Footer buttons */}

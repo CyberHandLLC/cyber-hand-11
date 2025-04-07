@@ -1,38 +1,38 @@
-### Testing & Reliability:
+Cyber Hand Project Rules
 
-- Configure Jest and React Testing Library
-- Create dedicated component tests for UI elements
-- Update unit tests when logic changes
-- Place tests in /tests folder mirroring main app structure
-- Include tests for: expected use, edge case, failure case
-- Use snapshot testing for UI components
-### Task Completion:
+### Core Principles
+Next.js 15.2.4/React 19 project with streaming focus
+TypeScript-first, modular (<500 lines), Server/Client Component separation
+Read PLANNING.md/TASK.md before starting any work
+Never assume context, verify packages and paths
 
-- Mark completed tasks in TASK.md after finishing
-- Add discovered sub-tasks to TASK.md under "Discovered During Work"
+### Architecture
+Server Components for data fetching, Client Components at leaf nodes only
+Implement proper Suspense boundaries following Next.js 15 streaming patterns
+Use React's cache() for deduplication and parallel data fetching
+Keep UI components separate from data fetching logic
+API route parameter handling as Promises (Next.js 15 change)
 
-### Style & Conventions:
+### Performance
+Budget: <3s initial load (3G), <300KB JS bundle
+Core Web Vitals targets: LCP <2.5s, TBT <200ms, CLS <0.1
+Lighthouse scores >90 for Performance/SEO/Accessibility
+Optimize: Next.js Image component, font preloading, skeleton loaders
+Memory: code splitting, heap limits, event cleanup
 
-- Use TypeScript as primary language
-- Follow theme-based styling approach
-- Implement Next.js data fetching with Server Components
-- Use pydantic for data validation
-- Adhere to React 19 and Next.js 15 best practices
-- Use memory-efficient state management
-- Use FastAPI for APIs and SQLAlchemy/SQLModel for ORM
-- Write Google-style docstrings for all functions
+### Code Quality
+TypeScript interfaces instead of 'any', underscore prefix for unused variables
+Content security policies (dev vs prod), proper error boundaries
+Theme-based styling with centralized CSS variables
+Document code, update README, mark completed TASK.md items
 
-### Development Approach:
+### Components
+'use client' directive only when required for interactivity
+Client component wrappers to prevent serialization errors
+Follow established component hierarchy and naming conventions
+Test files mirroring component structure
 
-- Use Server Components for data fetching and non-interactive UI
-- Restrict Client Components to interactive elements
-- Follow performance optimization practices
-- Implement memory profiling during development
-
-### Memory Management:
-
-- Configure IDE for appropriate heap size limits
-- Implement workspace-specific memory settings
-- Use code splitting to reduce initial load time
-- Monitor bundle size impact on memory usage
-- Implement proper cleanup for subscriptions and event listeners
+### SEO & Metadata
+Consistent metadata components, JSON-LD structured data
+Canonical URLs, semantic HTML, accessibility standards
+Privacy-focused analytics with custom event tracking

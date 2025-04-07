@@ -9,7 +9,6 @@
 
 import React, { ReactNode } from 'react';
 import { ThemeProvider } from '@/lib/theme-context';
-import { LocationProvider } from '@/lib/location/location-context';
 import { CookieConsentBanner } from '@/components/consent/cookie-consent-banner';
 
 interface ProvidersProps {
@@ -19,10 +18,8 @@ interface ProvidersProps {
 export function Providers({ children }: ProvidersProps) {
   return (
     <ThemeProvider>
-      <LocationProvider autoRequest={false}>
-        {children}
-        <CookieConsentBanner />
-      </LocationProvider>
+      {children}
+      <CookieConsentBanner />
     </ThemeProvider>
   );
 }

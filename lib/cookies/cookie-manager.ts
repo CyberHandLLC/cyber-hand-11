@@ -7,7 +7,7 @@
  * @module lib/cookies/cookie-manager
  */
 
-import { setCookie, getCookie, deleteCookie } from 'cookies-next';
+import { setCookie, getCookie } from 'cookies-next';
 import type { OptionsType } from 'cookies-next';
 
 /**
@@ -17,7 +17,6 @@ export enum ConsentType {
   ESSENTIAL = 'essential',
   ANALYTICS = 'analytics',
   MARKETING = 'marketing',
-  LOCATION = 'location',
 }
 
 /**
@@ -36,7 +35,6 @@ export interface ConsentPreferences {
   [ConsentType.ESSENTIAL]: ConsentStatus;
   [ConsentType.ANALYTICS]: ConsentStatus;
   [ConsentType.MARKETING]: ConsentStatus;
-  [ConsentType.LOCATION]: ConsentStatus;
   lastUpdated: number;
 }
 
@@ -47,13 +45,11 @@ export const DEFAULT_CONSENT: ConsentPreferences = {
   [ConsentType.ESSENTIAL]: ConsentStatus.GRANTED, // Essential cookies are always granted
   [ConsentType.ANALYTICS]: ConsentStatus.PENDING,
   [ConsentType.MARKETING]: ConsentStatus.PENDING,
-  [ConsentType.LOCATION]: ConsentStatus.PENDING,
   lastUpdated: Date.now(),
 };
 
-// Cookie names
+// Cookie name
 const CONSENT_COOKIE = 'cyberhand-cookie-consent';
-const LOCATION_COOKIE = 'cyberhand-location-data';
 
 // Cookie options with secure settings
 const cookieOptions: OptionsType = {
@@ -138,70 +134,6 @@ export function updateConsent(type: ConsentType, status: ConsentStatus): boolean
   return saveConsentPreferences(updatedPreferences);
 }
 
-/**
- * Store location data in a cookie (only if location consent is granted)
- * 
- * @param {Object} locationData - Location data to store
- * @param {string} locationData.city - City name
- * @param {string} locationData.region - Region/state name
- * @param {number} [locationData.latitude] - Latitude coordinate
- * @param {number} [locationData.longitude] - Longitude coordinate
- * @returns {boolean} Success status
- */
-export function storeLocationData(locationData: { 
-  city: string; 
-  region: string; 
-  latitude?: number; 
-  longitude?: number; 
-  ip?: string;
-  ipVersion?: string;
-  ipProvider?: string;
-  isIpBased?: boolean;
-}): boolean {
-  if (!hasConsent(ConsentType.LOCATION)) {
-    console.warn('Attempted to store location without consent');
-    return false;
-  }
-  
-  try {
-    setCookie(LOCATION_COOKIE, JSON.stringify(locationData), cookieOptions);
-    return true;
-  } catch (error) {
-    console.error('Error storing location data:', error);
-    return false;
-  }
-}
 
-/**
- * Get stored location data from cookie
- * 
- * @returns {Object|null} Location data or null if not found
- */
-export function getLocationData(): { city: string; region: string } | null {
-  try {
-    const locationCookie = getCookie(LOCATION_COOKIE);
-    if (!locationCookie) {
-      return null;
-    }
-    
-    return JSON.parse(String(locationCookie)) as { city: string; region: string };
-  } catch (error) {
-    console.error('Error parsing location cookie:', error);
-    return null;
-  }
-}
 
-/**
- * Clear stored location data
- * 
- * @returns {boolean} Success status
- */
-export function clearLocationData(): boolean {
-  try {
-    deleteCookie(LOCATION_COOKIE);
-    return true;
-  } catch (error) {
-    console.error('Error clearing location data:', error);
-    return false;
-  }
-}
+
