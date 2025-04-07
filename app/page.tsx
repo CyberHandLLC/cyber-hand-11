@@ -6,12 +6,16 @@
  * - Interactive elements isolated to Client Components
  * - Appropriate Suspense boundaries for progressive streaming
  * - Integration with route-level loading.tsx for initial loading state
+ * - Standardized skeleton components for consistent loading experience
+ * - Error boundaries for graceful error handling
  */
 
 import { Suspense } from 'react';
 import { CyberLogo } from "@/components/custom/cyber-logo";
 import { HomepageButtons } from "./components/homepage-buttons";
 import { CircuitEffectsWrapper } from "./components/circuit-effects-wrapper";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ContentErrorBoundary } from "@/app/components/error-boundary";
 
 /**
  * Static Hero Content Component - Server Component
@@ -35,25 +39,43 @@ function HomeHero() {
 
 /**
  * CircuitEffectsSkeleton Component
- * Placeholder while circuit effects are loading
+ * Standardized placeholder while circuit effects are loading
  */
 function CircuitEffectsSkeleton() {
   return (
-    <div className="absolute inset-0 z-5 opacity-10 pointer-events-none">
+    <div className="absolute inset-0 z-5 opacity-10 pointer-events-none" aria-hidden="true">
       {/* Simple placeholder for circuit effects */}
       {Array.from({ length: 4 }).map((_, i) => (
-        <div 
+        <Skeleton
           key={i}
           className="absolute h-px bg-cyan-500/20"
+          pulse={false}
           style={{
             width: `${50 + i * 20}px`,
             top: `${20 + i * 25}%`,
             left: `${10 + i * 15}%`,
             opacity: 0.3,
-            transform: 'rotate(45deg)'
+            transform: 'rotate(45deg)',
+            animationDelay: `${i * 0.15}s`
           }}
-        ></div>
+        />
       ))}
+    </div>
+  );
+}
+
+/**
+ * Button Skeleton Component
+ * Standardized placeholder for homepage buttons
+ */
+function ButtonsSkeleton() {
+  return (
+    <div className="inline-flex flex-wrap gap-3 sm:gap-4 justify-center mt-6 sm:mt-8">
+      <Skeleton className="h-10 w-32 bg-cyan-500/30 rounded" />
+      <Skeleton 
+        className="h-10 w-32 bg-gray-700/30 border border-gray-700/50 rounded"
+        animationDelay="0.15s"
+      />
     </div>
   );
 }
@@ -61,6 +83,7 @@ function CircuitEffectsSkeleton() {
 /**
  * Home Page - Main Component
  * Server Component that delegates interactive elements to Client Components
+ * Now enhanced with standardized skeleton components and error boundaries
  */
 export default function Home() {
   return (
@@ -74,20 +97,19 @@ export default function Home() {
         {/* Static hero content rendered immediately */}
         <HomeHero />
 
-        {/* Interactive buttons in a Client Component */}
-        <Suspense fallback={
-          <div className="inline-flex flex-wrap gap-3 sm:gap-4 justify-center mt-6 sm:mt-8">
-            <div className="h-10 w-32 bg-cyan-500/30 rounded animate-pulse"></div>
-            <div className="h-10 w-32 bg-gray-700/30 border border-gray-700/50 rounded animate-pulse"></div>
-          </div>
-        }>
-          <HomepageButtons />
-        </Suspense>
+        {/* Interactive buttons in a Client Component with error boundary */}
+        <ContentErrorBoundary>
+          <Suspense fallback={<ButtonsSkeleton />}>
+            <HomepageButtons />
+          </Suspense>
+        </ContentErrorBoundary>
 
-        {/* Circuit effects with appropriate Suspense boundary */}
-        <Suspense fallback={<CircuitEffectsSkeleton />}>
-          <CircuitEffectsWrapper />
-        </Suspense>
+        {/* Circuit effects with appropriate Suspense boundary and error handling */}
+        <ContentErrorBoundary>
+          <Suspense fallback={<CircuitEffectsSkeleton />}>
+            <CircuitEffectsWrapper />
+          </Suspense>
+        </ContentErrorBoundary>
       </div>
     </main>
   );

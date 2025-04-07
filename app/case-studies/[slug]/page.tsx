@@ -1,4 +1,6 @@
 import { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import Link from 'next/link';
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
 import { caseStudies } from "@/data/case-studies";
 import { CaseStudyClientWrapper } from "@/components/case-studies/case-study-client-wrapper";
@@ -19,58 +21,39 @@ function CaseStudyNotFound() {
   );
 }
 
-/**
- * HeaderSkeleton Component
- * Skeleton UI for the case study header while it's loading
- */
-function HeaderSkeleton() {
-  return (
-    <div className="py-8">
-      <div className="h-10 bg-gray-100 dark:bg-gray-800 rounded animate-pulse mb-6 w-3/4 max-w-xl"></div>
-      <div className="h-6 bg-gray-100 dark:bg-gray-800 rounded animate-pulse mb-8 w-1/2 max-w-md"></div>
-    </div>
-  );
-}
+import { HeadingSkeleton, TextSkeleton, ImageSkeleton, SectionSkeleton, CardGridSkeleton } from "@/components/ui/skeleton";
 
 /**
- * ContentSkeleton Component
- * Skeleton UI for the case study content while it's loading
+ * CaseStudyDetailSkeleton Component
+ * Skeleton UI for the case study detail page while it's loading.
+ * Uses standardized skeleton components for consistency across the app.
  */
-function ContentSkeleton() {
+function CaseStudyDetailSkeleton() {
   return (
-    <div className="py-8 space-y-8">
-      <div className="space-y-4">
-        <div className="h-6 bg-gray-100 dark:bg-gray-800 rounded animate-pulse w-1/4"></div>
-        <div className="h-4 bg-gray-100 dark:bg-gray-800 rounded animate-pulse w-full"></div>
-        <div className="h-4 bg-gray-100 dark:bg-gray-800 rounded animate-pulse w-5/6"></div>
+    <div className="space-y-12">
+      {/* Header section */}
+      <div className="py-8">
+        <HeadingSkeleton level={1} width="75%" className="max-w-xl" />
+        <TextSkeleton width="50%" className="max-w-md" />
       </div>
-      <div className="space-y-4">
-        <div className="h-6 bg-gray-100 dark:bg-gray-800 rounded animate-pulse w-1/4"></div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="h-32 bg-gray-100 dark:bg-gray-800 rounded animate-pulse"></div>
-          <div className="h-32 bg-gray-100 dark:bg-gray-800 rounded animate-pulse"></div>
+      
+      {/* Main content */}
+      <div className="py-8 space-y-8">
+        <SectionSkeleton />
+        
+        <div className="space-y-4">
+          <HeadingSkeleton level={3} width="25%" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ImageSkeleton height="200px" />
+            <ImageSkeleton height="200px" />
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-/**
- * RelatedSkeleton Component
- * Skeleton UI for related case studies while they're loading
- */
-function RelatedSkeleton() {
-  return (
-    <div className="py-8">
-      <div className="h-6 bg-gray-100 dark:bg-gray-800 rounded animate-pulse w-1/4 mb-6"></div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <div 
-            key={i} 
-            className="h-48 bg-gray-100 dark:bg-gray-800 rounded animate-pulse"
-            style={{ animationDelay: `${i * 0.15}s` }}
-          ></div>
-        ))}
+      
+      {/* Related section */}
+      <div className="py-8">
+        <HeadingSkeleton level={3} width="25%" className="mb-6" />
+        <CardGridSkeleton count={3} columns={3} />
       </div>
     </div>
   );
@@ -94,18 +77,43 @@ async function CaseStudyContent({ slug }: { slug: string }) {
 }
 
 /**
+ * ErrorBoundary for case study page
+ * Provides a fallback UI when errors occur during data fetching or rendering
+ */
+function CaseStudyErrorFallback({ error }: { error: Error }) {
+  return (
+    <PageLayout>
+      <SectionContainer className="py-24">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">Something went wrong</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
+            {error.message || "There was an error loading this case study."}
+          </p>
+          <Link href="/case-studies" className="text-primary hover:underline">
+            Return to all case studies
+          </Link>
+        </div>
+      </SectionContainer>
+    </PageLayout>
+  );
+}
+
+/**
  * Main Case Study Page component - Server Component
- * Uses Next.js 15 streaming with async components and Suspense boundaries
+ * Uses Next.js 15 streaming with a single Suspense boundary for better performance
+ * and consistent error handling
  */
 export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
   // Await and destructure params
   const { slug } = await params;
   
   return (
-    <Suspense fallback={<HeaderSkeleton />}>
-      <Suspense fallback={<ContentSkeleton />}>
-        <CaseStudyContent slug={slug} />
-      </Suspense>
-    </Suspense>
+    <ErrorBoundary fallback={<CaseStudyErrorFallback error={new Error("Failed to load case study")} />}>
+      <PageLayout>
+        <Suspense fallback={<CaseStudyDetailSkeleton />}>
+          <CaseStudyContent slug={slug} />
+        </Suspense>
+      </PageLayout>
+    </ErrorBoundary>
   );
 }

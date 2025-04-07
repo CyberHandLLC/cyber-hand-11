@@ -1,96 +1,85 @@
-"use client";
+/**
+ * Resources Page - Server Component with Client Component Islands
+ * 
+ * This page leverages Next.js 15's built-in streaming capabilities with:
+ * - The page itself as a Server Component
+ * - Static content rendered immediately
+ * - Interactive elements isolated to Client Components
+ * - Optimized Suspense boundaries for progressive streaming
+ * - Integration with route-level loading.tsx for initial loading state
+ * - Standardized skeleton components for consistent loading experience
+ * - Comprehensive error boundaries for graceful error recovery
+ */
 
-import { useTheme } from "@/lib/theme-context";
-import { getThemeStyle } from "@/lib/theme-utils";
+import { Suspense } from 'react';
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
-import { AnimatedElement } from "@/lib/animation-utils";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { ArrowRightIcon } from "@/components/ui/icons";
+import { ResourcesContent } from "./components/resources-content";
+import { HeadingSkeleton, TextSkeleton, Skeleton } from "@/components/ui/skeleton";
+import { ContentErrorBoundary } from "@/app/components/error-boundary";
 
+/**
+ * ResourcesContentSkeleton Component
+ * Standardized skeleton UI for resources content while it's loading
+ */
+function ResourcesContentSkeleton() {
+  return (
+    <div className="max-w-3xl mx-auto text-center">
+      <HeadingSkeleton level={1} width="60%" className="mx-auto mb-6" />
+      <div className="w-24 h-1 bg-gray-700 mx-auto mb-8"></div>
+      <TextSkeleton width="90%" className="mx-auto mb-8" />
+      
+      <div className="rounded-lg border border-gray-800/30 bg-gray-900/30 p-8 mb-12">
+        <div className="flex items-center justify-center mb-6">
+          <Skeleton className="w-12 h-12 rounded-full mr-4" />
+          <HeadingSkeleton level={2} width="40%" />
+        </div>
+        
+        <div className="space-y-4 text-left mb-8">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="flex items-start">
+              <Skeleton className="w-2 h-2 rounded-full mt-2 mr-3" animationDelay={`${i * 0.1}s`} />
+              <TextSkeleton className="w-11/12" animationDelay={`${i * 0.1}s`} />
+            </div>
+          ))}
+        </div>
+        
+        <div className="text-center mt-8">
+          <TextSkeleton width="70%" className="mx-auto mb-4" />
+          <Skeleton className="h-10 w-40 mx-auto rounded-md" />
+        </div>
+      </div>
+      
+      <div className="flex flex-wrap justify-center gap-4 mt-8">
+        <Skeleton className="h-10 w-32 rounded-md" />
+        <Skeleton className="h-10 w-32 rounded-md" animationDelay="0.15s" />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Export metadata for SEO
+ */
+export const metadata = {
+  title: 'Resources | Cyber Hand',
+  description: 'Access our comprehensive library of digital marketing and web development resources to help grow your business.',
+};
+
+/**
+ * Resources page component showing upcoming resources
+ * Implements Next.js 15 streaming patterns with Server and Client Components
+ */
 export default function ResourcesPage() {
-  const { theme } = useTheme();
-  
   return (
     <PageLayout>
       {/* Hero section with coming soon messaging */}
       <section className="py-24 md:py-32">
         <SectionContainer>
-          <div className="max-w-3xl mx-auto text-center">
-            <AnimatedElement animation="fadeInUp" delay={0.1}>
-              <h1 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent mb-6">
-                Resources Coming Soon
-              </h1>
-              
-              <div className="mb-8 w-24 h-1 bg-cyan-500 mx-auto"></div>
-              
-              <p className={`text-lg md:text-xl mb-8 ${getThemeStyle('text-secondary', theme)}`}>
-                We&#39;re building a comprehensive library of resources to help you excel in digital marketing and web development.
-              </p>
-              
-              <div className="rounded-lg border border-gray-800/30 bg-gradient-to-br from-black/60 to-transparent backdrop-blur-sm p-8 mb-12">
-                <div className="flex items-center justify-center mb-6">
-                  <div className="w-12 h-12 rounded-full bg-cyan-500/20 flex items-center justify-center mr-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <h2 className="text-xl font-semibold text-white">What to Expect</h2>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  {[
-                    "In-depth marketing guides and tutorials",
-                    "Web development best practices",
-                    "Case study breakdowns and analysis",
-                    "Free templates and tools to boost your business"
-                  ].map((item, index) => (
-                    <div key={index} className="flex items-start">
-                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-cyan-500/50 flex items-center justify-center mt-1 mr-3">
-                        <span className="w-2 h-2 bg-cyan-400 rounded-full"></span>
-                      </div>
-                      <p className={getThemeStyle('text-secondary', theme)}>{item}</p>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="text-center mt-8">
-                  <p className={`text-sm italic mb-4 ${getThemeStyle('text-secondary', theme)}`}>
-                    Want to be notified when our resources are available?
-                  </p>
-                  
-                  <Link href="/contact">
-                    <Button 
-                      variant="primary" 
-                      size="lg"
-                      className="px-6"
-                    >
-                      Contact Us
-                      <ArrowRightIcon className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </AnimatedElement>
-            
-            <AnimatedElement animation="fadeIn" delay={0.4}>
-              <div className="flex flex-wrap justify-center gap-4">
-                <Link 
-                  href="/services"
-                  className="inline-flex items-center bg-black/40 border border-gray-700/30 hover:border-cyan-500/50 px-4 py-2 rounded-md text-sm font-medium text-white/90 hover:text-white transition-all duration-300 backdrop-blur-sm"
-                >
-                  Explore Our Services
-                </Link>
-                
-                <Link 
-                  href="/case-studies"
-                  className="inline-flex items-center bg-black/40 border border-gray-700/30 hover:border-cyan-500/50 px-4 py-2 rounded-md text-sm font-medium text-white/90 hover:text-white transition-all duration-300 backdrop-blur-sm"
-                >
-                  View Case Studies
-                </Link>
-              </div>
-            </AnimatedElement>
-          </div>
+          <ContentErrorBoundary>
+            <Suspense fallback={<ResourcesContentSkeleton />}>
+              <ResourcesContent />
+            </Suspense>
+          </ContentErrorBoundary>
         </SectionContainer>
       </section>
     </PageLayout>

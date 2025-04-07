@@ -70,13 +70,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${fontVariables.orbitron} ${fontVariables.inter}`}>
       <head>
-        {/* Preload critical assets */}
-        <link 
-          rel="preload"
-          href="/images/bg-website-design-seo-marketing-ai-intergration-hosting-cyberhand.png"
-          as="image"
-          type="image/png"
-        />
+        {/* Critical assets preloading - removed unused image preload */}
         
         {/* Font optimization: Preconnect to font domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -120,15 +114,9 @@ export default function RootLayout({
           }
         ` }} />
         
-        {/* Preload critical CSS */}
-        <link 
-          rel="preload" 
-          href="/styles/critical.css" 
-          as="style"
-        />
+        {/* Critical CSS is now included directly in the build, no preload needed */}
         
-        {/* Add resource hints for other important resources */}
-        <link rel="prefetch" href="/images/logo.svg" />
+        {/* Resource hints - logo.svg prefetch removed due to 404 error */}
         
         {/* DNS prefetch for common external domains */}
         <link rel="dns-prefetch" href="https://images.unsplash.com" />

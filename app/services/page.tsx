@@ -1,122 +1,109 @@
-"use client";
+/**
+ * Services Page - Server Component with Client Component Islands
+ * 
+ * This page leverages Next.js 15's built-in streaming capabilities with:
+ * - Static content rendered as Server Components
+ * - Interactive elements isolated to Client Components
+ * - Optimized Suspense boundaries for progressive streaming
+ * - Standardized skeleton components for consistent loading experience
+ * - Comprehensive error boundaries for graceful error recovery
+ */
 
-import { useState, useRef as _useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { useTheme } from "@/lib/theme-context";
-import { ServiceCard } from "@/components/custom/service-card";
-import { ServiceCarousel } from "@/components/custom/service-carousel";
+import { Suspense } from 'react';
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
 import { services } from "@/data/services";
+import { ServicesGrid, ServicesMobile, ServicesCTA } from "./components";
+import { HeadingSkeleton, TextSkeleton, CardGridSkeleton, Skeleton } from "@/components/ui/skeleton";
+import { ContentErrorBoundary } from "@/app/components/error-boundary";
 
-// Constants
-const MOBILE_BREAKPOINT = 768; // px
+/**
+ * Services Grid Loading Skeleton
+ */
+function ServicesGridSkeleton() {
+  return <CardGridSkeleton count={5} columns={3} className="mb-12" />;
+}
+
+/**
+ * Services Mobile Loading Skeleton
+ */
+function ServicesMobileSkeleton() {
+  return (
+    <div className="space-y-4 mb-12">
+      <HeadingSkeleton level={3} width="60%" className="mx-auto" />
+      <div className="bg-gray-900/30 p-4 rounded-lg h-56"></div>
+      <div className="flex justify-center gap-2">
+        {[1, 2, 3].map((i) => (
+          <Skeleton 
+            key={i} 
+            className="w-2 h-2 rounded-full" 
+            animationDelay={`${i * 0.1}s`} 
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * CTA Section Loading Skeleton
+ */
+function CTASkeleton() {
+  return (
+    <div className="mt-16 p-8 rounded-xl bg-gray-900/30 border border-gray-800/50 text-center">
+      <HeadingSkeleton level={2} width="50%" className="mx-auto mb-4" />
+      <TextSkeleton width="70%" className="mx-auto mb-6" />
+      <Skeleton className="h-10 w-32 mx-auto" />
+    </div>
+  );
+}
 
 /**
  * Services page component showing all service offerings with pricing 
+ * Implements Next.js 15 streaming patterns with Server and Client Components
  */
 export default function Services() {
-  const router = useRouter();
-  const { theme } = useTheme();
-  const [_isMobile, setIsMobile] = useState(false);
+  // Page metadata
+  const title = "Our Digital Services";
+  const subtitle = "Choose from our range of digital marketing and web services to elevate your online presence. All plans include regular updates and dedicated support.";
   
-  // Use useEffect to safely access window object on client-side only
-  useEffect(() => {
-    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Theme-based styling for text and card elements
-  const textClass = theme === 'light'
-    ? "text-gray-800"
-    : "text-white";
-    
-  const subtitleClass = theme === 'light'
-    ? "text-gray-600"
-    : "text-gray-300";
-    
-  const ctaCardClass = theme === 'light' 
-    ? 'bg-white shadow-xl' 
-    : 'bg-gray-900/50 border border-gray-800';
-
-  // Handle service selection
-  const handleSelectService = (serviceId: string) => {
-    // Navigate to contact page with selected service
-    router.push(`/contact?service=${serviceId}`);
-  };
 
   return (
     <PageLayout>
       {/* Hero section with title */}
       <SectionContainer className="pt-20 lg:pt-28 text-center">
-        <h1 
-          className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 ${textClass}`}
-        >
-          Our Digital Services
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
+          {title}
         </h1>
-        <p 
-          className={`${subtitleClass} max-w-3xl mx-auto text-lg mb-16`}
-        >
-          Choose from our range of digital marketing and web services to elevate your online presence. 
-          All plans include regular updates and dedicated support.
+        <p className="text-gray-300 dark:text-gray-300 max-w-3xl mx-auto text-lg mb-16">
+          {subtitle}
         </p>
       </SectionContainer>
       
       <SectionContainer>
-        {/* Desktop Service Grid */}
-        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-8">
-          {services.map((service, index) => (
-            <ServiceCard
-              key={service.id}
-              {...service}
-              index={index}
-              onSelect={handleSelectService}
-            />
-          ))}
+        {/* Desktop Service Grid with ErrorBoundary and Suspense */}
+        <div className="hidden md:block">
+          <ContentErrorBoundary>
+            <Suspense fallback={<ServicesGridSkeleton />}>
+              <ServicesGrid services={services} />
+            </Suspense>
+          </ContentErrorBoundary>
         </div>
         
-        {/* Mobile Service Carousel */}
+        {/* Mobile Service Carousel with ErrorBoundary and Suspense */}
         <div className="md:hidden">
-          <ServiceCarousel 
-            services={services} 
-            onSelectService={handleSelectService} 
-          />
+          <ContentErrorBoundary>
+            <Suspense fallback={<ServicesMobileSkeleton />}>
+              <ServicesMobile services={services} />
+            </Suspense>
+          </ContentErrorBoundary>
         </div>
         
-        {/* CTA Section */}
-        <div 
-          className={`mt-20 text-center p-8 rounded-xl ${ctaCardClass}`}
-        >
-          <h2 className={`text-2xl sm:text-3xl font-bold mb-4 ${textClass}`}>Need a custom solution?</h2>
-          <p className={`${subtitleClass} max-w-2xl mx-auto mb-6`}>
-            We can create a tailored package that perfectly fits your business needs and budget.
-          </p>
-          <Button 
-            variant="primary" 
-            size="lg"
-            onClick={() => router.push('/contact')}
-            className="px-8"
-          >
-            Contact Us
-          </Button>
-        </div>
-        
-        {/* Back link */}
-        <div className="text-center mt-10 pb-10">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={() => router.push('/')}
-          >
-            Back to Home
-          </Button>
-        </div>
+        {/* CTA Section with ErrorBoundary and Suspense */}
+        <ContentErrorBoundary>
+          <Suspense fallback={<CTASkeleton />}>
+            <ServicesCTA />
+          </Suspense>
+        </ContentErrorBoundary>
       </SectionContainer>
     </PageLayout>
   );
