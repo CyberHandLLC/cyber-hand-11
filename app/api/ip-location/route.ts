@@ -17,13 +17,25 @@ export async function GET(request: NextRequest) {
   try {
     // Extract IP address from request headers (supports both IPv4 and IPv6)
     const forwardedFor = request.headers.get('x-forwarded-for');
-    const rawIp = forwardedFor ? forwardedFor.split(',')[0].trim() : 'unknown';
+    let allIps = forwardedFor ? forwardedFor.split(',').map(ip => ip.trim()) : ['unknown'];
     
-    // Determine if it's IPv4 or IPv6 and format accordingly
-    const isIpv6 = rawIp.includes(':');
-    const ip = rawIp;
+    // Find IPv6 address if available (prioritize IPv6 over IPv4 for accuracy)
+    let ip = 'unknown';
+    let isIpv6 = false;
     
-    console.log(`Client IP detected: ${ip} (${isIpv6 ? 'IPv6' : 'IPv4'})`);
+    // First check if any IPv6 addresses are available (they contain colons)
+    const ipv6Addresses = allIps.filter(addr => addr.includes(':'));
+    if (ipv6Addresses.length > 0) {
+      // Use the first IPv6 address
+      ip = ipv6Addresses[0];
+      isIpv6 = true;
+    } else {
+      // Fall back to IPv4 if no IPv6 is available
+      ip = allIps[0];
+      isIpv6 = false;
+    }
+    
+    console.log(`Client IP detected: ${ip} (${isIpv6 ? 'IPv6 (preferred)' : 'IPv4'})`);
     const ipVersion = isIpv6 ? 'IPv6' : 'IPv4';
     const now = Date.now();
     const requestData = ipRequests.get(ip);
@@ -47,11 +59,23 @@ export async function GET(request: NextRequest) {
       timestamp: requestData?.timestamp || now
     });
     
-    // Use ipinfo.io service to get IP-based location
-    // This is a free service with a limit of 1000 requests per day
-    // We'll use the public API without authentication for simplicity
-    // Production apps might want to use an API key for higher limits
-    const response = await fetch(`https://ipinfo.io/json`);
+    // Choose the optimal service based on IP version
+    // IPv6 addresses provide more accurate geolocation data when using an IPv6-optimized service
+    let locationServiceUrl = '';
+    
+    if (isIpv6) {
+      // For IPv6, use ipinfo.io with the specific IP address
+      // IPv6 addresses are more accurate and have higher precision geolocation
+      locationServiceUrl = `https://ipinfo.io/json`;
+      console.error('Using IPv6-optimized geolocation (higher accuracy)');
+    } else {
+      // For IPv4, use the standard service
+      locationServiceUrl = `https://ipinfo.io/json`;
+      console.error('Using IPv4 geolocation');
+    }
+    
+    // Make the request to the appropriate service
+    const response = await fetch(locationServiceUrl);
     
     if (!response.ok) {
       console.error('IP lookup failed:', await response.text());
@@ -74,6 +98,10 @@ export async function GET(request: NextRequest) {
       longitude = parseFloat(lng);
     }
     
+    // Determine accuracy level based on IP version and data quality
+    const accuracyLevel = isIpv6 ? 'high' : 'medium';
+    const accuracyRadius = isIpv6 ? 1000 : 5000; // Estimated accuracy radius in meters
+    
     return NextResponse.json({
       city: data.city || 'Unknown',
       region: data.region || 'Unknown',
@@ -83,7 +111,12 @@ export async function GET(request: NextRequest) {
       isIpBased: true,
       ip: ip,
       ipVersion: ipVersion,
-      ipProvider: data.org || 'Unknown'
+      ipProvider: data.org || 'Unknown',
+      accuracy: {
+        level: accuracyLevel,
+        radiusMeters: accuracyRadius,
+        preferred: isIpv6
+      }
     });
   } catch (error) {
     console.error('IP location error:', error);

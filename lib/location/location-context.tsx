@@ -40,6 +40,11 @@ interface LocationData {
   ipVersion?: string;
   ipProvider?: string;
   isIpBased?: boolean;
+  accuracy?: {
+    level: 'high' | 'medium' | 'low';
+    radiusMeters: number;
+    preferred: boolean;
+  };
 }
 
 interface LocationContextType {

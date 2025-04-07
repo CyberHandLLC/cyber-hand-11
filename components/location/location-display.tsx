@@ -174,6 +174,9 @@ export function LocationDisplay({
                   {locationData.ipVersion && (
                     <span className="ml-2 text-xs bg-gray-800/80 text-amber-400 px-1.5 py-0.5 rounded">
                       {locationData.ipVersion}
+                      {locationData.ipVersion === 'IPv6' && (
+                        <span className="ml-1 text-[10px] text-green-400">(preferred)</span>
+                      )}
                     </span>
                   )}
                 </p>

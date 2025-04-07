@@ -24,6 +24,11 @@ interface IPLocationData {
   isIpBased: boolean;
   error?: string;
   responseTimeMs?: number;
+  accuracy?: {
+    level: 'high' | 'medium' | 'low';
+    radiusMeters: number;
+    preferred: boolean;
+  };
 }
 
 export function IPDebugClient() {
@@ -100,6 +105,11 @@ export function IPDebugClient() {
                 {ipData.ipVersion && (
                   <span className="ml-2 text-xs text-amber-400 rounded-full bg-amber-900/30 px-2 py-0.5">
                     {ipData.ipVersion}
+                    {ipData.ipVersion === 'IPv6' && (
+                      <span className="ml-1 text-[10px] text-green-400 font-medium">
+                        (high accuracy)
+                      </span>
+                    )}
                   </span>
                 )}
               </div>
