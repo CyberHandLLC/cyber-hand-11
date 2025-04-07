@@ -9,15 +9,25 @@
 
 import React, { ReactNode } from 'react';
 import { ThemeProvider } from '@/lib/theme-context';
+import { LocationProvider } from '@/lib/location/location-context';
+import type { LocationData } from '@/lib/location/location-context';
 
+// Interface for providers props with location data
 interface ProvidersProps {
   children: ReactNode;
+  locationData: LocationData;
 }
 
-export function Providers({ children }: ProvidersProps) {
+/**
+ * Client Component: Application Providers
+ * Wraps the application with all context providers.
+ */
+export function Providers({ children, locationData }: ProvidersProps) {
   return (
     <ThemeProvider>
-      {children}
+      <LocationProvider initialLocation={locationData}>
+        {children}
+      </LocationProvider>
     </ThemeProvider>
   );
 }

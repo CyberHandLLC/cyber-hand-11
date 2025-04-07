@@ -8,14 +8,29 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
+// Define Vercel's geolocation type extension
+interface VercelGeolocation {
+  city?: string;
+  country?: string;
+  countryRegion?: string;
+  latitude?: string;
+  longitude?: string;
+  region?: string;
+}
+
+// Extended NextRequest with Vercel's geo property
+interface VercelNextRequest extends NextRequest {
+  geo?: VercelGeolocation;
+}
+
 // Mark as Edge runtime to ensure geolocation access
 export const runtime = 'edge';
 
 export async function GET(request: NextRequest) {
   try {
     // Directly access geo data from request (only available in production on Vercel)
-    // We use type assertion since TypeScript doesn't know about Vercel extensions
-    const geo = (request as any).geo || null;
+    // Use proper type extension for Vercel's request object
+    const geo = (request as VercelNextRequest).geo || null;
     
     // Create debug response with all available information
     return NextResponse.json({

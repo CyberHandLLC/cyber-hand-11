@@ -35,34 +35,45 @@ interface ExtendedNextRequest extends NextRequest {
 export async function middleware(request: ExtendedNextRequest) {
   const response = NextResponse.next();
   
-  // Get geolocation data from the request object (only populated in Vercel production)
-  const { geo } = request;
+  // Extract Vercel's geolocation headers
+  const country = request.headers.get('x-vercel-ip-country');
+  const city = request.headers.get('x-vercel-ip-city');
+  const region = request.headers.get('x-vercel-ip-country-region');
+  const latitude = request.headers.get('x-vercel-ip-latitude');
+  const longitude = request.headers.get('x-vercel-ip-longitude');
+  const timezone = request.headers.get('x-vercel-ip-timezone');
+  const continent = request.headers.get('x-vercel-ip-continent');
   
+  // Log in development
+  if (process.env.NODE_ENV === 'development') {
+    console.error('Geolocation from headers:', {
+      country, city, region, latitude, longitude, timezone, continent
+    });
+  }
+
   // Process geolocation data based on environment
-  if (geo) {
+  if (country || city) {
     // We have real geolocation data from Vercel's edge network
-    // Log in development only for verification (this case only happens on Vercel preview deploys)
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Edge geolocation detected:', geo);
-    }
-    
-    // Add key geolocation data to response headers
-    if (geo.country) response.headers.set('x-geo-country', geo.country);
-    if (geo.city) response.headers.set('x-geo-city', geo.city);
-    if (geo.region) response.headers.set('x-geo-region', geo.region);
-    if (geo.latitude) response.headers.set('x-geo-latitude', geo.latitude.toString());
-    if (geo.longitude) response.headers.set('x-geo-longitude', geo.longitude.toString());
+    // Add standardized geo headers for our components to use
+    if (country) response.headers.set('x-geo-country', country);
+    if (city) response.headers.set('x-geo-city', decodeURIComponent(city || ''));
+    if (region) response.headers.set('x-geo-region', region);
+    if (latitude) response.headers.set('x-geo-latitude', latitude);
+    if (longitude) response.headers.set('x-geo-longitude', longitude);
+    if (timezone) response.headers.set('x-geo-timezone', timezone);
+    if (continent) response.headers.set('x-geo-continent', continent);
   } else if (process.env.NODE_ENV === 'development') {
     // In local development, provide mock geolocation data for testing
     console.error('Using mock geolocation data in development environment');
     
     // Set mock values for development testing
-    // These values won't appear in production unless geo is undefined on Vercel
     response.headers.set('x-geo-country', 'US');
     response.headers.set('x-geo-city', 'San Francisco');
     response.headers.set('x-geo-region', 'CA');
     response.headers.set('x-geo-latitude', '37.7749');
     response.headers.set('x-geo-longitude', '-122.4194');
+    response.headers.set('x-geo-timezone', 'America/Los_Angeles');
+    response.headers.set('x-geo-continent', 'NA');
   }
   
   // Extract location consent cookie

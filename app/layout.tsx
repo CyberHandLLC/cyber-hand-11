@@ -4,6 +4,7 @@ import { fontVariables, fontFallbacks } from "./font";
 import { Providers } from "./providers";
 import { PerformanceWrapper } from "./performance-wrapper";
 import { BaseStructuredData } from "@/lib/seo/structured-data";
+import { getLocationData } from "@/lib/location/location-service";
 
 // Web Vitals reporting is implemented in the PerformanceWrapper client component
 // to avoid build errors with the app router
@@ -127,7 +128,7 @@ export default function RootLayout({
       </head>
       <body className="font-adjustment-active antialiased text-body">
         {/* Apply performance optimizations and providers at the root level */}
-        <Providers>
+        <Providers locationData={getLocationData()}>
           <PerformanceWrapper>
             {/* No Navbar on homepage, it will be included in each page except the landing page */}
             {children}
