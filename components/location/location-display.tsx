@@ -127,14 +127,25 @@ export function LocationDisplay({
             </svg>
             <span className="font-medium">Your Location</span>
           </div>
-          <p className="text-sm text-gray-300">
-            {locationData.city === 'Unknown' 
-              ? locationData.latitude && locationData.longitude
-                ? `Coordinates: ${locationData.latitude.toFixed(4)}, ${locationData.longitude.toFixed(4)}` 
-                : 'Location information not available' 
-              : `${locationData.city}, ${locationData.region}`
-            }
-          </p>
+          <div className="text-sm text-gray-300 space-y-1">
+            {locationData.city !== 'Unknown' && (
+              <p>
+                <span className="opacity-75">Location:</span> {locationData.city}, {locationData.region}
+              </p>
+            )}
+            
+            {/* Always show coordinates when available, regardless of city/region availability */}
+            {locationData.latitude && locationData.longitude && (
+              <p>
+                <span className="opacity-75">Coordinates:</span> {locationData.latitude.toFixed(4)}, {locationData.longitude.toFixed(4)}
+              </p>
+            )}
+            
+            {/* Only show this message when we have neither location nor coordinates */}
+            {locationData.city === 'Unknown' && (!locationData.latitude || !locationData.longitude) && (
+              <p>Location information not available</p>
+            )}
+          </div>
           {isLocationAllowed && (
             <Button
               variant="link"

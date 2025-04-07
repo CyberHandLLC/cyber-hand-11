@@ -36,6 +36,7 @@ export function isGeolocationSupported(): boolean {
  */
 export async function getCurrentPosition(): Promise<GeolocationPosition> {
   if (!isGeolocationSupported()) {
+    console.error('Geolocation API not supported by this browser');
     throw {
       code: 0,
       message: 'Geolocation is not supported by this browser',
@@ -44,8 +45,14 @@ export async function getCurrentPosition(): Promise<GeolocationPosition> {
   }
 
   return new Promise((resolve, reject) => {
+    console.log('Requesting user location from browser...');
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        console.log('Successfully received coordinates:', {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+          accuracy: position.coords.accuracy
+        });
         resolve({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -68,6 +75,8 @@ export async function getCurrentPosition(): Promise<GeolocationPosition> {
             break;
         }
         
+        console.error('Geolocation error:', { code: error.code, message: error.message, type: errorType });
+        
         reject({
           code: error.code,
           message: error.message,
@@ -76,8 +85,8 @@ export async function getCurrentPosition(): Promise<GeolocationPosition> {
       },
       {
         enableHighAccuracy: false,
-        timeout: 5000,
-        maximumAge: 0
+        timeout: 8000, // Increased timeout for slower connections
+        maximumAge: 60000 // Allow cached positions up to 1 minute old
       }
     );
   });
@@ -96,10 +105,13 @@ export async function getLocationFromCoordinates(
   longitude: number
 ): Promise<{city: string, region: string}> {
   try {
+    console.log(`Calling geocode API with lat=${latitude}, lng=${longitude}`);
+    
     // Use our server-side API instead of direct external service calls
     // This solves CORS issues, handles rate limits, and adds caching
     const response = await fetch(
-      `/api/geocode?lat=${latitude}&lng=${longitude}`
+      `/api/geocode?lat=${latitude}&lng=${longitude}`,
+      { cache: 'no-store' } // Prevent caching to ensure fresh data
     );
     
     if (!response.ok) {
@@ -111,6 +123,7 @@ export async function getLocationFromCoordinates(
     
     // Parse the response from our API
     const data = await response.json();
+    console.log('Geocoding API response:', data);
     
     // Ensure we have city and region, with fallbacks
     return {

@@ -97,6 +97,7 @@ export function LocationProvider({ children, autoRequest = true }: LocationProvi
    */
   const refreshLocation = useCallback(async (): Promise<void> => {
     if (!isLocationAllowed || !browserSupportsGeolocation) {
+      console.log('Location permission or browser support lacking:', { isLocationAllowed, browserSupportsGeolocation });
       return;
     }
     
@@ -104,28 +105,70 @@ export function LocationProvider({ children, autoRequest = true }: LocationProvi
     setLocationData(prev => ({ ...prev, loading: true, error: null }));
     
     try {
+      console.log('Attempting to get current position...');
       // Get current position
       const position = await getCurrentPosition();
       
-      // Get location name from coordinates
-      const locationInfo = await getLocationFromCoordinates(
-        position.latitude,
-        position.longitude
-      );
-      
-      // Update state with coordinates and location info
-      setLocationData({
-        city: locationInfo.city,
-        region: locationInfo.region,
-        latitude: position.latitude,
-        longitude: position.longitude,
-        loading: false,
-        error: null
+      console.log('Successfully got coordinates, attempting reverse geocoding...', {
+        lat: position.latitude,
+        lng: position.longitude
       });
       
-      // Store in cookie
-      storeLocationData(locationInfo);
+      // First, store the coordinates in state to ensure they're available
+      // even if geocoding fails
+      setLocationData(prev => ({
+        ...prev,
+        latitude: position.latitude,
+        longitude: position.longitude
+      }));
+      
+      try {
+        // Get location name from coordinates
+        const locationInfo = await getLocationFromCoordinates(
+          position.latitude,
+          position.longitude
+        );
+        
+        console.log('Successfully got location info:', locationInfo);
+        
+        // Update state with coordinates and location info
+        setLocationData({
+          city: locationInfo.city,
+          region: locationInfo.region,
+          latitude: position.latitude,
+          longitude: position.longitude,
+          loading: false,
+          error: null
+        });
+        
+        // Store in cookie
+        storeLocationData({
+          ...locationInfo,
+          latitude: position.latitude,
+          longitude: position.longitude
+        });
+      } catch (geocodingError) {
+        console.error('Error during geocoding:', geocodingError);
+        // Update state with coordinates but show geocoding error
+        setLocationData(prev => ({
+          ...prev,
+          city: 'Unknown',
+          region: 'Unknown',
+          loading: false,
+          error: 'Could not determine location name, but coordinates were obtained'
+        }));
+        
+        // Still store the coordinates in cookie
+        storeLocationData({
+          city: 'Unknown',
+          region: 'Unknown',
+          latitude: position.latitude,
+          longitude: position.longitude
+        });
+      }
     } catch (error) {
+      console.error('Location error:', error);
+      
       // Handle errors
       const geoError = error as GeolocationError;
       let errorMessage = 'Error getting location';

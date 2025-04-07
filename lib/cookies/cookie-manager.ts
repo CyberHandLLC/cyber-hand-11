@@ -144,9 +144,16 @@ export function updateConsent(type: ConsentType, status: ConsentStatus): boolean
  * @param {Object} locationData - Location data to store
  * @param {string} locationData.city - City name
  * @param {string} locationData.region - Region/state name
+ * @param {number} [locationData.latitude] - Latitude coordinate
+ * @param {number} [locationData.longitude] - Longitude coordinate
  * @returns {boolean} Success status
  */
-export function storeLocationData(locationData: { city: string; region: string }): boolean {
+export function storeLocationData(locationData: { 
+  city: string; 
+  region: string; 
+  latitude?: number; 
+  longitude?: number; 
+}): boolean {
   if (!hasConsent(ConsentType.LOCATION)) {
     console.warn('Attempted to store location without consent');
     return false;
