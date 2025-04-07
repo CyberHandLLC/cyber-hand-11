@@ -67,8 +67,8 @@ export function OptimizedLayoutWrapper({
     }
   }, [isLCP, id, reportWebVitals]);
   
-  // Apply CSS containment classes
-  const containmentClass = containment ? 'optimized-container' : '';
+  // Apply CSS containment classes using our standardized utility classes
+  const containmentClass = containment ? (isLCP ? 'contain-section' : 'contain-interactive') : '';
   const lcpClass = isLCP ? 'lcp-container' : '';
   
   // Construct the final component
@@ -81,18 +81,7 @@ export function OptimizedLayoutWrapper({
     >
       {children}
       
-      {/* Add runtime CSS containment */}
-      {containment && (
-        <style dangerouslySetInnerHTML={{ __html: `
-          .optimized-container {
-            contain: content;
-          }
-          
-          .lcp-container {
-            contain: layout style;
-          }
-        `}} />
-      )}
+      {/* CSS containment is now applied via utility classes */}
     </div>
   );
   
@@ -122,9 +111,9 @@ export function CSSContainmentStyles() {
   // Only include this component once in your app, ideally in the root layout
   return (
     <style dangerouslySetInnerHTML={{ __html: `
-      /* Apply CSS containment to appropriate elements */
+      /* Apply CSS containment to appropriate elements using standardized classes */
       ${CSS_CONTAINMENT_SELECTORS.join(', ')} {
-        contain: content;
+        /* These elements use the contain-interactive class */
       }
       
       /* Skeleton loader styling for deferred content */
@@ -149,16 +138,16 @@ export function CSSContainmentStyles() {
         }
       }
       
-      /* Above-the-fold optimizations */
+      /* Adding utility classes directly to elements in the DOM is preferred over these selectors */
+      
+      /* Above-the-fold optimizations - use contain-section instead */
       main > *:first-child {
-        content-visibility: auto;
-        contain-intrinsic-size: 1px 5000px;
+        /* Use the contain-section class instead of inline styles */
       }
       
-      /* Below-the-fold optimizations */
+      /* Below-the-fold optimizations - use contain-card instead */
       .below-fold {
-        content-visibility: auto;
-        contain-intrinsic-size: 1px 1000px;
+        /* Use the contain-card class instead of inline styles */
       }
     `}} />
   );

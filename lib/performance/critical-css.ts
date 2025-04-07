@@ -53,35 +53,32 @@ export const CSS_CONTAINMENT_SELECTORS = [
 ];
 
 /**
- * Generate a style tag with critical CSS containment properties
+ * Generate a style tag with instructions for applying standardized CSS containment utility classes
  * 
- * @returns String containing CSS rules for containment
+ * @returns String containing CSS comments to guide developers on utility class usage
  */
 export function generateContainmentCSS(): string {
   return `
-    ${CSS_CONTAINMENT_SELECTORS.join(', ')} {
-      contain: content;
-    }
-    
-    /* Layout containment for specific elements */
-    .fixed-layout-section {
-      contain: layout;
-    }
-    
-    /* Paint containment for offscreen elements */
-    .offscreen-content {
-      contain: paint;
-    }
-    
-    /* Size containment for elements with intrinsic size */
-    .fixed-size-element {
-      contain: size;
-    }
-    
-    /* Strict containment for isolated UI components */
-    .isolated-component {
-      contain: strict;
-    }
+    /* 📝 NOTE: Direct containment CSS has been replaced with standardized utility classes. 
+       Instead of using this generated CSS, apply these utility classes directly: 
+       
+       - Card components:        'contain-card'
+       - Layout sections:        'contain-section'
+       - Navigation elements:    'contain-nav'
+       - Media containers:       'contain-media'
+       - Interactive components: 'contain-interactive'
+       - Fixed-size elements:    'contain-fixed'
+       - Offscreen content:      'contain-offscreen'
+       
+       Documentation in: docs/CSS-CONSOLIDATION.md 
+    */
+
+    /* Element-specific mapping recommendations */
+    ${CSS_CONTAINMENT_SELECTORS.map(selector => `/* ${selector} → add 'contain-interactive' class */`).join('\n    ')}
+    /* .fixed-layout-section → add 'contain-section' class */
+    /* .offscreen-content → add 'contain-offscreen' class */
+    /* .fixed-size-element → add 'contain-fixed' class */
+    /* .isolated-component → add 'contain-strict' class */
   `;
 }
 
@@ -90,7 +87,7 @@ export function generateContainmentCSS(): string {
  * to avoid flash of unstyled content
  */
 export const PRELOAD_STYLESHEETS = [
-  '/styles/critical.css',
+  // Note: critical.css has been consolidated into globals.css
   '/styles/fonts.css',
 ];
 

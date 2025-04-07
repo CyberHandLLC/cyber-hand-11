@@ -2,9 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/**
+ * Consolidated Theme Variables
+ * 
+ * This section contains all theme variables for the application.
+ * Variables are organized by purpose and include both light and dark themes.
+ */
+
 /* Base theme variables - Dark theme (default) */
 :root {
-  /* Color scheme */
+  /* Color scheme - Base colors */
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 0, 0, 0;
   --background-end-rgb: 0, 0, 0;
@@ -26,6 +33,28 @@
   --bg-accent: 6, 182, 212; /* cyan-500 */
   --border-color: 51, 65, 85; /* slate-700 */
   
+  /* Semantic UI variables (from critical.css) */
+  --background: #030711;
+  --foreground: #e1e7ef;
+  --card: #1a1a1a;
+  --card-foreground: #e1e7ef;
+  --popover: #030711;
+  --popover-foreground: #e1e7ef;
+  --primary-semantic: #3b82f6;
+  --primary-foreground: #f8fafc;
+  --secondary-semantic: #1e293b;
+  --secondary-foreground: #f8fafc;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --accent-semantic: #1e293b;
+  --accent-foreground: #f8fafc;
+  --destructive: #ef4444;
+  --destructive-foreground: #f8fafc;
+  --border: #1e293b;
+  --input: #1e293b;
+  --ring: #3b82f6;
+  --radius: 0.5rem;
+  
   /* Shadows & Effects */
   --shadow-sm: 0 0 6px rgba(6, 182, 212, 0.2);
   --shadow-md: 0 0 10px rgba(6, 182, 212, 0.3);
@@ -39,7 +68,7 @@
 }
 
 /* Light theme variables */
-[data-theme="light"] {
+[data-theme="light"], .light {
   /* Color scheme */
   --foreground-rgb: 15, 23, 42; /* slate-900 */
   --background-start-rgb: 248, 250, 252; /* slate-50 */
@@ -53,6 +82,27 @@
   --bg-secondary: 248, 250, 252; /* slate-50 */
   --bg-accent: 236, 254, 255; /* cyan-50 */
   --border-color: 226, 232, 240; /* slate-200 */
+  
+  /* Semantic UI variables (from critical.css) */
+  --background: #ffffff;
+  --foreground: #171717;
+  --card: #f8f8f8;
+  --card-foreground: #171717;
+  --popover: #ffffff;
+  --popover-foreground: #171717;
+  --primary-semantic: #2563eb;
+  --primary-foreground: #f8fafc;
+  --secondary-semantic: #f1f5f9;
+  --secondary-foreground: #1e293b;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent-semantic: #f1f5f9;
+  --accent-foreground: #1e293b;
+  --destructive: #ef4444;
+  --destructive-foreground: #f8fafc;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #2563eb;
   
   /* Shadows & Effects - softer in light mode */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -209,7 +259,102 @@ a:hover {
   @apply absolute w-1 h-1 rounded-full bg-cyan-400 shadow-glow;
 }
 
-/* Custom animations */
+/**
+ * CSS Containment Utilities
+ * 
+ * These utility classes implement CSS containment strategies for performance optimization.
+ * Proper containment helps the browser understand which parts of the page are independent
+ * from each other, improving rendering performance.
+ * 
+ * Usage Guidelines:
+ * - .contain-layout: Use for components that change internal layout but shouldn't affect parent
+ * - .contain-paint: Use for components that don't visually overflow their bounds
+ * - .contain-size: Use for components with fixed or predictable dimensions
+ * - .contain-content: Use for independent widgets or components with internal DOM changes
+ * - .contain-strict: Use for fully isolated components (combines size, layout, style, paint)
+ */
+@layer utilities {
+  /* Basic Containment Types */
+  
+  /* Layout containment - isolates layout impact to prevent layout thrashing */
+  .contain-layout {
+    contain: layout;
+  }
+  
+  /* Style containment - prevents styles from affecting elements outside */
+  .contain-style {
+    contain: style;
+  }
+  
+  /* Paint containment - defines an area that won't draw outside its bounds */
+  .contain-paint {
+    contain: paint;
+  }
+  
+  /* Size containment - element size doesn't depend on its content */
+  .contain-size {
+    contain: size;
+  }
+  
+  /* Content containment - combines layout, style and paint */
+  .contain-content {
+    contain: content;
+  }
+  
+  /* Strict containment - maximum isolation (all properties except 'size') */
+  .contain-strict {
+    contain: strict;
+  }
+  
+  /* Combined Containment Strategies */
+  
+  /* For cards, panels, and section containers */
+  .contain-card {
+    contain: layout paint;
+    content-visibility: auto;
+  }
+  
+  /* For hero sections and large layout blocks */
+  .contain-section {
+    contain: layout paint;
+    content-visibility: auto;
+    contain-intrinsic-size: 600px; /* Estimated height to reduce CLS */
+  }
+  
+  /* For navigation menus and headers */
+  .contain-nav {
+    contain: layout paint;
+  }
+  
+  /* For images and media that shouldn't affect layout */
+  .contain-media {
+    contain: layout size;
+    content-visibility: auto;
+  }
+  
+  /* For interactive components with DOM changes */
+  .contain-interactive {
+    contain: content;
+  }
+  
+  /* For fixed-size components like avatars, icons */
+  .contain-fixed {
+    contain: strict;
+    content-visibility: auto;
+  }
+  
+  /* For off-screen or initially hidden content */
+  .contain-offscreen {
+    contain: strict;
+    content-visibility: hidden;
+  }
+}
+
+/**
+ * Animation Library
+ * 
+ * Consolidated animation keyframes and utilities.
+ */
 @keyframes pulse-glow {
   0%, 100% {
     filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.5));
@@ -259,8 +404,15 @@ a:hover {
   scrollbar-width: none; /* for Firefox */
 }
 
-.hide-scrollbar::-webkit-scrollbar {
-  display: none; /* for Chrome, Safari, and Opera */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* CLS prevention for images and layout shifts */
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Grid pattern for background texture */

@@ -71,9 +71,9 @@ export const metadata = {
  */
 export default function ResourcesPage() {
   return (
-    <PageLayout>
+    <PageLayout className="bg-gradient-to-b from-[#0c1117] to-[#0c1117] min-h-screen">
       {/* Hero section with coming soon messaging */}
-      <section className="py-24 md:py-32">
+      <section className="py-24 md:py-32 pb-32">
         <SectionContainer>
           <ContentErrorBoundary>
             <Suspense fallback={<ResourcesContentSkeleton />}>

@@ -75,18 +75,11 @@ export function CaseStudiesClientWrapper({
   
   return (
     <div 
-      className="case-studies-container contain-content" 
+      className="case-studies-container contain-layout w-full max-w-screen-xl mx-auto" 
       id="filtered-case-studies"
     >
-      {/* Dynamic import of the CaseStudyGrid component */}
+      {/* Dynamic import of the CaseStudyGrid component with improved containment */}
       <DynamicCaseStudyGridWrapper caseStudies={filteredStudies} />
-      
-      {/* Apply CSS containment for better rendering performance */}
-      <style dangerouslySetInnerHTML={{ __html: `
-        .case-studies-container {
-          contain: content;
-        }
-      `}} />
     </div>
   );
 }

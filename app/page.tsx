@@ -8,6 +8,7 @@
  * - Integration with route-level loading.tsx for initial loading state
  * - Standardized skeleton components for consistent loading experience
  * - Error boundaries for graceful error handling
+ * - SEO optimized with metadata and structured data
  */
 
 import { Suspense } from 'react';
@@ -16,6 +17,8 @@ import { HomepageButtons } from "./components/homepage-buttons";
 import { CircuitEffectsWrapper } from "./components/circuit-effects-wrapper";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ContentErrorBoundary } from "@/app/components/error-boundary";
+import { createMetadata } from "@/lib/seo/metadata";
+import { WebPageSchema } from "@/lib/seo/structured-data";
 
 /**
  * Static Hero Content Component - Server Component
@@ -81,13 +84,33 @@ function ButtonsSkeleton() {
 }
 
 /**
+ * Generate metadata for the homepage
+ */
+export const metadata = createMetadata({
+  // No title specified = uses the default from layout.tsx
+  description: "CyberHand is a next-generation digital agency specializing in cutting-edge web development, design, and digital marketing services.",
+  keywords: ['digital agency', 'web development', 'UI/UX design', 'digital marketing', 'CyberHand'],
+  // Homepage gets canonical without trailing slash
+  canonicalUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com',
+});
+
+/**
  * Home Page - Main Component
  * Server Component that delegates interactive elements to Client Components
- * Now enhanced with standardized skeleton components and error boundaries
+ * Now enhanced with standardized skeleton components, error boundaries, and SEO optimization
  */
 export default function Home() {
   return (
     <main className="relative min-h-screen flex items-center justify-center overflow-hidden cyber-circuit-bg">
+      {/* Structured data for the homepage */}
+      <WebPageSchema
+        title="CyberHand | Next-Gen Digital Agency"
+        description="CyberHand is a next-generation digital agency specializing in cutting-edge web development, design, and digital marketing services."
+        url="/"
+        datePublished="2023-01-01"
+        dateModified={new Date().toISOString()}
+        imageUrl="/images/og-image.jpg"
+      />
       {/* Background layers */}
       <div className="absolute inset-0 bg-black bg-opacity-50 z-0" />
       <div className="absolute inset-0 bg-black bg-opacity-50 z-10" />

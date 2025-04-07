@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
 import { caseStudies } from "@/data/case-studies";
 import { CaseStudyClientWrapper } from "@/components/case-studies/case-study-client-wrapper";
+import { createCaseStudyMetadata } from "@/lib/seo/metadata";
+import { ArticleSchema, BreadcrumbSchema } from "@/lib/seo/structured-data";
 
 /**
  * CaseStudyNotFound Component
@@ -99,6 +101,20 @@ function CaseStudyErrorFallback({ error }: { error: Error }) {
 }
 
 /**
+ * Generate metadata for the case study page
+ */
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const caseStudy = caseStudies.find(cs => cs.id === slug || cs.slug === slug);
+  
+  if (!caseStudy) {
+    return {};
+  }
+  
+  return createCaseStudyMetadata(caseStudy);
+}
+
+/**
  * Main Case Study Page component - Server Component
  * Uses Next.js 15 streaming with a single Suspense boundary for better performance
  * and consistent error handling
@@ -107,9 +123,36 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
   // Await and destructure params
   const { slug } = await params;
   
+  // Find case study data for structured data
+  const caseStudy = caseStudies.find(cs => cs.id === slug || cs.slug === slug);
+  
   return (
     <ErrorBoundary fallback={<CaseStudyErrorFallback error={new Error("Failed to load case study")} />}>
       <PageLayout>
+        {/* Add structured data if we have a valid case study */}
+        {caseStudy && (
+          <>
+            <ArticleSchema
+              title={caseStudy.title}
+              description={caseStudy.challenge}
+              url={`/case-studies/${slug}`}
+              imageUrl={caseStudy.imageUrl || '/images/case-studies/default.jpg'}
+              datePublished={new Date().toISOString()}
+              dateModified={new Date().toISOString()}
+              authorName="CyberHand Team"
+              category={caseStudy.industry}
+              tags={[caseStudy.industry, 'case study', 'project', ...caseStudy.services]}
+            />
+            <BreadcrumbSchema 
+              items={[
+                { name: 'Home', url: '/' },
+                { name: 'Case Studies', url: '/case-studies' },
+                { name: caseStudy.title, url: `/case-studies/${slug}` }
+              ]}
+            />
+          </>
+        )}
+        
         <Suspense fallback={<CaseStudyDetailSkeleton />}>
           <CaseStudyContent slug={slug} />
         </Suspense>

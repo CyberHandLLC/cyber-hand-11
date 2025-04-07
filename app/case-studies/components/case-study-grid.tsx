@@ -26,8 +26,8 @@ interface CaseStudyGridProps {
 export function CaseStudyGrid({ caseStudies }: CaseStudyGridProps) {
   return (
     <OptimizedLayoutWrapper
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-      containment={true}
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full mx-auto"
+      containment={false}
       id="case-study-grid"
       deferHydration={false} // We want this to hydrate immediately once loaded
     >

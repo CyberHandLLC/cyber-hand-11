@@ -68,6 +68,12 @@ To maintain high code quality and developer experience, the following standards 
    - Use type guards for runtime type checking
    - Document complex types with JSDoc comments
 
+3. **Suspense Boundaries**:
+   - Strategic placement of Suspense boundaries around async components
+   - Skeleton placeholders for content during streaming
+   - Optimized waterfall prevention through parallel data fetching
+   - Component-level suspense with granular fallbacks for improved UX
+
 3. **Error Handling**:
    - Implement proper error boundaries in client components
    - Add structured error handling in server actions and components
@@ -104,8 +110,10 @@ Next.js 15 provides enhanced support for React Server Components (RSC), offering
 
 5. **Streaming Implementation (Next.js 15)**:
    - Leverage App Router's native streaming capabilities for progressive UI rendering
-   - Use loading.js files for route-level loading states during streaming
-   - Implemented Next.js 15 streaming patterns across all major pages
+   - Implementation of loading.js files for route-level loading indicators
+   - Server data fetching without client-side JavaScript hydration cost
+   - Client interactivity delivered through isolated Client Component islands
+   - Clear separation between data fetching (Server Components) and interactivity (Client Components)
    - Established standardized skeleton components for consistent loading states
    - Created centralized error boundary system for graceful error handling
    - Optimized page performance with proper Server/Client Component separation
@@ -114,6 +122,8 @@ Next.js 15 provides enhanced support for React Server Components (RSC), offering
 ## Streaming and Rendering Strategy
 
 We have successfully implemented a sophisticated streaming and rendering strategy across the entire application with the following standardized patterns:
+
+### Standardized Streaming Patterns
 
 1. **Server Components Architecture**:
    - Established clear separation between Server and Client Components
@@ -129,14 +139,37 @@ We have successfully implemented a sophisticated streaming and rendering strateg
    - Optimized layout stability with properly sized skeleton components
    - Added accessibility attributes to all loading states, blur placeholders, and responsive sizing
 
+3. **Error Boundary System**:
+   - Implemented standardized error boundary components for Client Components
+   - Created consistent error UI with recovery actions
+   - Added error boundaries at appropriate component levels for granular recovery
+   - Ensured proper error propagation from Server to Client Components
+
+### Performance Optimization Utilities
+
+1. **Code Splitting**:
+   - Optimized code-splitting utility (lib/performance/code-splitting.tsx) for React 19
+   - Simplified dynamic import patterns with error boundary integration
+   - Created consistent loading states for dynamically loaded components
+   - Enhanced error recovery for split components
+
+2. **Deferred Loading**:
+   - Modernized deferred loading hooks for non-critical UI elements
+   - Implemented visibility-based loading with Intersection Observer API
+   - Added prioritization system for resource loading
+   - Documented clear guidance on when to use built-in streaming vs. deferred loading
+
 ## Performance Optimization
 
 To achieve exceptional Core Web Vitals scores, special attention will be paid to:
+
+### Core Web Vitals Optimization
 
 1. **Performance Monitoring System**:
    - Development dashboard for real-time performance visualization
    - Production logging service with intelligent sampling and batched reporting
    - Documentation available in `docs/performance-monitoring.md`
+   - Integration with streaming patterns for accurate metrics collection
 
 2. **Largest Contentful Paint (LCP)**:
    - Implement priority loading for critical content
@@ -162,7 +195,7 @@ A comprehensive image optimization strategy has been implemented with the follow
 3. **Progressive Loading Techniques**:
    - SVG-based color placeholders for instant visual feedback
    - Blur-up technique with smooth transitions between placeholder and final image
-   - Priority loading for LCP (Largest Contentful Paint) images above the fold
+   - Priority loading for LCP images above the fold
    - Custom `useProgressiveImage` hook for advanced loading scenarios
 
 4. **Format Optimization**:

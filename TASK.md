@@ -168,22 +168,37 @@ This document outlines the specific tasks required to implement the frontend dev
 ### Performance Optimization (Added 2025-04-06)
 1. **Code Splitting Implementation**
    - [x] Create code-splitting utility with Next.js dynamic imports
-   - [x] Optimize code-splitting utility for React 19 best practices
-   - [x] Implement dynamic loading for case study grid component
-   - [x] Add skeleton loading placeholders during component loading
-   - [x] Configure proper error handling for dynamic imports
+   - [x] Implement fallback UI for async chunks
+   - [x] Add error boundaries for chunk loading failures
+   - [x] Create performance-aware lazy loading patterns
+   - [x] Document code splitting best practices
+   - [x] Modernize code-splitting utilities for Next.js 15 and React 19
 
-2. **Critical CSS Optimization**
-   - [x] Create critical.css for above-the-fold content
+2. **CSS Optimization**
+   - [x] Create critical CSS loading strategy
    - [x] Implement non-critical CSS loading during browser idle time
    - [x] Add CSS containment for layout isolation and rendering performance
    - [x] Implement progressive loading with transitions between states
 
-3. **Resource Loading Optimization**
-   - [x] Add resource hints (preconnect, dns-prefetch) for external domains
+3. **CSS Consolidation (Added 2025-04-07)**
+   - [x] Consolidate theme variables from critical.css and globals.css
+   - [x] Create standardized CSS containment utility classes
+   - [x] Remove redundant critical.css file
+   - [x] Document CSS containment strategies in CSS-CONSOLIDATION.md
+   - [ ] Update component styles to use new utility classes
+   - [ ] Update layout.tsx to remove references to critical.css
+   - [ ] Verify theme switching with consolidated CSS approach
+   - [ ] Measure performance impact with Core Web Vitals
+
+3. **Deferred Loading**
+   - [x] Implement component-level deferred loading based on priority
+   - [x] Create visibility-based loading for non-critical components
    - [x] Implement root-level performance wrapper for application-wide optimizations
    - [x] Configure proper preloading of critical resources
    - [x] Set up deferred loading of below-the-fold content
+   - [x] Optimize deferred loading utilities for modern browser APIs
+   - [x] Add documentation for when to use built-in Next.js streaming vs. custom deferred loading
+   - [x] Enhance visibility detection with modern Intersection Observer implementation
 
 4. **Next.js 15 Streaming Migration (Added 2025-04-06)**
    - [x] Create comprehensive documentation for streaming migration and cleanup
@@ -214,6 +229,13 @@ This document outlines the specific tasks required to implement the frontend dev
      - [x] Update any imports referencing these files
      - [x] Run comprehensive tests to verify functionality after cleanup
      - [x] Create legacy folder with README.md for preserving deprecated code
+
+   - [x] Performance Utility Modernization
+     - [x] Optimize code-splitting.tsx for React 19 and reduce complexity
+     - [x] Update deferred-loading.tsx with modern browser APIs
+     - [x] Add accessibility attributes to loading states
+     - [x] Improve error boundaries with standardized interfaces
+     - [x] Remove unused preloading directives from layout.tsx
 
    - [x] Test and verify the new implementation
      - [x] Test streaming behavior across various network conditions
@@ -295,10 +317,10 @@ For immediate implementation, prioritize these tasks:
    - [x] Add font loading optimization (preloading critical fonts)
 
 2. **Core SEO Foundation**
-   - [ ] Create metadata component system
-   - [ ] Implement basic JSON-LD structured data
-   - [ ] Configure canonical URLs
-   - [ ] Add semantic HTML improvement
+   - [x] Create metadata component system
+   - [x] Implement basic JSON-LD structured data
+   - [x] Configure canonical URLs
+   - [x] Add semantic HTML improvement
 
 3. **Enhanced User Experience**
    - [x] Create skeleton loading components for case studies

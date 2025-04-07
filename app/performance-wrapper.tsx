@@ -4,15 +4,14 @@
  * Application-level performance optimization wrapper
  * 
  * This component applies performance optimizations at the root level:
- * - CSS containment for better rendering performance
  * - Performance monitoring using Web Vitals
- * - Critical CSS loading optimization
+ * - Standardized CSS containment through utility classes
+ * - Resource loading optimization
  */
 
 import React, { useEffect } from 'react';
 import { reportWebVitals } from '@/lib/web-vitals';
-import { CSSContainmentStyles } from '@/components/performance/optimized-layout-wrapper';
-// Import any other performance utilities we need from the new location
+// CSS containment is now handled through utility classes in globals.css
 
 interface PerformanceWrapperProps {
   children: React.ReactNode;
@@ -31,12 +30,8 @@ export function PerformanceWrapper({ children }: PerformanceWrapperProps) {
   useEffect(() => {
     if ('requestIdleCallback' in window) {
       const loadNonCriticalResources = () => {
-        // Load non-critical CSS
-        const nonCriticalCss = document.createElement('link');
-        nonCriticalCss.rel = 'stylesheet';
-        nonCriticalCss.href = '/styles/non-critical.css';
-        nonCriticalCss.type = 'text/css';
-        document.head.appendChild(nonCriticalCss);
+        // Note: CSS is now consolidated in globals.css
+        // No need to load separate non-critical CSS files
         
         // Preload below-fold images
         const belowFoldImages = document.querySelectorAll('img[data-below-fold="true"]');
@@ -58,8 +53,7 @@ export function PerformanceWrapper({ children }: PerformanceWrapperProps) {
   return (
     <>
       {children}
-      {/* Apply global CSS containment styles */}
-      <CSSContainmentStyles />
+      {/* CSS containment is now applied via utility classes directly in component JSX */}
       
       {/* Add performance monitoring markers */}
       <script

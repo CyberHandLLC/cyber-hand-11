@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { fontVariables, fontFallbacks } from "./font";
 import { ThemeProvider } from "@/lib/theme-context";
 import { PerformanceWrapper } from "./performance-wrapper";
+import { BaseStructuredData } from "@/lib/seo/structured-data";
 
 // Web Vitals reporting is implemented in the PerformanceWrapper client component
 // to avoid build errors with the app router
@@ -75,6 +76,9 @@ export default function RootLayout({
         {/* Font optimization: Preconnect to font domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        
+        {/* JSON-LD Structured Data */}
+        <BaseStructuredData />
         
         {/* Font display optimization - Add font-display settings for fallback fonts */}
         <style dangerouslySetInnerHTML={{ __html: `
