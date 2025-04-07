@@ -160,6 +160,23 @@ export function LocationDisplay({
               </p>
             )}
             
+            {/* Show IP information when using IP-based fallback */}
+            {locationData.isIpBased && locationData.ip && (
+              <div className="mt-1 pt-1 border-t border-gray-700 text-xs">
+                <p>
+                  <span className="text-amber-400/70">Fallback Method:</span> IP-based location
+                </p>
+                <p>
+                  <span className="opacity-75">IP:</span> {locationData.ip}
+                </p>
+                {locationData.ipProvider && (
+                  <p>
+                    <span className="opacity-75">Network:</span> {locationData.ipProvider}
+                  </p>
+                )}
+              </div>
+            )}
+            
             {/* Only show this message when we have neither location nor coordinates and no specific error */}
             {locationData.city === 'Unknown' && (!locationData.latitude || !locationData.longitude) && !locationData.error && (
               <p>Location information not available</p>

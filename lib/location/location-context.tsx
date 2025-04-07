@@ -36,6 +36,9 @@ interface LocationData {
   longitude?: number;
   loading: boolean;
   error: string | null;
+  ip?: string;
+  ipProvider?: string;
+  isIpBased?: boolean;
 }
 
 interface LocationContextType {
@@ -209,7 +212,10 @@ export function LocationProvider({ children, autoRequest = true }: LocationProvi
             latitude: ipLocation.latitude,
             longitude: ipLocation.longitude,
             loading: false,
-            error: ipLocation.isIpBased ? 'Using approximate location based on network address' : null
+            error: ipLocation.isIpBased ? 'Using approximate location based on network address' : null,
+            ip: ipLocation.ip,
+            ipProvider: ipLocation.ipProvider,
+            isIpBased: ipLocation.isIpBased
           });
           
           // Store in cookie

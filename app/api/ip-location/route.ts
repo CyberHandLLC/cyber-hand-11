@@ -73,7 +73,9 @@ export async function GET(request: NextRequest) {
       latitude,
       longitude,
       country: data.country || 'Unknown',
-      isIpBased: true
+      isIpBased: true,
+      ip: ip,
+      ipProvider: data.org || 'Unknown'
     });
   } catch (error) {
     console.error('IP location error:', error);
