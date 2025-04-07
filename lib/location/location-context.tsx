@@ -179,11 +179,58 @@ export function LocationProvider({ children, autoRequest = true }: LocationProvi
         updateConsent(ConsentType.LOCATION, ConsentStatus.DENIED);
         setIsLocationAllowed(false);
       } else if (geoError.type === 'POSITION_UNAVAILABLE') {
-        errorMessage = 'Unable to determine your location (POSITION_UNAVAILABLE). This may happen due to:\n' +
-          '• Hardware limitations or GPS signal issues\n' +
-          '• VPN or proxy interference\n' +
-          '• Browser-specific privacy features\n' +
-          '\nTry using a different browser or device, or disabling VPN services.';
+        // For Brave Browser or other privacy-focused browsers, try IP-based fallback
+        console.log('Browser geolocation failed, trying IP-based fallback...');
+        try {
+          // Set a temporary error message while we try the fallback
+          setLocationData(prev => ({
+            ...prev,
+            loading: true,
+            error: 'Primary location service unavailable. Trying alternative method...'
+          }));
+          
+          // Fetch location from our IP-based API endpoint
+          const response = await fetch('/api/ip-location');
+          
+          if (!response.ok) {
+            throw new Error('IP location service unavailable');
+          }
+          
+          const ipLocation = await response.json();
+          
+          if (ipLocation.error) {
+            throw new Error(ipLocation.error);
+          }
+          
+          // Update with IP-based location data
+          setLocationData({
+            city: ipLocation.city,
+            region: ipLocation.region,
+            latitude: ipLocation.latitude,
+            longitude: ipLocation.longitude,
+            loading: false,
+            error: ipLocation.isIpBased ? 'Using approximate location based on network address' : null
+          });
+          
+          // Store in cookie
+          storeLocationData({
+            city: ipLocation.city,
+            region: ipLocation.region,
+            latitude: ipLocation.latitude,
+            longitude: ipLocation.longitude
+          });
+          
+          // Successfully used fallback, return early
+          return;
+        } catch (fallbackError) {
+          console.error('IP fallback location error:', fallbackError);
+          // Fall through to the original error if fallback also fails
+          errorMessage = 'Unable to determine your location. This may happen due to:\n' +
+            '• Browser privacy features (common in Brave Browser)\n' +
+            '• VPN or proxy interference\n' +
+            '• Hardware limitations or GPS signal issues\n' +
+            '\nTry using a different browser like Chrome or Firefox.';
+        }
       } else if (geoError.type === 'TIMEOUT') {
         errorMessage = 'Location request timed out';
       } else if (geoError.type === 'UNSUPPORTED') {
