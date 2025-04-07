@@ -12,6 +12,7 @@
 
 import React, { useState } from 'react';
 import { LocationDisplay } from '@/components/location/location-display';
+import { LocationDebugger } from '@/components/location/location-debugger';
 import { useLocation } from '@/lib/location/location-context';
 import { 
   ConsentType, 
@@ -33,10 +34,30 @@ export function LocationDemoClient() {
     setConsentStatus(getConsentPreferences()[ConsentType.LOCATION]);
   };
 
-  // Handle consenting to location tracking
-  const handleConsent = async () => {
-    await requestLocationPermission();
-    refreshConsentStatus();
+  // Handle consenting to location tracking with direct browser API call
+  const handleConsent = () => {
+    // Direct browser prompt that will definitely show the permission dialog
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        // Success handler
+        async (position) => {
+          console.log('Got browser location:', {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+          // After direct permission granted, use our system
+          await requestLocationPermission();
+          refreshConsentStatus();
+        },
+        // Error handler
+        (error) => {
+          console.error('Browser location error:', error);
+          alert('Location permission denied or unavailable. Please check your browser settings.');
+        }
+      );
+    } else {
+      alert('Your browser does not support geolocation');
+    }
   };
 
   // Handle revoking location consent
@@ -125,6 +146,18 @@ export function LocationDemoClient() {
         </div>
       </section>
       
+      {/* Debugging Section */}
+      <section className="bg-gray-800/30 rounded-lg p-6 border border-gray-700 border-yellow-500/50">
+        <h2 className="text-xl font-semibold mb-4">Location Debugging Tools</h2>
+        <p className="text-gray-300 mb-4">
+          Use this tool to directly test browser geolocation and API functionality. This can help diagnose issues with the location services.
+        </p>
+        <LocationDebugger />
+        <p className="text-xs text-gray-400 mt-2">
+          Note: This debugging tool bypasses the consent system and directly tests browser capabilities and API responses.
+        </p>
+      </section>
+
       {/* Developer Guide */}
       <section className="bg-gray-800/30 rounded-lg p-6 border border-gray-700">
         <h2 className="text-xl font-semibold mb-4">Developer Guide</h2>

@@ -32,7 +32,26 @@ export function LocationDisplay({
   } = useLocation();
   
   const handleRequestLocation = async () => {
-    await requestLocationPermission();
+    // Direct browser geolocation API call to ensure prompt appears
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        // Success handler
+        async (position) => {
+          console.log('Browser geolocation success:', position.coords);
+          // After we get permission, update through our context system
+          await requestLocationPermission();
+        },
+        // Error handler
+        (error) => {
+          console.error('Browser geolocation error:', error);
+          alert('Could not access your location. Please check your browser settings and try again.');
+        },
+        // Options
+        { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }
+      );
+    } else {
+      alert('Geolocation is not supported by your browser');
+    }
   };
   
   const handleRefreshLocation = async () => {
@@ -65,14 +84,14 @@ export function LocationDisplay({
         <p className="text-sm text-gray-300 mb-3">
           Allow location access to see personalized content.
         </p>
-        <Button
-          variant="primary"
-          size="sm"
+        {/* Use button instead of Button component to ensure native browser behaviors */}
+        <button
+          className="bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded text-sm transition-colors"
           onClick={handleRequestLocation}
           disabled={isLoadingLocation}
         >
           {isLoadingLocation ? 'Loading...' : 'Allow Location Access'}
-        </Button>
+        </button>
       </div>
     );
   }
