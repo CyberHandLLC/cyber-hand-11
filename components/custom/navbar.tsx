@@ -8,6 +8,7 @@ import { Button as _Button } from "@/components/ui/button";
 import { getThemeStyle } from "@/lib/theme-utils";
 import { AnimatedElement } from "@/lib/animation-utils";
 import { MenuIcon, XIcon, MoonIcon, SunIcon } from "@/components/ui/icons";
+import { LocationControl } from "@/components/location";
 
 // Define reusable types
 type NavItem = {
@@ -143,6 +144,11 @@ export function Navbar() {
           <AuthButtons />
         </div>
         
+        {/* Location control */}
+        <div className="hidden md:block ml-4">
+          <LocationControl />
+        </div>
+        
         {/* Theme toggle button */}
         <div className="ml-4">
           <ThemeToggleButton />
@@ -169,6 +175,11 @@ export function Navbar() {
               
               <div className="pt-4 border-t border-gray-700">
                 <AuthButtons />
+              </div>
+              
+              {/* Location control in mobile menu */}
+              <div className="pt-4 border-t border-gray-700 flex items-center justify-center">
+                <LocationControl />
               </div>
             </div>
           </div>

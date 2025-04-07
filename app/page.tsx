@@ -20,6 +20,7 @@ import { ContentErrorBoundary } from "@/app/components/error-boundary";
 import { createMetadata } from "@/lib/seo/metadata";
 import { WebPageSchema } from "@/lib/seo/structured-data";
 import { trackPageView } from "@/lib/analytics/geolocation-tracker";
+import { GeoNotification } from "@/components/location";
 
 /**
  * Static Hero Content Component - Server Component
@@ -138,7 +139,8 @@ export default function Home() {
           </Suspense>
         </ContentErrorBoundary>
         
-
+        {/* Location notification for user consent - client component */}
+        <GeoNotification />
       </div>
     </main>
   );
