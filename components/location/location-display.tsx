@@ -160,9 +160,21 @@ export function LocationDisplay({
               </p>
             )}
             
-            {/* Only show this message when we have neither location nor coordinates */}
-            {locationData.city === 'Unknown' && (!locationData.latitude || !locationData.longitude) && (
+            {/* Only show this message when we have neither location nor coordinates and no specific error */}
+            {locationData.city === 'Unknown' && (!locationData.latitude || !locationData.longitude) && !locationData.error && (
               <p>Location information not available</p>
+            )}
+            
+            {/* Display any specific error messages */}
+            {locationData.error && (
+              <div className="mt-2 text-amber-500 text-xs">
+                <div className="whitespace-pre-line">{locationData.error}</div>
+                {locationData.error.includes('POSITION_UNAVAILABLE') && (
+                  <div className="mt-1 pt-1 border-t border-gray-700 text-gray-400">
+                    <p className="text-xs">Try using a different browser or device.</p>
+                  </div>
+                )}
+              </div>
             )}
           </div>
           {isLocationAllowed && (

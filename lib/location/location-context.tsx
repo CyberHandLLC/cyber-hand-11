@@ -179,7 +179,11 @@ export function LocationProvider({ children, autoRequest = true }: LocationProvi
         updateConsent(ConsentType.LOCATION, ConsentStatus.DENIED);
         setIsLocationAllowed(false);
       } else if (geoError.type === 'POSITION_UNAVAILABLE') {
-        errorMessage = 'Location information is unavailable';
+        errorMessage = 'Unable to determine your location (POSITION_UNAVAILABLE). This may happen due to:\n' +
+          '• Hardware limitations or GPS signal issues\n' +
+          '• VPN or proxy interference\n' +
+          '• Browser-specific privacy features\n' +
+          '\nTry using a different browser or device, or disabling VPN services.';
       } else if (geoError.type === 'TIMEOUT') {
         errorMessage = 'Location request timed out';
       } else if (geoError.type === 'UNSUPPORTED') {
