@@ -1,106 +1,93 @@
-"use client";
+/**
+ * Homepage - Server Component Entry Point
+ * 
+ * This page implements Next.js 15 streaming best practices:
+ * - Main page is a Server Component for improved rendering
+ * - Interactive elements isolated to Client Components
+ * - Appropriate Suspense boundaries for progressive streaming
+ * - Integration with route-level loading.tsx for initial loading state
+ */
 
-import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { CyberLogo } from "@/components/custom/cyber-logo";
-import { PageLayout as _PageLayout, SectionContainer as _SectionContainer } from "@/components/custom/page-layout";
-import { getThemeStyle as _getThemeStyle } from "@/lib/theme-utils";
-import { useTheme as _useTheme } from "@/lib/theme-context";
-import { AnimatedElement as _AnimatedElement } from "@/lib/animation-utils";
 import { Suspense } from 'react';
+import { CyberLogo } from "@/components/custom/cyber-logo";
+import { HomepageButtons } from "./components/homepage-buttons";
+import { CircuitEffectsWrapper } from "./components/circuit-effects-wrapper";
 
-// Define types for circuit elements
-interface _CircuitLineProps {
-  width: string;
-  animation: string;
-  position: {
-    top: string;
-    left: string;
-  };
+/**
+ * Static Hero Content Component - Server Component
+ * Does not depend on data fetching, interactive elements, or client state
+ */
+function HomeHero() {
+  return (
+    <div className="text-center">
+      {/* CyberHand Logo */}
+      <CyberLogo size="md" className="mb-6 animate-fade-in" />
+
+      {/* Headline */}
+      <h1 className="text-4xl md:text-5xl lg:text-6xl mb-8 animate-fade-in">
+        <span className="cyber-gradient-text">
+          Next-Gen Digital Agency
+        </span>
+      </h1>
+    </div>
+  );
 }
 
-interface _GlowingDotProps {
-  animation: string;
-  position: {
-    top: string;
-    left: string;
-  };
+/**
+ * CircuitEffectsSkeleton Component
+ * Placeholder while circuit effects are loading
+ */
+function CircuitEffectsSkeleton() {
+  return (
+    <div className="absolute inset-0 z-5 opacity-10 pointer-events-none">
+      {/* Simple placeholder for circuit effects */}
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div 
+          key={i}
+          className="absolute h-px bg-cyan-500/20"
+          style={{
+            width: `${50 + i * 20}px`,
+            top: `${20 + i * 25}%`,
+            left: `${10 + i * 15}%`,
+            opacity: 0.3,
+            transform: 'rotate(45deg)'
+          }}
+        ></div>
+      ))}
+    </div>
+  );
 }
 
-// Lazy-loaded circuit components for better performance
-const CircuitEffects = dynamic(() => import('@/components/custom/circuit-effects').then(mod => mod.CircuitEffects), {
-  ssr: false,
-  loading: () => <div className="absolute inset-0 z-5 opacity-30 pointer-events-none" />
-});
-
+/**
+ * Home Page - Main Component
+ * Server Component that delegates interactive elements to Client Components
+ */
 export default function Home() {
-  const router = useRouter();
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  // Simulate content being fully loaded
-  useEffect(() => {
-    setIsLoaded(true);
-  }, []);
-
-  const handleGetStarted = () => {
-    router.push("/get-started");
-  };
-
-  const handleLearnMore = () => {
-    router.push("/services");
-  };
-
   return (
     <main className="relative min-h-screen flex items-center justify-center overflow-hidden cyber-circuit-bg">
-      {/* Background image with priority loading */}
-      <div 
-        className="absolute inset-0 bg-black bg-opacity-50 z-0" 
-      />
-      
-      {/* Dark overlay */}
+      {/* Background layers */}
+      <div className="absolute inset-0 bg-black bg-opacity-50 z-0" />
       <div className="absolute inset-0 bg-black bg-opacity-50 z-10" />
 
       {/* Content container */}
       <div className="relative z-20 px-4 py-16 sm:px-6 lg:px-8 w-full max-w-4xl text-center">
-        {/* CyberHand Logo with priority */}
-        <CyberLogo size="md" className="mb-6 animate-fade-in" />
+        {/* Static hero content rendered immediately */}
+        <HomeHero />
 
-        {/* Headline */}
-        <h1 className="text-4xl md:text-5xl lg:text-6xl mb-8 animate-fade-in">
-          <span className="cyber-gradient-text">
-            Next-Gen Digital Agency
-          </span>
-        </h1>
+        {/* Interactive buttons in a Client Component */}
+        <Suspense fallback={
+          <div className="inline-flex flex-wrap gap-3 sm:gap-4 justify-center mt-6 sm:mt-8">
+            <div className="h-10 w-32 bg-cyan-500/30 rounded animate-pulse"></div>
+            <div className="h-10 w-32 bg-gray-700/30 border border-gray-700/50 rounded animate-pulse"></div>
+          </div>
+        }>
+          <HomepageButtons />
+        </Suspense>
 
-        {/* Button container */}
-        <div className="inline-flex flex-wrap gap-3 sm:gap-4 justify-center mt-6 sm:mt-8 animate-fade-in-delayed">
-          <Button 
-            variant="primary" 
-            size="md"
-            onClick={handleGetStarted}
-            className="min-w-[120px] sm:min-w-[140px]"
-          >
-            Get Started
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            size="md"
-            onClick={handleLearnMore}
-            className="min-w-[120px] sm:min-w-[140px]"
-          >
-            Learn More
-          </Button>
-        </div>
-
-        {/* Circuit elements loaded after initial content */}
-        {isLoaded && (
-          <Suspense fallback={null}>
-            <CircuitEffects />
-          </Suspense>
-        )}
+        {/* Circuit effects with appropriate Suspense boundary */}
+        <Suspense fallback={<CircuitEffectsSkeleton />}>
+          <CircuitEffectsWrapper />
+        </Suspense>
       </div>
     </main>
   );

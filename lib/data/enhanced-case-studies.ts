@@ -1,38 +1,22 @@
 /**
- * Streaming Case Studies Data Fetching
+ * Enhanced Case Studies Data Fetching
  * 
- * This module extends the case-studies.ts module to add streaming capabilities.
- * It implements React's streaming pattern for improved perceived performance.
+ * This module provides optimized data fetching utilities for case studies
+ * using Next.js 15's built-in streaming capabilities with React Server Components.
  */
 
 import { cache } from 'react';
 import { CaseStudyProps } from '@/components/custom/case-study-card';
 import { getCaseStudies, getCaseStudyBySlug } from './case-studies';
-import { createResource } from '@/lib/streaming-utils';
-
-/**
- * Creates a streaming resource for case studies
- * This allows React to render UI progressively as data becomes available
- */
-export function createCaseStudiesStream() {
-  return createResource(getCaseStudies());
-}
-
-/**
- * Creates a streaming resource for a single case study
- */
-export function createCaseStudyStream(slug: string) {
-  return createResource(getCaseStudyBySlug(slug));
-}
 
 /**
  * Batch fetch case studies with streaming support
- * This allows for progressive loading of multiple case studies
+ * This allows for progressive loading of multiple case studies when used with Suspense
  * 
  * @param slugs - Array of case study slugs to fetch
- * @returns Array of case study data
+ * @returns Promise resolving to an array of case study data
  */
-export const getStreamingBatchCaseStudies = cache(async (
+export const getBatchCaseStudies = cache(async (
   slugs: string[]
 ): Promise<(CaseStudyProps | null)[]> => {
   // Create individual promises for each case study
@@ -44,26 +28,31 @@ export const getStreamingBatchCaseStudies = cache(async (
 });
 
 /**
- * Get featured case studies with streaming support
- * Uses a tag or quality criteria to determine featured status
+ * Get featured case studies with automatic streaming support
+ * Uses a sorting criteria to determine featured status
+ * 
+ * @param limit - Maximum number of featured case studies to return
+ * @returns Promise resolving to an array of featured case studies
  */
-export const getStreamingFeaturedCaseStudies = cache(async (
+export const getFeaturedCaseStudies = cache(async (
   limit: number = 3
 ): Promise<CaseStudyProps[]> => {
   const allCaseStudies = await getCaseStudies();
   
-  // Filter to select featured case studies based on available criteria
-  // Since featured is not in the type, we use another property as criteria (e.g., most recent)
+  // Sort by some criteria to determine "featured" status
   return allCaseStudies
-    // Sort by some criteria to determine "featured" status
     .sort((a, b) => (b.id > a.id ? 1 : -1)) // Sort by id as a proxy for recency
     .slice(0, limit); // Take the first few as "featured"
 });
 
 /**
- * Get paginated case studies with streaming support
+ * Get paginated case studies with automatic streaming support
+ * 
+ * @param page - Page number to retrieve (starting from 1)
+ * @param pageSize - Number of case studies per page
+ * @returns Promise resolving to pagination result object
  */
-export const getStreamingPaginatedCaseStudies = cache(async (
+export const getPaginatedCaseStudies = cache(async (
   page: number = 1,
   pageSize: number = 6
 ): Promise<{

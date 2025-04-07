@@ -102,6 +102,21 @@ Next.js 15 provides enhanced support for React Server Components (RSC), offering
    - Implement proper error handling for data fetching operations
    - Use { next: { revalidate: timeInSeconds } } for time-based revalidation
 
+5. **Streaming Implementation (Next.js 15)**:
+   - Leverage App Router's native streaming capabilities for progressive UI rendering
+   - Use loading.js files for route-level loading states during streaming
+   - Implement async Server Components with direct data fetching for automatic streaming
+   - Place Suspense boundaries strategically around data-dependent UI sections
+   - Maintain parallel data fetching for optimal streaming performance
+   - Follow the simplified Next.js 15 streaming pattern (no manual resource creation)
+   - Apply page-specific streaming strategies based on data requirements:
+     - **Content-Heavy Pages** (case studies, detail pages): Multiple Suspense boundaries with granular loading states
+     - **Interactive Pages** (contact form): Stream form components separately from static content
+     - **Mixed Content Pages** (homepage): Immediate static content with streaming for dynamic sections
+   - Remove custom streaming utilities in favor of built-in patterns
+   - Document migration path in dedicated guides (streaming-migration-plan.md, streaming-cleanup-guide.md)
+   - Implement comprehensive Suspense fallbacks with skeleton UI components
+
 5. **State Management Approach**:
    - Keep UI state in Client Components
    - Maintain data fetching logic in Server Components

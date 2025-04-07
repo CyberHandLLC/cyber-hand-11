@@ -1,14 +1,25 @@
 /**
- * Streaming Case Study Grid Component
+ * DEPRECATED: Streaming Case Study Grid Component
  * 
+ * IMPORTANT: This file has been moved to the legacy folder as part of the Next.js 15 streaming migration.
+ * It's preserved for reference purposes only and should not be imported or used in new code.
+ * 
+ * The functionality has been replaced by Next.js 15's built-in streaming capabilities:
+ * - Use loading.tsx files for route-level streaming
+ * - Use async Server Components with Suspense boundaries for component-level streaming
+ * - Use enhanced-case-studies.ts for optimized data fetching
+ * 
+ * Original description:
  * This component implements Next.js streaming for progressively rendering
  * case studies as data becomes available. This improves perceived performance
  * by allowing the page to render incrementally.
+ * 
+ * @deprecated Since April 2025 - Replaced by Next.js 15 native streaming
  */
 
 import React, { Suspense } from 'react';
 import { CaseStudyProps } from '@/components/custom/case-study-card';
-import { DynamicCaseStudyGridWrapper } from './dynamic-case-study-grid';
+import { DynamicCaseStudyGridWrapper } from '../../app/case-studies/components/dynamic-case-study-grid';
 
 // Loading skeleton component
 function CaseStudyGridSkeleton() {

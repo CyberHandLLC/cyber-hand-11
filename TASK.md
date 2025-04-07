@@ -177,6 +177,41 @@ This document outlines the specific tasks required to implement the frontend dev
    - [x] Configure proper preloading of critical resources
    - [x] Set up deferred loading of below-the-fold content
 
+4. **Next.js 15 Streaming Migration (Added 2025-04-06)**
+   - [ ] Create comprehensive documentation for streaming migration and cleanup
+     - [x] Create streaming-migration-plan.md outlining the overall strategy
+     - [x] Create streaming-cleanup-guide.md with detailed implementation steps
+     - [x] Document all pages requiring updates in both guides
+
+   - [x] Implement loading.js files for route-level streaming
+     - [x] app/case-studies/loading.tsx (Critical - high data dependency)
+     - [x] app/case-studies/[slug]/loading.tsx (Critical - high data dependency)
+     - [x] app/contact/loading.tsx (Existing Suspense boundaries)
+     - [x] app/loading.tsx (Homepage - existing Suspense boundaries) 
+     - [x] app/resources/loading.tsx (Optional - for consistency)
+     - [x] app/services/loading.tsx (Optional - for consistency)
+     - [x] app/get-started/loading.tsx (Optional - for consistency)
+
+   - [x] Refactor page components with appropriate streaming patterns
+      - [x] Update case-studies/page.tsx (multiple Suspense boundaries)
+      - [x] Update case-studies/[slug]/page.tsx (async component architecture)
+      - [x] Update contact/page.tsx (optimize existing Suspense boundaries)
+      - [x] Update page.tsx (simplify existing Suspense usage)
+
+   - [x] Clean up obsolete custom streaming implementation
+     - [x] Remove lib/streaming-utils.ts (no longer needed with Next.js 15)
+     - [x] Remove app/case-studies/streaming-page.tsx (demo implementation)
+     - [x] Refactor lib/data/streaming-case-studies.ts to enhanced-case-studies.ts
+     - [x] Move app/case-studies/components/streaming-case-study-grid.tsx to legacy folder
+     - [x] Update any imports referencing these files
+     - [x] Run comprehensive tests to verify functionality after cleanup
+     - [x] Create legacy folder with README.md for preserving deprecated code
+
+   - [ ] Test and verify the new implementation
+     - [ ] Test streaming behavior across various network conditions
+     - [ ] Verify progressive loading behavior in all pages
+     - [ ] Conduct performance testing to validate improvements
+
 ### Testing & Test Infrastructure
 1. **Testing Framework Configuration**
    - [x] Set up Jest and React Testing Library
