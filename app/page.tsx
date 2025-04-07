@@ -20,7 +20,8 @@ import { ContentErrorBoundary } from "@/app/components/error-boundary";
 import { createMetadata } from "@/lib/seo/metadata";
 import { WebPageSchema } from "@/lib/seo/structured-data";
 import { trackPageView } from "@/lib/analytics/geolocation-tracker";
-import { GeoNotification } from "@/components/location";
+// Import LocationConsent directly - it's properly wrapped as a client component in its definition
+import { LocationConsent } from '@/components/location';
 
 /**
  * Static Hero Content Component - Server Component
@@ -138,10 +139,12 @@ export default function Home() {
             <CircuitEffectsWrapper />
           </Suspense>
         </ContentErrorBoundary>
-        
-        {/* Location notification for user consent - client component */}
-        <GeoNotification />
       </div>
+      
+      {/* Location consent notification - already wrapped in Suspense in its implementation */}
+      <ContentErrorBoundary>
+        <LocationConsent />
+      </ContentErrorBoundary>
     </main>
   );
 }
