@@ -31,14 +31,19 @@ export function LocationConsent({ className }: LocationConsentProps) {
   const { location, overrideLocation } = useLocation();
   const [visible, setVisible] = useState(false);
   
-  // Only show consent if location is detected and consent hasn't been given before
+  // Show consent notification if user hasn't made a decision yet, regardless of location detection state
   useEffect(() => {
     // Check if user has already made a decision
     const hasConsent = document.cookie.includes(`${LOCATION_CONSENT_COOKIE}=true`);
     const hasDenied = document.cookie.includes(`${LOCATION_CONSENT_COOKIE}=false`);
     
-    // Only show if location is detected and user hasn't decided yet
-    if (location.isDetected && !hasConsent && !hasDenied) {
+    // Check if we're in production
+    const isProduction = process.env.NODE_ENV === 'production';
+    
+    // In development, only show if location is detected
+    // In production, show regardless of detection state if no consent decision exists
+    if ((!isProduction && location.isDetected && !hasConsent && !hasDenied) || 
+        (isProduction && !hasConsent && !hasDenied)) {
       setVisible(true);
       
       // Auto-dismiss after timeout
@@ -100,8 +105,13 @@ export function LocationConsent({ className }: LocationConsentProps) {
       buttonWrapperClasses={className}
     >
       <span style={{ fontSize: '14px' }}>
-        We detect your location ({location.city ? `${location.city}, ` : ''}{location.country || 'Unknown'}) 
-        to provide you with relevant content. Do you consent to this?
+        {location.isDetected ? (
+          <>We detect your location ({location.city ? `${location.city}, ` : ''}{location.country || 'Unknown'}) 
+          to provide you with relevant content. Do you consent to this?</>
+        ) : (
+          <>We use location data to provide you with region-specific content and improve your experience. 
+          Do you consent to this?</>
+        )}
       </span>
     </CookieConsent>
   );
