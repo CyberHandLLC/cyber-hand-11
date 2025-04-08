@@ -27,6 +27,15 @@ As our application grows in complexity, it's crucial to:
 | `Navbar` | `components/navigation/navbar.tsx` | `PageLayout` | 2025-04-02 |
 | `Footer` | `components/navigation/footer.tsx` | `PageLayout` | 2025-04-02 |
 
+### Location System
+
+| Component | Location | Dependents | Last Updated |
+|-----------|----------|------------|----------------|
+| `LocationProvider` | `lib/location/location-context.tsx` | `app/providers.tsx` | 2025-04-07 |
+| `LocationService` | `lib/location/location-service.ts` | `app/layout.tsx`, Server Components | 2025-04-07 |
+| `LocationConsent` | `components/location/location-consent.tsx` | `location-consent-wrapper.tsx` | 2025-04-07 |
+| `LocationConsentWrapper` | `components/location/location-consent-wrapper.tsx` | `app/page.tsx` | 2025-04-07 |
+
 ### UI Components
 
 | Component | Location | Dependents | Last Updated |
@@ -40,6 +49,12 @@ As our application grows in complexity, it's crucial to:
 | `Input` | `components/ui/input.tsx` | All form components | 2025-04-03 |
 | `CaseStudyCard` | `components/custom/case-study-card.tsx` | Case studies page | 2025-04-04 |
 | `ServiceCard` | `components/custom/service-card.tsx` | Services page | 2025-04-04 |
+
+### Middleware
+
+| Middleware | Location | Dependents | Last Updated |
+|------------|----------|------------|--------------|  
+| `middleware` | `middleware.ts` | All pages, `lib/location/location-service.ts` | 2025-04-07 |
 
 ### Performance Utilities
 
@@ -61,6 +76,24 @@ As our application grows in complexity, it's crucial to:
 | `ContactFormActions` | `lib/actions/contact/contact-form.ts` | `contact-form-client.tsx`, `contact-form.tsx` | 2025-04-06 |
 | `CaseStudyActions` | `lib/actions/case-studies/*.ts` | Case study components | - |
 | `ServiceActions` | `lib/actions/services/*.ts` | Service components | - |
+
+### Server Actions
+
+| Action | Location | Dependents | Last Updated |
+|--------|----------|------------|--------------|  
+| `ContactFormActions` | `lib/actions/contact/contact-form.ts` | `contact-form-client.tsx`, `contact-form.tsx` | 2025-04-06 |
+| `CaseStudyActions` | `lib/actions/case-studies/*.ts` | Case study components | 2025-04-06 |
+| `ServiceActions` | `lib/actions/services/*.ts` | Service components | 2025-04-06 |
+| `UserPreferencesActions` | `lib/actions/user/preferences.ts` | Settings components | 2025-04-05 |
+
+### API Routes
+
+| Route | Location | Consumers | Last Updated |
+|-------|----------|-----------|--------------|  
+| `api/geo-debug` | `app/api/geo-debug/route.ts` | Debugging tools | 2025-04-07 |
+| `api/placeholder/[category]` | `app/api/placeholder/[category]/route.ts` | Various page components | 2025-04-05 |
+| `api/analytics` | `app/api/analytics/route.ts` | Analytics components | 2025-04-05 |
+| `api/feedback` | `app/api/feedback/route.ts` | Feedback form | 2025-04-05 |
 
 ### Data Fetching Utilities
 
@@ -108,7 +141,72 @@ When making significant changes to a component or utility, use this checklist to
 - [ ] Component documentation
 - [ ] Type definitions
 - [ ] This dependency tracking file
+
+### Performance Impact Assessment
+- [ ] Bundle size effect: [Increased/Decreased/No change] (specify size if applicable)
+- [ ] Core Web Vitals impact: [LCP/FID/CLS/INP] (specify expected change)
+- [ ] Server-side rendering time: [Increased/Decreased/No change]
+- [ ] Client-side hydration time: [Increased/Decreased/No change]
+
+### Browser & Device Compatibility
+- [ ] Cross-browser tested: [List browsers]
+- [ ] Mobile responsiveness verified
+- [ ] Touch interactions tested (if applicable)
+- [ ] High-DPI/Retina display support
+
+### Accessibility Considerations
+- [ ] Contrast requirements met
+- [ ] Screen reader compatibility
+- [ ] Keyboard navigation supported
+- [ ] ARIA attributes properly implemented
+- [ ] Focus management verified
 ```
+
+## Data Fetching Patterns
+
+The application uses various Next.js 15 data fetching patterns:
+
+| Pattern | Description | Used In | Last Updated |
+|---------|-------------|---------|--------------|  
+| `generateStaticParams` | Static generation of dynamic routes | `case-studies/[slug]/page.tsx`, `services/[id]/page.tsx` | 2025-04-05 |
+| `Suspense` Boundaries | Streaming and progressive rendering | Homepage, case studies page | 2025-04-07 |
+| `cache()` | Request deduplication | `lib/data/*.ts`, `lib/location/location-service.ts` | 2025-04-07 |
+| `revalidatePath` | On-demand revalidation | Contact form submission, feedback forms | 2025-04-06 |
+| `fetch` with `next: { revalidate }` | Time-based revalidation | Blog posts, service listings | 2025-04-05 |
+| `useFormStatus` | Form submission state tracking | All form components | 2025-04-06 |
+| `useFormState` | Form state management with Server Actions | Contact form, feedback forms | 2025-04-06 |
+
+## Build Optimization Features
+
+| Feature | Purpose | Components Affected | Last Updated |
+|---------|---------|---------------------|--------------|  
+| `prefetch={false}` | Disable link prefetching | Low-priority navigation links | 2025-04-05 |
+| `Link prefetch={true}` | Prioritize prefetching | Primary navigation | 2025-04-05 |
+| Route Segments config | Control rendering strategy | Root layout, dashboard layout | 2025-04-05 |
+| Static/Dynamic Settings | Per-page rendering strategy | All pages | 2025-04-05 |
+| Image Optimization | Config in `next.config.js` | All `Image` components | 2025-04-05 |
+| Font Optimization | Local fonts & display settings | Typography components | 2025-04-05 |
+| Bundle Splitting | Code organization for optimal loading | All client components | 2025-04-06 |
+
+## Server/Client Boundaries
+
+The application implements a clear separation between Server and Client Components following Next.js 15 best practices:
+
+| Component Type | Purpose | Considerations | Examples |
+|---------------|---------|----------------|----------|
+| Server Components | Data fetching, SEO, initial HTML | Cannot use hooks, client-side APIs | Page components, layout components |
+| Client Components | Interactivity, state management, event handling | Add `'use client'` directive, avoid large bundles | `LocationProvider`, UI components |
+| Client Boundaries | Wrapper components that separate server/client concerns | Use dynamic imports and Suspense | `LocationConsentWrapper` |
+
+## Next.js-Specific Dependencies
+
+| Feature | Used In | Considerations | Last Updated |
+|---------|---------|----------------|--------------|  
+| Edge Runtime | `middleware.ts` | Required for geolocation in Vercel | 2025-04-07 |
+| React Context | `location-context.tsx`, `theme-context.tsx` | Client Components only | 2025-04-07 |
+| Headers API | `location-service.ts` | Server Components only | 2025-04-07 |
+| Dynamic Imports | `location-consent-wrapper.tsx` | Used for code splitting | 2025-04-07 |
+| Root Layout | `app/layout.tsx` | Wraps all pages, includes Providers | 2025-04-07 |
 
 ## Update Workflow
 
@@ -178,6 +276,26 @@ npm run analyze:server-client
 | Performance Tests | TBD | Performance metrics, optimization utilities | - |
 | API Route Tests | TBD | API endpoints, server actions | - |
 
+## Client/Server Type Safety
+
+| Type or Interface | Location | Shared Between | Last Updated |
+|-------------------|----------|----------------|--------------|  
+| `LocationData` | `lib/location/location-context.tsx` | Server and Client | 2025-04-07 |
+| `ThemeOptions` | `lib/theme-context.tsx` | Server and Client | 2025-04-05 |
+| `UserProfile` | `types/user.ts` | Server and Client | 2025-04-05 |
+| `CaseStudyType` | `types/case-study.ts` | Server and Client | 2025-04-05 |
+| `ApiResponse` | `types/api.ts` | Server Actions and Client | 2025-04-06 |
+| `FormState` | `types/forms.ts` | Server Actions and Client | 2025-04-06 |
+
+### Serialization Boundaries
+
+| Component | Props Serialized | Considerations | Last Updated |
+|-----------|------------------|----------------|--------------|  
+| `Providers` | `locationData` | JSON-serializable only | 2025-04-07 |
+| `CaseStudyPage` | `caseStudy` data | Complex data structure | 2025-04-05 |
+| `ContactForm` | Form initial state | Simple primitives only | 2025-04-05 |
+| `UserDashboard` | User profile data | Dates converted to strings | 2025-04-05 |
+
 ## Special Considerations
 
 ### Server Component Dependencies
@@ -187,6 +305,18 @@ Server Components have special dependency considerations:
 1. **Data Dependencies**: Track both component and data dependencies
 2. **Client Boundaries**: Document where Server/Client component boundaries exist
 3. **React Cache**: Note which components use React's `cache()` function
+4. **Headers API**: Track components using `headers()` from Next.js
+5. **Middleware Integration**: Components relying on headers set by middleware
+
+### Location-Based Features
+
+Components that rely on geolocation data have special considerations:
+
+1. **Middleware Dependencies**: Components using geo headers from middleware
+2. **Client-Side Location Access**: Components using the `useLocation()` hook
+3. **Consent Requirements**: Components that must respect user location consent
+4. **Edge Runtime**: Features requiring Edge Runtime (e.g., geolocation on Vercel)
+5. **Environment Differences**: Development vs. Production behavior
 
 ### CSS and Style Dependencies
 
@@ -208,3 +338,6 @@ Track style dependencies, especially for:
 8. Add test coverage tracking per component/utility
 9. Document data flow between client/server boundaries
 10. Create script to auto-detect new dependencies from import statements
+11. Track location-based feature dependencies more granularly
+12. Document middleware dependencies across different environments
+13. Create tests specifically for geolocation feature dependencies
