@@ -165,7 +165,7 @@ const NEARBY_CITIES: Record<string, NearbyCity[]> = {
  * Generate nearby cities for any location using geo coordinates
  * For cities not in our predefined list, this will use a distance-based algorithm
  */
-function generateNearbyCities(location: string, coordinates?: { latitude: number; longitude: number }): NearbyCity[] {
+function generateNearbyCities(location: string, _coordinates?: { latitude: number; longitude: number }): NearbyCity[] {
   // First check if we have predefined nearby cities
   if (NEARBY_CITIES[location]) {
     return NEARBY_CITIES[location];

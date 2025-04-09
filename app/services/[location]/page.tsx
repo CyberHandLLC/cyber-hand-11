@@ -21,7 +21,8 @@ import { HeadingSkeleton, TextSkeleton, CardGridSkeleton, Skeleton } from '@/com
 import { ContentErrorBoundary } from '@/app/components/error-boundary';
 import { getLocationContent } from '@/lib/location/location-data-service';
 import type { Metadata } from 'next';
-import Image from 'next/image';
+// Commenting out unused import to pass typescript-eslint rules
+// import Image from 'next/image';
 
 // Skeleton components reused from services/page.tsx
 function ServicesGridSkeleton() {
@@ -250,7 +251,7 @@ export default async function LocationServicesPage({
           
           {locationContent.testimonial && (
             <div className="mt-8 bg-blue-950/30 p-6 rounded-lg border border-blue-900/30 italic">
-              <p className="mb-2">"{locationContent.testimonial.quote}"</p>
+              <p className="mb-2">&ldquo;{locationContent.testimonial.quote}&rdquo;</p>
               <p className="text-sm text-right">
                 <strong>{locationContent.testimonial.author}</strong>
                 {locationContent.testimonial.company && (
