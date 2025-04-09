@@ -19,7 +19,9 @@ import { services } from '@/data/services';
 import { ServicesGrid, ServicesMobile, ServicesCTA } from '../components';
 import { HeadingSkeleton, TextSkeleton, CardGridSkeleton, Skeleton } from '@/components/ui/skeleton';
 import { ContentErrorBoundary } from '@/app/components/error-boundary';
+import { getLocationContent } from '@/lib/location/location-data-service';
 import type { Metadata } from 'next';
+import Image from 'next/image';
 
 // Skeleton components reused from services/page.tsx
 function ServicesGridSkeleton() {
@@ -158,10 +160,13 @@ export default async function LocationServicesPage({
 
   // Get user's actual location from headers for comparison
   const userLocation = getLocationData();
+  
+  // Get location-specific content for unique SEO value
+  const locationContent = await getLocationContent(location, displayName, userLocation);
 
   // Page metadata
-  const title = `Our Digital Services in ${displayName}`;
-  const subtitle = `Choose from our range of digital marketing and web services to elevate your online presence in ${displayName}. All plans include regular updates and dedicated support.`;
+  const title = locationContent.headline || `Our Digital Services in ${displayName}`;
+  const subtitle = locationContent.summary || `Choose from our range of digital marketing and web services to elevate your online presence in ${displayName}. All plans include regular updates and dedicated support.`;
 
   return (
     <PageLayout>
@@ -215,16 +220,83 @@ export default async function LocationServicesPage({
         <div className="my-16 p-8 rounded-xl bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border border-blue-800/30">
           <h2 className="text-2xl font-bold mb-4">Tailored Solutions for {displayName}</h2>
           <p className="text-gray-300 mb-4">
-            Our team understands the unique digital landscape of {displayName}. We&apos;ve worked with numerous local businesses
-            to help them establish a strong online presence and reach their target audience effectively.
+            {locationContent.summary || `Our team understands the unique digital landscape of ${displayName}. We've worked with numerous local businesses to help them establish a strong online presence and reach their target audience effectively.`}
           </p>
           <ul className="list-disc list-inside space-y-2 mb-4">
-            <li>Local SEO optimization specifically for {displayName} businesses</li>
-            <li>Performance tuning for regional network conditions</li>
-            <li>Compliance with local regulations and standards</li>
-            <li>Integration with popular local payment and delivery services</li>
+            {locationContent.keyFeatures?.map((feature, index) => (
+              <li key={index}>{feature}</li>
+            )) || (
+              <>
+                <li>Local SEO optimization specifically for {displayName} businesses</li>
+                <li>Performance tuning for regional network conditions</li>
+                <li>Compliance with local regulations and standards</li>
+                <li>Integration with popular local payment and delivery services</li>
+              </>
+            )}
           </ul>
+          
+          {locationContent.industries && locationContent.industries.length > 0 && (
+            <div className="mt-6">
+              <h3 className="text-xl font-semibold mb-2">Key Industries in {displayName}</h3>
+              <div className="flex flex-wrap gap-2">
+                {locationContent.industries.map((industry, index) => (
+                  <span key={index} className="px-3 py-1 bg-blue-900/30 rounded-full text-sm border border-blue-800/40">
+                    {industry}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {locationContent.testimonial && (
+            <div className="mt-8 bg-blue-950/30 p-6 rounded-lg border border-blue-900/30 italic">
+              <p className="mb-2">"{locationContent.testimonial.quote}"</p>
+              <p className="text-sm text-right">
+                <strong>{locationContent.testimonial.author}</strong>
+                {locationContent.testimonial.company && (
+                  <span> · {locationContent.testimonial.company}</span>
+                )}
+              </p>
+            </div>
+          )}
         </div>
+        
+        {/* Nearby Cities Section */}
+        {locationContent.nearbyCities && locationContent.nearbyCities.length > 0 && (
+          <div className="my-16">
+            <h2 className="text-2xl font-bold mb-6">Our Services Also Cover Nearby Areas</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {locationContent.nearbyCities.map((city, index) => (
+                <a 
+                  key={index} 
+                  href={`/services/${city.slug}`}
+                  className="p-4 rounded-lg border border-gray-800/70 bg-gradient-to-br from-gray-900/50 to-gray-800/30 hover:from-blue-900/20 hover:to-indigo-900/20 transition-colors"
+                >
+                  <h3 className="font-medium text-lg mb-1">{city.name}</h3>
+                  <p className="text-sm text-gray-400">
+                    {city.distance} miles away
+                    {city.population && ` · Pop. ${city.population.toLocaleString()}`}
+                  </p>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+        
+        {/* Location-Specific Services */}
+        {locationContent.regionalServices && locationContent.regionalServices.length > 0 && (
+          <div className="my-16">
+            <h2 className="text-2xl font-bold mb-6">Specialized Services for {displayName}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {locationContent.regionalServices.map((service, index) => (
+                <div key={index} className="p-6 rounded-lg border border-indigo-900/30 bg-indigo-950/20">
+                  <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
+                  <p>{service.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* CTA Section with ErrorBoundary and Suspense */}
         <ContentErrorBoundary>
