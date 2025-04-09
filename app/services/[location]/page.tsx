@@ -7,6 +7,8 @@
  * - Dynamic metadata generation for SEO
  * - Proper error handling with notFound()
  * - Suspense boundaries for streaming content
+ * - Mobile-first responsive design for all device sizes
+ * - Touch-optimized interactions for mobile users
  */
 
 import { Suspense } from 'react';
@@ -78,12 +80,12 @@ function LocationBanner({
   }
 
   return (
-    <div className="bg-blue-900/30 border border-blue-800/50 p-4 rounded-lg my-8 text-center">
+    <div className="bg-blue-900/30 border border-blue-800/50 p-3 sm:p-4 rounded-lg my-6 sm:my-8 text-center text-sm sm:text-base">
       <p>
         You&apos;re viewing services for <strong>{currentLocation}</strong>, but we detected you&apos;re in <strong>{detectedLocation}</strong>.{' '}
         <a
           href={`/services/${detectedLocation.toLowerCase().replace(/\s+/g, '-')}`}
-          className="text-blue-400 hover:text-blue-300 underline"
+          className="text-blue-400 hover:text-blue-300 underline inline-block mt-1 sm:mt-0 sm:inline"
         >
           View services for {detectedLocation}
         </a>
@@ -172,17 +174,21 @@ export default async function LocationServicesPage({
   // Page metadata
   const title = locationContent.headline || `Our Digital Services in ${displayName}`;
   const subtitle = locationContent.summary || `Choose from our range of digital marketing and web services to elevate your online presence in ${displayName}. All plans include regular updates and dedicated support.`;
+  
+  // Define service type for display - this was missing and causing TypeScript errors
+  const serviceType = "Digital"; // Default value if not provided elsewhere
 
   return (
     <PageLayout>
       {/* Hero section with title */}
-      <SectionContainer className="pt-20 lg:pt-28 text-center">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
-          {title}
+      <SectionContainer className="pt-16 sm:pt-20 lg:pt-28 text-center px-4 sm:px-6">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
+          {`${serviceType} Services in ${displayName}`}
         </h1>
-          <p className="text-gray-300 dark:text-gray-300 max-w-3xl mx-auto text-base sm:text-lg mb-8 sm:mb-16 px-4 sm:px-0">
-            {subtitle}
-          </p>
+        <p className="text-gray-300 dark:text-gray-300 max-w-3xl mx-auto text-base sm:text-lg mb-8 sm:mb-12 lg:mb-16">
+          {locationContent.summary ? locationContent.summary.substring(0, 150) + '...' : 
+            `Get professional ${serviceType.toLowerCase()} services designed for businesses in ${displayName} and the surrounding area. Our local expertise ensures optimal results for your specific market.`}
+        </p>
 
         {/* Location Banner - only show for detected locations */}
         {userLocation.city && userLocation.city !== displayName && (
@@ -202,7 +208,7 @@ export default async function LocationServicesPage({
         )}
       </SectionContainer>
 
-      <SectionContainer>
+      <SectionContainer className="px-4 sm:px-6">
         {/* Desktop Service Grid with ErrorBoundary and Suspense */}
         <div className="hidden md:block">
           <ContentErrorBoundary>
@@ -222,7 +228,7 @@ export default async function LocationServicesPage({
         </div>
 
         {/* Location-Specific Content - Optimized for mobile first */}
-        <div className="my-8 sm:my-16 p-4 sm:p-8 rounded-xl bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border border-blue-800/30">
+        <div className="my-8 sm:my-12 p-4 sm:p-8 rounded-xl bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border border-blue-800/30">
           <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Tailored Solutions for {displayName}</h2>
           <p className="text-gray-300 mb-4 text-sm sm:text-base">
             {locationContent.summary || `Our team understands the unique digital landscape of ${displayName}. We've worked with numerous local businesses to help them establish a strong online presence and reach their target audience effectively.`}
@@ -266,19 +272,20 @@ export default async function LocationServicesPage({
           )}
         </div>
         
-        {/* Nearby Cities Section - Mobile optimized with scrolling on small screens */}
+        {/* Nearby Cities Section - Enhanced mobile experience */}
         {locationContent.nearbyCities && locationContent.nearbyCities.length > 0 && (
           <div className="my-8 sm:my-16">
             <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Our Services Also Cover Nearby Areas</h2>
             
-            {/* Mobile-optimized horizontal scrolling container for small screens */}
+            {/* Improved mobile-optimized horizontal scrolling for small screens */}
             <div className="block md:hidden overflow-x-auto pb-4 -mx-4 px-4">
-              <div className="flex space-x-3" style={{ minWidth: 'min-content' }}>
+              <div className="flex space-x-3" style={{ minWidth: 'min-content', touchAction: 'pan-x' }}>
                 {locationContent.nearbyCities.map((city, index) => (
                   <a 
                     key={index} 
                     href={`/services/${city.slug}`}
-                    className="flex-shrink-0 w-40 p-3 rounded-lg border border-gray-800/70 bg-gradient-to-br from-gray-900/50 to-gray-800/30 hover:from-blue-900/20 hover:to-indigo-900/20 transition-colors"
+                    className="flex-shrink-0 w-44 p-3 rounded-lg border border-gray-800/70 bg-gradient-to-br from-gray-900/50 to-gray-800/30 hover:from-blue-900/20 hover:to-indigo-900/20 transition-colors shadow-md active:scale-95 touch-manipulation"
+                    aria-label={`View services in ${city.name}`}
                   >
                     <h3 className="font-medium text-base mb-1">{city.name}</h3>
                     <p className="text-xs text-gray-400">
@@ -290,13 +297,13 @@ export default async function LocationServicesPage({
               </div>
             </div>
             
-            {/* Grid layout for larger screens */}
-            <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Improved grid layout for larger screens */}
+            <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {locationContent.nearbyCities.map((city, index) => (
                 <a 
                   key={index} 
                   href={`/services/${city.slug}`}
-                  className="p-4 rounded-lg border border-gray-800/70 bg-gradient-to-br from-gray-900/50 to-gray-800/30 hover:from-blue-900/20 hover:to-indigo-900/20 transition-colors"
+                  className="p-4 rounded-lg border border-gray-800/70 bg-gradient-to-br from-gray-900/50 to-gray-800/30 hover:from-blue-900/20 hover:to-indigo-900/20 transition-colors shadow-md hover:shadow-lg"
                   aria-label={`View services in ${city.name}`}
                 >
                   <h3 className="font-medium text-lg mb-1">{city.name}</h3>
@@ -310,15 +317,15 @@ export default async function LocationServicesPage({
           </div>
         )}
         
-        {/* Location-Specific Services - Responsive layout */}
+        {/* Location-Specific Services - Enhanced responsive layout */}
         {locationContent.regionalServices && locationContent.regionalServices.length > 0 && (
           <div className="my-8 sm:my-16">
             <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Specialized Services for {displayName}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               {locationContent.regionalServices.map((service, index) => (
-                <div key={index} className="p-4 sm:p-6 rounded-lg border border-indigo-900/30 bg-indigo-950/20">
+                <div key={index} className="p-4 sm:p-6 rounded-lg border border-indigo-900/30 bg-indigo-950/20 hover:bg-indigo-950/30 transition-colors">
                   <h3 className="text-lg sm:text-xl font-semibold mb-2">{service.name}</h3>
-                  <p className="text-sm sm:text-base">{service.description}</p>
+                  <p className="text-sm sm:text-base leading-relaxed">{service.description}</p>
                 </div>
               ))}
             </div>

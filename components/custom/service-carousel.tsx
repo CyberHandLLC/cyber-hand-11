@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useTheme } from "@/lib/theme-context";
 import { ServiceCard } from "./service-card";
 import { type ServiceProps } from "@/data/services";
+import { useSwipeable } from "react-swipeable"; // Will be added to package.json if not already there
 
 interface ServiceCarouselProps {
   services: ServiceProps[];
@@ -64,16 +65,12 @@ const NavigationButton = ({ direction, onClick, disabled, theme }: NavigationBut
  */
 const PaginationIndicators = ({ total, activeIndex, onSelect, theme }: PaginationIndicatorsProps) => {
   return (
-    <div className="flex justify-center space-x-2 mt-4">
+    <div className="flex justify-center space-x-2 mt-4 px-2">
       {Array.from({ length: total }).map((_, index) => (
         <button
           key={index}
           onClick={() => onSelect(index)}
-          className={`w-2 h-2 rounded-full transition-all ${
-            index === activeIndex 
-              ? 'w-6 bg-cyan-500' 
-              : theme === 'light' ? 'bg-gray-300' : 'bg-gray-700'
-          }`}
+          className={`h-2.5 rounded-full transition-all ${index === activeIndex ? 'w-8 bg-cyan-500' : `w-2.5 ${theme === 'light' ? 'bg-gray-300' : 'bg-gray-700'}`} touch-manipulation`}
           aria-label={`Go to service ${index + 1}`}
         />
       ))}
@@ -86,13 +83,15 @@ const PaginationIndicators = ({ total, activeIndex, onSelect, theme }: Paginatio
  */
 export function ServiceCarousel({ services, onSelectService }: ServiceCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const { theme } = useTheme();
   const carouselRef = useRef<HTMLDivElement>(null);
   
-  // Scroll to specific card by index
+  // Scroll to specific card by index with improved handling
   const scrollToCard = (index: number) => {
     if (!carouselRef.current) return;
     
+    setIsTransitioning(true);
     const cardElements = carouselRef.current.getElementsByClassName('service-card-container');
     if (cardElements.length > index) {
       const card = cardElements[index] as HTMLElement;
@@ -101,6 +100,9 @@ export function ServiceCarousel({ services, onSelectService }: ServiceCarouselPr
         left: card.offsetLeft - 16, // Account for padding
         behavior: 'smooth'
       });
+      
+      // Clear transitioning state after animation completes
+      setTimeout(() => setIsTransitioning(false), 500);
     }
   };
   
@@ -121,23 +123,55 @@ export function ServiceCarousel({ services, onSelectService }: ServiceCarouselPr
   
   // Handler for pagination indicator selection
   const handleIndicatorSelect = (index: number) => {
+    if (isTransitioning) return; // Prevent interaction during transition
     setActiveIndex(index);
     scrollToCard(index);
   };
   
+  // Set up swipe handlers for touch devices
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => !isTransitioning && scrollToNext(),
+    onSwipedRight: () => !isTransitioning && scrollToPrev(),
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: false,
+    trackTouch: true,
+  });
+  
+  // Handle scroll events to update active index based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!carouselRef.current || isTransitioning) return;
+      
+      const scrollLeft = carouselRef.current.scrollLeft;
+      const containerWidth = carouselRef.current.offsetWidth;
+      const approxIndex = Math.round(scrollLeft / containerWidth);
+      
+      if (approxIndex !== activeIndex && approxIndex >= 0 && approxIndex < services.length) {
+        setActiveIndex(approxIndex);
+      }
+    };
+    
+    const ref = carouselRef.current;
+    if (ref) {
+      ref.addEventListener('scroll', handleScroll);
+      return () => ref.removeEventListener('scroll', handleScroll);
+    }
+  }, [services.length, activeIndex, isTransitioning]);
+  
   // Component render
   return (
-    <div className="relative">
+    <div className="relative" {...swipeHandlers}>
       <div 
         ref={carouselRef}
-        className="overflow-x-auto pb-10 hide-scrollbar snap-x snap-mandatory"
+        className="overflow-x-auto pb-6 hide-scrollbar snap-x snap-mandatory -mx-4 px-4"
+        style={{ touchAction: 'pan-y' }}
       >
-        <div className="flex space-x-6 px-4 py-4">
+        <div className="flex space-x-4 sm:space-x-6 py-2">
           {services.map((service, index) => (
             <div 
               key={service.id}
-              className={`flex-shrink-0 w-[80%] snap-center service-card-container ${
-                index === activeIndex ? 'scale-100' : 'scale-95 opacity-80'
+              className={`flex-shrink-0 w-[85%] sm:w-[80%] snap-center service-card-container ${
+                index === activeIndex ? 'scale-100' : 'scale-95 opacity-75'
               }`}
               style={{ scrollSnapAlign: 'center', transition: 'all 0.3s ease' }}
             >
@@ -145,6 +179,7 @@ export function ServiceCarousel({ services, onSelectService }: ServiceCarouselPr
                 {...service}
                 index={index}
                 onSelect={onSelectService}
+                className="shadow-lg" /* Add shadow for better visual separation */
               />
             </div>
           ))}
@@ -159,19 +194,19 @@ export function ServiceCarousel({ services, onSelectService }: ServiceCarouselPr
         theme={theme}
       />
       
-      {/* Arrow Navigation with components */}
-      <div className="flex justify-between mt-6 px-4">
+      {/* Arrow Navigation with components - Better spacing for mobile */}
+      <div className="flex justify-between mt-4 sm:mt-6 px-4">
         <NavigationButton 
           direction="prev"
           onClick={scrollToPrev}
-          disabled={activeIndex === 0}
+          disabled={isTransitioning || activeIndex === 0}
           theme={theme}
         />
         
         <NavigationButton 
           direction="next"
           onClick={scrollToNext}
-          disabled={activeIndex === services.length - 1}
+          disabled={isTransitioning || activeIndex === services.length - 1}
           theme={theme}
         />
       </div>

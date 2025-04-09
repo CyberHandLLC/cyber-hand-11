@@ -20,6 +20,7 @@ export interface ServiceProps {
 interface ServiceCardProps extends ServiceProps {
   index: number;
   onSelect: (id: string) => void;
+  className?: string; // Optional className for additional styling
 }
 
 export function ServiceCard({ 
@@ -31,7 +32,8 @@ export function ServiceCard({
   icon, 
   popular, 
   index, 
-  onSelect 
+  onSelect,
+  className = '' // Default to empty string if not provided
 }: ServiceCardProps) {
   const { theme } = useTheme();
   
@@ -42,9 +44,9 @@ export function ServiceCard({
     <AnimatedElement
       animation="fadeInUp"
       delay={delay}
-      className={`relative rounded-xl p-6 transition-all duration-300 flex flex-col h-full ${getThemeStyle('bg-card', theme)} ${
+      className={`relative rounded-xl p-4 sm:p-6 transition-all duration-300 flex flex-col h-full ${getThemeStyle('bg-card', theme)} ${
         popular ? "shadow-xl" : "shadow-md"
-      }`}
+      } ${className}`}
     >
       {/* Popular badge - adjusted position to prevent clipping */}
       {popular && (
@@ -63,26 +65,26 @@ export function ServiceCard({
         {title}
       </h3>
       
-      {/* Description */}
-      <p className={`text-sm mb-4 min-h-[60px] ${getThemeStyle('text-secondary', theme)}`}>
+      {/* Description - Adjusted for better mobile readability */}
+      <p className={`text-xs sm:text-sm mb-3 sm:mb-4 min-h-[40px] sm:min-h-[60px] ${getThemeStyle('text-secondary', theme)}`}>
         {description}
       </p>
       
-      {/* Price */}
-      <div className="mb-6 flex items-baseline">
-        <span className={`text-3xl font-bold ${getThemeStyle('text-primary', theme)}`}>{price}</span>
-        <span className="text-sm ml-1 text-gray-500">/month</span>
+      {/* Price - Responsive typography */}
+      <div className="mb-4 sm:mb-6 flex items-baseline">
+        <span className={`text-2xl sm:text-3xl font-bold ${getThemeStyle('text-primary', theme)}`}>{price}</span>
+        <span className="text-xs sm:text-sm ml-1 text-gray-500">/month</span>
       </div>
       
-      {/* Features */}
-      <ul className="mb-6 space-y-2 flex-grow">
+      {/* Features - Improved spacing for mobile */}
+      <ul className="mb-4 sm:mb-6 space-y-1 sm:space-y-2 flex-grow">
         {features.map((feature, i) => (
           <li key={i} className="flex items-start">
             <CheckIcon 
-              className={`mr-2 mt-0.5 ${popular ? "text-cyan-500" : getThemeStyle('text-muted', theme)}`} 
+              className={`mr-1.5 sm:mr-2 mt-0.5 ${popular ? "text-cyan-500" : getThemeStyle('text-muted', theme)}`} 
               size="sm"
             />
-            <span className={getThemeStyle('text-secondary', theme)}>
+            <span className={`text-xs sm:text-sm ${getThemeStyle('text-secondary', theme)}`}>
               {feature}
             </span>
           </li>
