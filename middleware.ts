@@ -136,6 +136,15 @@ export async function middleware(request: ExtendedNextRequest) {
     response.headers.set('x-location-consent-status', 'prompt');
   }
   
+  // Log geolocation data for debugging
+  console.log('Geolocation data:', {
+    city,
+    country,
+    region,
+    consentStatus,
+    pathname
+  });
+
   // Handle dynamic route redirection for location-based content
   // Only redirect if we have both consent and a city
   if (pathname === '/services' && 
@@ -143,11 +152,29 @@ export async function middleware(request: ExtendedNextRequest) {
       city && city.trim() !== '') {
     
     try {
-      // Create slug from city name
-      const citySlug = safeDecodeURI(city)
-        ?.toLowerCase()
-        .replace(/\s+/g, '-')
-        .replace(/[^a-z0-9-]/g, '') || '';
+      // Get the decoded city name
+      const decodedCity = safeDecodeURI(city) || '';
+      
+      // Import the city map and slug generator directly to avoid circular dependencies
+      const { CITY_NAME_MAP } = await import('./lib/location/location-utils');
+      
+      // Try to find the city in our map first (case-sensitive match)
+      let citySlug = CITY_NAME_MAP[decodedCity];
+      
+      // If not found in map, generate a slug
+      if (!citySlug) {
+        citySlug = decodedCity
+          .toLowerCase()
+          .replace(/\s+/g, '-')
+          .replace(/[^a-z0-9-]/g, '');
+      }
+      
+      // Log the slug generation for debugging
+      console.log('City slug generation:', {
+        originalCity: city,
+        decodedCity,
+        generatedSlug: citySlug
+      });
       
       // Only redirect if we have a valid city slug
       if (citySlug && citySlug !== 'undefined' && citySlug !== 'null') {

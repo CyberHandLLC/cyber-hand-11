@@ -9,6 +9,7 @@ import { cache } from 'react';
 // List of valid locations (can be extended or fetched from API)
 export const VALID_LOCATIONS = [
   'new-york',
+  'lewis-center',  // Spaces converted to hyphens for URL compatibility
   'los-angeles',
   'chicago',
   'san-francisco',
@@ -21,13 +22,28 @@ export const VALID_LOCATIONS = [
   // Add other locations as needed
 ];
 
+// Maps original city names to URL-friendly slugs
+export const CITY_NAME_MAP: Record<string, string> = {
+  'New York': 'new-york',
+  'Lewis Center': 'lewis-center',
+  'Los Angeles': 'los-angeles',
+  'Chicago': 'chicago',
+  'San Francisco': 'san-francisco',
+  'Miami': 'miami',
+  'Seattle': 'seattle',
+  'Austin': 'austin',
+  'Boston': 'boston',
+  'Denver': 'denver',
+  'Atlanta': 'atlanta'
+};
+
 /**
  * Validates if a location slug is supported by our application
  * Uses React.cache() for deduplication of validation requests
  */
 export const validateLocation = cache(async (location: string): Promise<boolean> => {
   if (!location) return false;
-  
+
   // Basic validation - check if location is in our supported list
   return VALID_LOCATIONS.includes(location.toLowerCase());
 });
@@ -38,7 +54,7 @@ export const validateLocation = cache(async (location: string): Promise<boolean>
  */
 export function formatLocationName(locationSlug: string): string {
   if (!locationSlug) return '';
-  
+
   return locationSlug
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
@@ -52,10 +68,16 @@ export function formatLocationName(locationSlug: string): string {
 export function generateLocationSlug(cityName: string): string {
   if (!cityName) return '';
   
+  // First check if the city is in our predefined map
+  if (CITY_NAME_MAP[cityName]) {
+    return CITY_NAME_MAP[cityName];
+  }
+  
+  // Otherwise, generate a slug based on the name
   return cityName
     .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9-]/g, '');
+    .replace(/\s+/g, '-') // Convert spaces to hyphens
+    .replace(/[^a-z0-9-]/g, ''); // Remove non-alphanumeric characters
 }
 
 /**
@@ -94,16 +116,16 @@ export const getLocationInfo = cache(async (locationSlug: string): Promise<Locat
       normalizedSlug: ''
     };
   }
-  
+
   // Normalize the slug (ensure proper format)
   const normalizedSlug = locationSlug
     .toLowerCase()
     .replace(/\s+/g, '-')
     .replace(/[^a-z0-9-]/g, '');
-  
+
   // Validate location
   const isValid = await validateLocation(normalizedSlug);
-  
+
   // Default values for invalid locations
   if (!isValid) {
     return {
@@ -113,10 +135,10 @@ export const getLocationInfo = cache(async (locationSlug: string): Promise<Locat
       normalizedSlug
     };
   }
-  
+
   // Format for display (e.g., "new-york" -> "New York")
   const displayName = formatLocationName(normalizedSlug);
-  
+
   // Additional lookup could happen here to get country/region
   // For now we'll use a simple mapping for demo purposes
   const locationDetails = {
@@ -131,7 +153,7 @@ export const getLocationInfo = cache(async (locationSlug: string): Promise<Locat
     'denver': { country: 'US', region: 'CO' },
     'atlanta': { country: 'US', region: 'GA' },
   }[normalizedSlug] || {};
-  
+
   return {
     isValid,
     displayName,
@@ -151,7 +173,7 @@ export const getServicesForLocation = cache(async (location: string) => {
   if (!isValid) {
     throw new Error(`Invalid location: ${location}`);
   }
-  
+
   // In a real implementation, you would fetch from an API or database
   // For now we'll return mock data
   return {
@@ -162,9 +184,9 @@ export const getServicesForLocation = cache(async (location: string) => {
       { id: 'marketing', name: 'Digital Marketing', isAvailable: location !== 'denver' },
       { id: 'consulting', name: 'Tech Consulting', isAvailable: ['new-york', 'san-francisco', 'chicago'].includes(location) },
     ],
-    specialties: location === 'new-york' ? ['Fintech', 'Media'] : 
-                 location === 'san-francisco' ? ['Startups', 'Tech'] : 
-                 location === 'miami' ? ['Hospitality', 'Real Estate'] : 
-                 ['General Business']
+    specialties: location === 'new-york' ? ['Fintech', 'Media'] :
+      location === 'san-francisco' ? ['Startups', 'Tech'] :
+        location === 'miami' ? ['Hospitality', 'Real Estate'] :
+          ['General Business']
   };
 });
