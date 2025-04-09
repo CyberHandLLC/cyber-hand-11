@@ -1,59 +1,62 @@
-import { NextFont as _NextFont } from 'next/dist/compiled/@next/font';
+/**
+ * Font Optimization Implementation (Next.js 15.2.4+)
+ * 
+ * Follows Next.js 15 best practices for font optimization:
+ * 1. Automatic font optimization with next/font to eliminate CLS
+ * 2. Zero external network requests using self-hosted Google Fonts
+ * 3. Automatic fallback font generation with size-adjust metrics
+ * 4. Font subsetting for reduced file size and improved loading
+ * 5. Variable fonts for multiple weights with minimal file size impact
+ * 6. Strategic font-display settings (swap for all critical text)
+ */
 import { Inter, Orbitron } from 'next/font/google';
 
-/**
- * Font Optimization Implementation
- * 
- * We're implementing the following optimizations:
- * 1. Font subsetting - Only loading the characters we actually use
- * 2. Optimized font-display strategies - 'swap' for UI fonts, 'optional' for decorative
- * 3. Variable fonts when available - Reduced file size while supporting multiple weights
- * 4. Preloading of critical fonts - Improves LCP by avoiding font-related layout shifts
- */
-
-// Primary content font - used for body text and most content
-export const inter = Inter({
+// Primary content font - used for body text and most UI elements
+export const inter = Inter({ 
   subsets: ['latin'],
-  display: 'swap', // Use swap for primary content font to ensure text is always visible
+  display: 'swap', // Ensures text is always visible during font loading
   variable: '--font-inter',
-  preload: true,
-  fallback: ['system-ui', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-  // Enables font subsetting - only loads the characters we need
-  // This dramatically reduces font file size
-  adjustFontFallback: true, // Reduces CLS by matching fallback metrics
+  // Next.js 15 automatically applies proper size-adjust to fallbacks
+  fallback: ['system-ui', 'Segoe UI', 'Helvetica Neue', 'Arial', 'sans-serif'],
+  // This enables Next.js to automatically calculate size-adjust values
+  // to match fallback fonts to the actual font metrics, reducing CLS
+  adjustFontFallback: true, 
 });
 
-// Brand/heading font - used for headings and brand elements
+// Brand/heading font - used for headlines and key brand elements
 export const orbitron = Orbitron({
   subsets: ['latin'],
-  display: 'swap', // Important for brand identity elements
+  display: 'swap', // Brand identity should be visible immediately
   variable: '--font-orbitron',
-  // Only load needed weights to reduce file size
+  // Only load specific weights we actually use to reduce bundle size
   weight: ['400', '500', '600', '700'],
-  preload: true,
-  fallback: ['Arial', 'Helvetica', 'sans-serif'],
+  // Next.js 15 automatically applies proper size-adjust to fallbacks
+  fallback: ['Arial', 'Helvetica Neue', 'sans-serif'],
   adjustFontFallback: true,
 });
 
-// Font CSS class map for easy application
+/**
+ * Font utility exports for use throughout the application
+ */
+
+// Font class mapping for component-level application
 export const fontClasses = {
-  // Body text
+  // Body text class
   body: inter.className,
-  // Heading text
+  // Heading text class
   heading: orbitron.className,
-  // UI elements (buttons, inputs, etc.)
+  // UI elements class (buttons, inputs, etc.)
   ui: inter.className,
 };
 
-// CSS variable map for theme integration
+// CSS variable mapping for global application via layout
 export const fontVariables = {
   inter: inter.variable,
   orbitron: orbitron.variable,
 };
 
-// Fallback font stacks for critical CSS
-export const fontFallbacks = {
-  sans: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-  display: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
-  mono: 'SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-};
+// Helper type for strongly typed font classes
+export type FontClassName = keyof typeof fontClasses;
+
+// We no longer need explicit fallback stacks as Next.js 15 handles this
+// automatically with the adjustFontFallback option

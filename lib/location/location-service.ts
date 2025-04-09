@@ -80,7 +80,7 @@ export function isInCountry(countryCode: string): boolean {
   try {
     const { country } = getLocationData();
     return country === countryCode;
-  } catch (_error) {
+  } catch (_) {
     return false;
   }
 }
@@ -93,7 +93,7 @@ export function isInRegion(regionCode: string): boolean {
   try {
     const { region } = getLocationData();
     return region === regionCode;
-  } catch (_error) {
+  } catch (_) {
     return false;
   }
 }
@@ -105,7 +105,7 @@ export function isInContinent(continentCode: string): boolean {
   try {
     const { continent } = getLocationData();
     return continent === continentCode;
-  } catch (_error) {
+  } catch (_) {
     return false;
   }
 }
@@ -128,7 +128,65 @@ export function getFormattedLocation(): string {
     if (country) parts.push(country);
     
     return parts.join(', ');
-  } catch (_error) {
+  } catch (_) {
     return 'Unknown Location';
+  }
+}
+
+/**
+ * Extract location data from request headers in middleware
+ * This version is designed to work in middleware context, not in Server Components
+ */
+export function getLocationFromHeaders(headers: Headers): LocationData | null {
+  try {
+    // Extract geolocation headers
+    const country = headers.get('x-geo-country') || undefined;
+    const city = headers.get('x-geo-city') || undefined;
+    const region = headers.get('x-geo-region') || undefined;
+    const timezone = headers.get('x-geo-timezone') || undefined;
+    const continent = headers.get('x-geo-continent') || undefined;
+    
+    // Parse coordinate headers if present
+    const latValue = headers.get('x-geo-latitude');
+    const longValue = headers.get('x-geo-longitude');
+    
+    const latitude = latValue ? parseFloat(latValue) : undefined;
+    const longitude = longValue ? parseFloat(longValue) : undefined;
+    
+    return {
+      country,
+      city,
+      region,
+      timezone,
+      continent,
+      latitude,
+      longitude,
+      isDetected: Boolean(country || city),
+      lastUpdated: Date.now()
+    };
+  } catch (_) {
+    console.error('Error extracting location from headers');
+    return null;
+  }
+}
+
+/**
+ * Lighter version of location extraction for middleware
+ * Only extracts the most essential fields to minimize processing
+ */
+export function getLiteLocationFromHeaders(headers: Headers): {
+  country?: string;
+  city?: string;
+  region?: string;
+} {
+  try {
+    return {
+      country: headers.get('x-geo-country') || undefined,
+      city: headers.get('x-geo-city') || undefined,
+      region: headers.get('x-geo-region') || undefined,
+    };
+  } catch (_) {
+    console.error('Error extracting lite location from headers');
+    return {};
   }
 }

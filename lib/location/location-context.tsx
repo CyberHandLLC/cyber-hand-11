@@ -23,7 +23,7 @@ export interface LocationData {
 }
 
 // Context type definition
-interface LocationContextType {
+export interface LocationContextType {
   // Current location state
   location: LocationData;
   

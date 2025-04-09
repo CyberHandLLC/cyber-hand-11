@@ -1,6 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Exclude backup directory from build process
+  distDir: '.next',
+  // Exclude backup directory from file tracing (moved from experimental per Next.js 15.2.4)
+  outputFileTracingExcludes: {
+    '*': ['./backup/**/*'],
+  },
   images: {
     remotePatterns: [
       {

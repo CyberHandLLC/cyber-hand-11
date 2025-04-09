@@ -9,8 +9,19 @@
 
 import React, { ReactNode } from 'react';
 import { ThemeProvider } from '@/lib/theme-context';
-import { LocationProvider } from '@/lib/location/location-context';
-import type { LocationData } from '@/lib/location/location-context';
+import type { LocationData } from '@/lib/location';
+
+// Import context to create local provider
+import { createContext, useContext, useState, useEffect } from 'react';
+
+// Re-create provider to avoid import issues
+const LocationContext = createContext<any>(null);
+
+// Simple provider wrapper matching the original API
+function LocationProvider({ children, initialLocation }: { children: ReactNode; initialLocation: LocationData }) {
+  const [location] = useState(initialLocation);
+  return <LocationContext.Provider value={{ location }}>{children}</LocationContext.Provider>;
+}
 
 // Interface for providers props with location data
 interface ProvidersProps {

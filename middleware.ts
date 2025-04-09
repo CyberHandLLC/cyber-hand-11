@@ -33,7 +33,12 @@ interface ExtendedNextRequest extends NextRequest {
 // because middleware runs in a different environment than server components
 
 export async function middleware(request: ExtendedNextRequest) {
-  const response = NextResponse.next();
+  // Get URL and pathname for routing decisions
+  const url = request.nextUrl.clone();
+  const { pathname } = url;
+  
+  // Create base response
+  let response = NextResponse.next();
   
   // Extract Vercel's geolocation headers
   // These are available on all Vercel plans when using the Edge runtime
@@ -115,18 +120,51 @@ export async function middleware(request: ExtendedNextRequest) {
   
   // Set a request header with the consent status for use in components
   // This makes it easy to access in both client and server components
+  let consentStatus = 'prompt';
   if (locationConsent) {
     try {
       const parsedConsent = JSON.parse(locationConsent.value || '{}');
+      consentStatus = parsedConsent.consentStatus;
       
       // Add consent status to request headers for use in server components
-      response.headers.set('x-location-consent-status', parsedConsent.consentStatus);
+      response.headers.set('x-location-consent-status', consentStatus);
     } catch (error) {
       console.error('Error parsing location consent cookie:', error);
     }
   } else {
     // No consent cookie found, mark as 'prompt' in headers
     response.headers.set('x-location-consent-status', 'prompt');
+  }
+  
+  // Handle dynamic route redirection for location-based content
+  // Only redirect if we have both consent and a city
+  if (pathname === '/services' && 
+      consentStatus === 'granted' && 
+      city && city.trim() !== '') {
+    
+    try {
+      // Create slug from city name
+      const citySlug = safeDecodeURI(city)
+        ?.toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '') || '';
+      
+      // Only redirect if we have a valid city slug
+      if (citySlug && citySlug !== 'undefined' && citySlug !== 'null') {
+        // Create URL for location-specific services page
+        const locationUrl = new URL(`/services/${citySlug}`, request.url);
+        
+        // Preserve any query parameters
+        request.nextUrl.searchParams.forEach((value, key) => {
+          locationUrl.searchParams.set(key, value);
+        });
+        
+        // Redirect to location-specific page
+        return NextResponse.redirect(locationUrl);
+      }
+    } catch (error) {
+      console.error('Error redirecting to location-specific page:', error);
+    }
   }
   
   return response;
