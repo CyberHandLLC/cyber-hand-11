@@ -38,14 +38,34 @@ export const CITY_NAME_MAP: Record<string, string> = {
 };
 
 /**
- * Validates if a location slug is supported by our application
+ * Validates if a location slug is potentially valid for our application
  * Uses React.cache() for deduplication of validation requests
+ * 
+ * In this more permissive implementation, we consider a location valid if:
+ * 1. It's in our predefined list (guaranteed valid)
+ * 2. OR it meets basic format requirements for a location slug
  */
 export const validateLocation = cache(async (location: string): Promise<boolean> => {
   if (!location) return false;
-
-  // Basic validation - check if location is in our supported list
-  return VALID_LOCATIONS.includes(location.toLowerCase());
+  
+  // Normalize the input slug
+  const normalizedSlug = location.toLowerCase();
+  
+  // If it's in our predefined list, it's definitely valid
+  if (VALID_LOCATIONS.includes(normalizedSlug)) {
+    return true;
+  }
+  
+  // Otherwise, perform basic validation for a potential location slug:
+  // - Must be at least 3 characters
+  // - Must contain only alphanumeric characters and hyphens
+  // - Must not contain consecutive hyphens
+  // - Must start and end with an alphanumeric character
+  return (
+    normalizedSlug.length >= 3 && 
+    /^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(normalizedSlug) &&
+    !normalizedSlug.includes('--')
+  );
 });
 
 /**
@@ -122,7 +142,7 @@ export const getLocationInfo = cache(async (locationSlug: string): Promise<Locat
     .toLowerCase()
     .replace(/\s+/g, '-')
     .replace(/[^a-z0-9-]/g, '');
-
+  
   // Validate location
   const isValid = await validateLocation(normalizedSlug);
 
@@ -139,10 +159,13 @@ export const getLocationInfo = cache(async (locationSlug: string): Promise<Locat
   // Format for display (e.g., "new-york" -> "New York")
   const displayName = formatLocationName(normalizedSlug);
 
-  // Additional lookup could happen here to get country/region
-  // For now we'll use a simple mapping for demo purposes
-  const locationDetails = {
+  // For predefined locations, use our hardcoded region/country data
+  let locationDetails = {};
+  
+  // Check if it's in our predefined mappings
+  const predefinedDetails = {
     'new-york': { country: 'US', region: 'NY' },
+    'lewis-center': { country: 'US', region: 'OH' },
     'los-angeles': { country: 'US', region: 'CA' },
     'chicago': { country: 'US', region: 'IL' },
     'san-francisco': { country: 'US', region: 'CA' },
@@ -152,8 +175,20 @@ export const getLocationInfo = cache(async (locationSlug: string): Promise<Locat
     'boston': { country: 'US', region: 'MA' },
     'denver': { country: 'US', region: 'CO' },
     'atlanta': { country: 'US', region: 'GA' },
-  }[normalizedSlug] || {};
-
+  }[normalizedSlug];
+  
+  if (predefinedDetails) {
+    // Use our predefined details if available
+    locationDetails = predefinedDetails;
+  } else {
+    // For dynamic locations, provide US as default country
+    // In a production environment, you could do a geocoding API lookup here
+    locationDetails = {
+      country: 'US',
+      region: ''
+    };
+  }
+  
   return {
     isValid,
     displayName,
@@ -171,7 +206,17 @@ export const getServicesForLocation = cache(async (location: string) => {
   // Validate location before fetching
   const isValid = await validateLocation(location);
   if (!isValid) {
-    throw new Error(`Invalid location: ${location}`);
+    // For invalid locations, still return a minimal data set rather than error
+    // This avoids 500 errors and provides a fallback experience
+    return {
+      location: formatLocationName(location),
+      services: [
+        { id: 'web-dev', name: 'Web Development', isAvailable: true },
+        { id: 'design', name: 'UI/UX Design', isAvailable: true },
+        { id: 'marketing', name: 'Digital Marketing', isAvailable: true },
+      ],
+      specialties: ['General Business']
+    };
   }
 
   // In a real implementation, you would fetch from an API or database

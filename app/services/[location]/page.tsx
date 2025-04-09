@@ -13,7 +13,7 @@ import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { getLocationData } from '@/lib/location/location-service';
 import { PageLayout, SectionContainer } from '@/components/custom/page-layout';
-import { getLocationInfo } from '@/lib/location';
+import { getLocationInfo, VALID_LOCATIONS } from '@/lib/location';
 import { services } from '@/data/services';
 import { ServicesGrid, ServicesMobile, ServicesCTA } from '../components';
 import { HeadingSkeleton, TextSkeleton, CardGridSkeleton, Skeleton } from '@/components/ui/skeleton';
@@ -140,12 +140,8 @@ export default async function LocationServicesPage({
   // In Next.js 15, params are wrapped in a Promise that must be awaited
   const { location } = await params;
 
-  // Validate the location
+  // Get location info - our new implementation treats most locations as valid
   const locationInfo = await getLocationInfo(location);
-  if (!locationInfo.isValid) {
-    // If invalid location, show 404 page
-    notFound();
-  }
 
   // Format the location for display
   const { displayName } = locationInfo;
@@ -168,12 +164,21 @@ export default async function LocationServicesPage({
           {subtitle}
         </p>
 
-        {/* Location Banner */}
-        {userLocation.city && (
+        {/* Location Banner - only show for detected locations */}
+        {userLocation.city && userLocation.city !== displayName && (
           <LocationBanner
             currentLocation={displayName}
             detectedLocation={userLocation.city}
           />
+        )}
+        
+        {/* Show a note for dynamically generated location pages */}
+        {!VALID_LOCATIONS.includes(location.toLowerCase()) && (
+          <div className="bg-amber-900/30 border border-amber-800/50 p-4 rounded-lg my-4">
+            <p className="text-sm">
+              This is a dynamically generated location page. Our services are available in {displayName} and most other locations.
+            </p>
+          </div>
         )}
       </SectionContainer>
 
