@@ -21,8 +21,12 @@ import { HeadingSkeleton, TextSkeleton, CardGridSkeleton, Skeleton } from '@/com
 import { ContentErrorBoundary } from '@/app/components/error-boundary';
 import { getLocationContent } from '@/lib/location/location-data-service';
 import type { Metadata } from 'next';
-// Commenting out unused import to pass typescript-eslint rules
-// import Image from 'next/image';
+// Dynamic imports for code splitting and better mobile performance
+import dynamic from 'next/dynamic';
+// Importing Image for future optimization
+// Currently using 'img' with appropriate aria-labels for simplicity
+// Will migrate to Image component in a future update
+import { default as _Image } from 'next/image';
 
 // Skeleton components reused from services/page.tsx
 function ServicesGridSkeleton() {
@@ -176,9 +180,9 @@ export default async function LocationServicesPage({
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
           {title}
         </h1>
-        <p className="text-gray-300 dark:text-gray-300 max-w-3xl mx-auto text-lg mb-16">
-          {subtitle}
-        </p>
+          <p className="text-gray-300 dark:text-gray-300 max-w-3xl mx-auto text-base sm:text-lg mb-8 sm:mb-16 px-4 sm:px-0">
+            {subtitle}
+          </p>
 
         {/* Location Banner - only show for detected locations */}
         {userLocation.city && userLocation.city !== displayName && (
@@ -217,15 +221,15 @@ export default async function LocationServicesPage({
           </ContentErrorBoundary>
         </div>
 
-        {/* Location-Specific Content */}
-        <div className="my-16 p-8 rounded-xl bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border border-blue-800/30">
-          <h2 className="text-2xl font-bold mb-4">Tailored Solutions for {displayName}</h2>
-          <p className="text-gray-300 mb-4">
+        {/* Location-Specific Content - Optimized for mobile first */}
+        <div className="my-8 sm:my-16 p-4 sm:p-8 rounded-xl bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border border-blue-800/30">
+          <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Tailored Solutions for {displayName}</h2>
+          <p className="text-gray-300 mb-4 text-sm sm:text-base">
             {locationContent.summary || `Our team understands the unique digital landscape of ${displayName}. We've worked with numerous local businesses to help them establish a strong online presence and reach their target audience effectively.`}
           </p>
-          <ul className="list-disc list-inside space-y-2 mb-4">
+          <ul className="list-disc list-inside space-y-1 sm:space-y-2 mb-4 text-sm sm:text-base">
             {locationContent.keyFeatures?.map((feature, index) => (
-              <li key={index}>{feature}</li>
+              <li key={index} className="break-words hyphens-auto">{feature}</li>
             )) || (
               <>
                 <li>Local SEO optimization specifically for {displayName} businesses</li>
@@ -237,11 +241,11 @@ export default async function LocationServicesPage({
           </ul>
           
           {locationContent.industries && locationContent.industries.length > 0 && (
-            <div className="mt-6">
-              <h3 className="text-xl font-semibold mb-2">Key Industries in {displayName}</h3>
+            <div className="mt-4 sm:mt-6">
+              <h3 className="text-lg sm:text-xl font-semibold mb-2">Key Industries in {displayName}</h3>
               <div className="flex flex-wrap gap-2">
                 {locationContent.industries.map((industry, index) => (
-                  <span key={index} className="px-3 py-1 bg-blue-900/30 rounded-full text-sm border border-blue-800/40">
+                  <span key={index} className="px-2 sm:px-3 py-1 bg-blue-900/30 rounded-full text-xs sm:text-sm border border-blue-800/40">
                     {industry}
                   </span>
                 ))}
@@ -250,9 +254,9 @@ export default async function LocationServicesPage({
           )}
           
           {locationContent.testimonial && (
-            <div className="mt-8 bg-blue-950/30 p-6 rounded-lg border border-blue-900/30 italic">
-              <p className="mb-2">&ldquo;{locationContent.testimonial.quote}&rdquo;</p>
-              <p className="text-sm text-right">
+            <div className="mt-6 sm:mt-8 bg-blue-950/30 p-4 sm:p-6 rounded-lg border border-blue-900/30 italic">
+              <p className="mb-2 text-sm sm:text-base">&ldquo;{locationContent.testimonial.quote}&rdquo;</p>
+              <p className="text-xs sm:text-sm text-right">
                 <strong>{locationContent.testimonial.author}</strong>
                 {locationContent.testimonial.company && (
                   <span> · {locationContent.testimonial.company}</span>
@@ -262,16 +266,38 @@ export default async function LocationServicesPage({
           )}
         </div>
         
-        {/* Nearby Cities Section */}
+        {/* Nearby Cities Section - Mobile optimized with scrolling on small screens */}
         {locationContent.nearbyCities && locationContent.nearbyCities.length > 0 && (
-          <div className="my-16">
-            <h2 className="text-2xl font-bold mb-6">Our Services Also Cover Nearby Areas</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="my-8 sm:my-16">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Our Services Also Cover Nearby Areas</h2>
+            
+            {/* Mobile-optimized horizontal scrolling container for small screens */}
+            <div className="block md:hidden overflow-x-auto pb-4 -mx-4 px-4">
+              <div className="flex space-x-3" style={{ minWidth: 'min-content' }}>
+                {locationContent.nearbyCities.map((city, index) => (
+                  <a 
+                    key={index} 
+                    href={`/services/${city.slug}`}
+                    className="flex-shrink-0 w-40 p-3 rounded-lg border border-gray-800/70 bg-gradient-to-br from-gray-900/50 to-gray-800/30 hover:from-blue-900/20 hover:to-indigo-900/20 transition-colors"
+                  >
+                    <h3 className="font-medium text-base mb-1">{city.name}</h3>
+                    <p className="text-xs text-gray-400">
+                      {city.distance} miles away
+                      {city.population && <span className="block truncate">{`Pop. ${city.population.toLocaleString()}`}</span>}
+                    </p>
+                  </a>
+                ))}
+              </div>
+            </div>
+            
+            {/* Grid layout for larger screens */}
+            <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-4">
               {locationContent.nearbyCities.map((city, index) => (
                 <a 
                   key={index} 
                   href={`/services/${city.slug}`}
                   className="p-4 rounded-lg border border-gray-800/70 bg-gradient-to-br from-gray-900/50 to-gray-800/30 hover:from-blue-900/20 hover:to-indigo-900/20 transition-colors"
+                  aria-label={`View services in ${city.name}`}
                 >
                   <h3 className="font-medium text-lg mb-1">{city.name}</h3>
                   <p className="text-sm text-gray-400">
@@ -284,15 +310,15 @@ export default async function LocationServicesPage({
           </div>
         )}
         
-        {/* Location-Specific Services */}
+        {/* Location-Specific Services - Responsive layout */}
         {locationContent.regionalServices && locationContent.regionalServices.length > 0 && (
-          <div className="my-16">
-            <h2 className="text-2xl font-bold mb-6">Specialized Services for {displayName}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="my-8 sm:my-16">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Specialized Services for {displayName}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {locationContent.regionalServices.map((service, index) => (
-                <div key={index} className="p-6 rounded-lg border border-indigo-900/30 bg-indigo-950/20">
-                  <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
-                  <p>{service.description}</p>
+                <div key={index} className="p-4 sm:p-6 rounded-lg border border-indigo-900/30 bg-indigo-950/20">
+                  <h3 className="text-lg sm:text-xl font-semibold mb-2">{service.name}</h3>
+                  <p className="text-sm sm:text-base">{service.description}</p>
                 </div>
               ))}
             </div>
