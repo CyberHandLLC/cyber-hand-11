@@ -110,12 +110,20 @@ export async function generateMetadata({
 
   const { displayName } = locationInfo;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com';
+  const canonical = `${siteUrl}/services/${location}`;
+  const ampUrl = `${siteUrl}/services/${location}?amp=1`;
 
   return {
     title: `Services in ${displayName} | Cyber Hand`,
     description: `Explore our digital agency services tailored for ${displayName}. Web development, UI/UX design, and digital marketing solutions.`,
+    keywords: [`${displayName} web design`, `${displayName} digital marketing`, `${displayName} UI/UX design`],
     alternates: {
-      canonical: `${siteUrl}/services/${location}`,
+      canonical
+    },
+    // Next.js 15 doesn't have a native amphtml in the Metadata type
+    // We'll add it as a custom meta tag
+    other: {
+      'amphtml': ampUrl
     },
     openGraph: {
       title: `Services in ${displayName} | Cyber Hand`,
