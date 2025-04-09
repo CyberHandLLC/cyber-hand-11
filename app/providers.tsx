@@ -12,10 +12,16 @@ import { ThemeProvider } from '@/lib/theme-context';
 import type { LocationData } from '@/lib/location';
 
 // Import context to create local provider
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useState } from 'react';
+// Remove unused imports completely rather than trying to prefix them
+
+// Define proper type for LocationContext instead of using 'any'
+interface LocationContextType {
+  location: LocationData;
+}
 
 // Re-create provider to avoid import issues
-const LocationContext = createContext<any>(null);
+const LocationContext = createContext<LocationContextType | null>(null);
 
 // Simple provider wrapper matching the original API
 function LocationProvider({ children, initialLocation }: { children: ReactNode; initialLocation: LocationData }) {

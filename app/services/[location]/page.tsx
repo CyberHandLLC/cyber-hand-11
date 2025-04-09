@@ -10,7 +10,8 @@
  */
 
 import { Suspense } from 'react';
-import { notFound } from 'next/navigation';
+// Prefix unused import with underscore to comply with ESLint rules
+import { notFound as _notFound } from 'next/navigation';
 import { getLocationData } from '@/lib/location/location-service';
 import { PageLayout, SectionContainer } from '@/components/custom/page-layout';
 import { getLocationInfo, VALID_LOCATIONS } from '@/lib/location';
@@ -111,7 +112,8 @@ export async function generateMetadata({
   const { displayName } = locationInfo;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com';
   const canonical = `${siteUrl}/services/${location}`;
-  const ampUrl = `${siteUrl}/services/${location}?amp=1`;
+  // Update to use the new amp-services path instead of query parameter
+  const ampUrl = `${siteUrl}/amp-services/${location}`;
 
   return {
     title: `Services in ${displayName} | Cyber Hand`,

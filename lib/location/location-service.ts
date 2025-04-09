@@ -48,11 +48,11 @@ export function getLocationData(): LocationData {
     const continent = headersList.get('x-geo-continent') || undefined;
     
     // Parse coordinate headers if present
-    const latValue = headersList.get('x-geo-latitude');
-    const longValue = headersList.get('x-geo-longitude');
+    const _latValue = headersList.get('x-geo-latitude');
+    const _longValue = headersList.get('x-geo-longitude');
     
-    const latitude = latValue ? parseFloat(latValue) : undefined;
-    const longitude = longValue ? parseFloat(longValue) : undefined;
+    const latitude = _latValue ? parseFloat(_latValue) : undefined;
+    const longitude = _longValue ? parseFloat(_longValue) : undefined;
     
     // Return the parsed location data
     return {
@@ -147,11 +147,11 @@ export function getLocationFromHeaders(headers: Headers): LocationData | null {
     const continent = headers.get('x-geo-continent') || undefined;
     
     // Parse coordinate headers if present
-    const latValue = headers.get('x-geo-latitude');
-    const longValue = headers.get('x-geo-longitude');
+    const _latValue = headers.get('x-geo-latitude');
+    const _longValue = headers.get('x-geo-longitude');
     
-    const latitude = latValue ? parseFloat(latValue) : undefined;
-    const longitude = longValue ? parseFloat(longValue) : undefined;
+    const latitude = _latValue ? parseFloat(_latValue) : undefined;
+    const longitude = _longValue ? parseFloat(_longValue) : undefined;
     
     return {
       country,
