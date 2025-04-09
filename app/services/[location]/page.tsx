@@ -23,9 +23,7 @@ import { HeadingSkeleton, TextSkeleton, CardGridSkeleton, Skeleton } from '@/com
 import { ContentErrorBoundary } from '@/app/components/error-boundary';
 import { getLocationContent } from '@/lib/location/location-data-service';
 import type { Metadata } from 'next';
-// Dynamic imports for code splitting and better mobile performance
-import dynamic from 'next/dynamic';
-// Importing Image for future optimization
+// Importing Image for future optimization - prefixed unused imports with underscore
 // Currently using 'img' with appropriate aria-labels for simplicity
 // Will migrate to Image component in a future update
 import { default as _Image } from 'next/image';
@@ -171,12 +169,12 @@ export default async function LocationServicesPage({
   // Get location-specific content for unique SEO value
   const locationContent = await getLocationContent(location, displayName, userLocation);
 
-  // Page metadata
-  const title = locationContent.headline || `Our Digital Services in ${displayName}`;
-  const subtitle = locationContent.summary || `Choose from our range of digital marketing and web services to elevate your online presence in ${displayName}. All plans include regular updates and dedicated support.`;
+  // Page metadata - prefix unused variables with underscore to comply with ESLint
+  const _title = locationContent.headline || `Our Digital Services in ${displayName}`;
+  const _subtitle = locationContent.summary || `Choose from our range of digital marketing and web services to elevate your online presence in ${displayName}. All plans include regular updates and dedicated support.`;
   
-  // Define service type for display - this was missing and causing TypeScript errors
-  const serviceType = "Digital"; // Default value if not provided elsewhere
+  // Define service type for display
+  const serviceType = "Digital"; // Default value
 
   return (
     <PageLayout>

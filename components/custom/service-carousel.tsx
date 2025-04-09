@@ -132,9 +132,10 @@ export function ServiceCarousel({ services, onSelectService }: ServiceCarouselPr
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => !isTransitioning && scrollToNext(),
     onSwipedRight: () => !isTransitioning && scrollToPrev(),
-    preventDefaultTouchmoveEvent: true,
-    trackMouse: false,
-    trackTouch: true,
+    // Use the correct properties for the swipeable config
+    delta: 10, // Min distance in px before a swipe starts
+    swipeDuration: 500, // Max time in ms to detect a swipe
+    touchEventOptions: { passive: false }, // Handle passive event listeners
   });
   
   // Handle scroll events to update active index based on scroll position
