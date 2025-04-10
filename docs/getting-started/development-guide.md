@@ -212,7 +212,6 @@ npm test -- --watch
 
 - Check the issues in the GitHub repository
 - Refer to [Next.js Documentation](https://nextjs.org/docs)
-- Consult the team on Discord
 
 ## Additional Resources
 

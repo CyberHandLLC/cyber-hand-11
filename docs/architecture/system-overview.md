@@ -169,6 +169,46 @@ Security measures include:
 2. **Input Validation** - Validation on both client and server
 3. **CSRF Protection** - Built into Server Actions
 4. **XSS Prevention** - Auto-escaping in React and proper data handling
+5. **Row Level Security** - Supabase RLS policies for data access control
+
+## Client Management System Architecture
+
+The Client Management System follows our core architectural principles with these specific implementations:
+
+1. **Authentication Flow** - Supabase Auth with server-side session validation and secure JWT handling
+   - User roles stored in `user_metadata` (CLIENT, STAFF, ADMIN)
+   - Session verification through middleware
+   - Protected routes based on role authorization
+
+2. **Database Schema** - Structured around user roles and relationships
+   - Core user information in Supabase `auth.users` table
+   - Extended client information in `client_records` table linked by `user_id`
+   - Row Level Security (RLS) policies for role-based data access
+
+3. **Service Request Pipeline** - Multi-step workflow with validation and status tracking
+   - Projects/orders table referencing `client_records.id`
+   - Status transitions enforced through server-side validation
+   - Notification system for status updates
+
+4. **Payment Processing** - Stripe integration with webhook event handling
+   - Client record creation/update triggered on first purchase
+   - Secure transaction processing with Stripe API
+   - Subscription management for recurring payments
+
+5. **Dashboard Architecture** - Role-specific interfaces with conditional rendering
+   - Client dashboard: personal services, analytics, billing
+   - Staff dashboard: client management, service operations
+   - Admin dashboard: full system access, staff management
+
+6. **Security Implementation** - Multi-layered approach
+   - Supabase RLS policies for granular data access control
+   - Role-based UI rendering with server verification
+   - HTTPS enforcement and environment variable security
+
+7. **Performance Optimization** - Specialized for different access patterns
+   - Database indexing on frequently queried fields (e.g., `client_records.user_id`)
+   - Next.js SSR for public marketing pages (SEO benefit)
+   - Client-side rendering with caching for authenticated dashboards
 
 ## Related Documentation
 

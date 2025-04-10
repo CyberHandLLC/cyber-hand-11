@@ -39,7 +39,7 @@ export default async function ProductsPage() {
 }
 ```
 
-For data fetching functions, we use React's `cache()` function to deduplicate requests and implement parallel data fetching when appropriate:
+For data fetching functions, we use React's `cache()` function to deduplicate requests and implement parallel data fetching when appropriate. Note that Next.js 15.2.4 introduced an opt-in caching model for `fetch()` calls that requires explicit configuration:
 
 ```tsx
 // lib/products.ts
@@ -52,352 +52,399 @@ import { type Product } from "@/types";
  */
 export const getProducts = cache(async (): Promise<Product[]> => {
   const res = await fetch("https://api.example.com/products", {
-    // Next.js 15 requires explicit opt-in to caching
-    next: {
-      revalidate: 60, // Revalidate every 60 seconds
-      tags: ["products"], // For targeted revalidation with revalidateTag()
-    },
+    // Next.js 15.2.4 requires explicit opt-in for caching
+    next: { 
+      revalidate: 60, // Cache for 60 seconds
+      tags: ['products'] // Tag for targeted revalidation
+    }
   });
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch products: ${res.statusText}`);
-  }
-
+  
+  if (!res.ok) throw new Error('Failed to fetch products');
   return res.json();
 });
+```
 
-/**
- * Example of parallel data fetching to prevent waterfalls
- */
-export async function getProductPageData(productId: string) {
-  // Start both fetches in parallel
-  const productPromise = getProductById(productId);
-  const recommendationsPromise = getRecommendedProducts(productId);
+### Explicit Caching Model in Next.js 15.2.4
 
-  // Wait for both to complete
-  const [product, recommendations] = await Promise.all([productPromise, recommendationsPromise]);
+Next.js 15.2.4 changed to an opt-in caching model for `fetch()`. Caching is no longer automatic but requires explicit configuration:
 
-  return { product, recommendations };
+```tsx
+// Cached for 60 seconds with time-based revalidation
+fetch(url, { next: { revalidate: 60 } })
+
+// Cached indefinitely until manually revalidated via tags
+fetch(url, { next: { tags: ['collection'] } })
+
+// Cached between page refreshes only (force-cache)
+fetch(url, { cache: 'force-cache' })
+
+// Never cached (no-store)
+fetch(url, { cache: 'no-store' })
+```
+
+To revalidate tagged data, use the revalidateTag function:
+
+```tsx
+// In a Server Action or Route Handler
+import { revalidateTag } from 'next/cache';
+
+export async function updateProduct() {
+  'use server';
+  // Update data
+  await db.product.update(...);
+  
+  // Revalidate all fetches with this tag
+  revalidateTag('products');
 }
 ```
 
-### Server Actions for Data Mutations
+### Parallel Data Fetching
 
-For form submissions and data mutations, we use Server Actions as introduced in Next.js 15. Server Actions provide secure, server-side mutation capabilities with built-in security enhancements:
+To prevent waterfalls, we fetch data in parallel using Promise.all:
+
+```tsx
+// app/dashboard/page.tsx
+export default async function DashboardPage() {
+  // Fetch data in parallel
+  const [user, products, orders] = await Promise.all([
+    getUser(),
+    getProducts(),
+    getOrders()
+  ]);
+
+  return (
+    <Dashboard 
+      user={user}
+      products={products}
+      orders={orders}
+    />
+  );
+}
+```
+
+### Client-Side Data Fetching
+
+While we prefer Server Components for data fetching, some scenarios require client-side data fetching:
+
+- Real-time data with WebSockets/SSE
+- User-specific data post-authentication
+- Polling for updates
+- Data that depends on client-side user interactions
+
+For these cases, we use the SWR pattern:
+
+```tsx
+"use client";
+
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+
+export function UserDashboard() {
+  const { data: session } = useSession();
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (session) {
+      fetch("/api/user-data")
+        .then((res) => res.json())
+        .then((data) => {
+          setUserData(data);
+          setLoading(false);
+        });
+    }
+  }, [session]);
+
+  if (loading) return <div>Loading...</div>;
+
+  return (
+    <div>
+      <h1>Welcome {userData?.name}</h1>
+      {/* Dashboard content */}
+    </div>
+  );
+}
+```
+
+### Server Actions
+
+For data mutations, we use Server Actions following Next.js 15.2.4 best practices:
 
 ```tsx
 // app/actions.ts
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 
-// Data validation schema using Zod
-const ProductSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  price: z.number().positive("Price must be positive"),
+// Strong schema validation for form data
+const productSchema = z.object({
+  name: z.string().min(3),
+  price: z.number().positive(),
   description: z.string().optional(),
 });
 
-/**
- * Server Action for creating a new product
- * Next.js 15 automatically creates secure IDs for Server Actions
- * and implements CSRF protection
- */
 export async function createProduct(formData: FormData) {
-  // Type-safe data extraction and validation
+  // Validate form data with zod schema
   const rawData = {
     name: formData.get("name"),
     price: Number(formData.get("price")),
     description: formData.get("description") || "",
   };
 
-  // Validate using Zod
-  const validation = ProductSchema.safeParse(rawData);
-
-  if (!validation.success) {
-    return {
-      success: false,
-      errors: validation.error.flatten().fieldErrors,
-    };
-  }
-
   try {
-    // Security check (authorization)
-    const isAuthorized = await checkUserPermission("create:product");
-    if (!isAuthorized) {
-      return { success: false, errors: { _form: ["Not authorized"] } };
+    const data = productSchema.parse(rawData);
+    
+    // Get authenticated user from session
+    const supabase = createServerActionClient({ cookies });
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (!session) {
+      throw new Error("Unauthorized");
     }
-
-    // Save to database with validated data
-    const newProduct = await db.products.create(validation.data);
-
-    // Revalidation strategies for cache invalidation
-    revalidatePath("/products"); // Path-based revalidation
-    revalidateTag("products"); // Tag-based revalidation
-
-    // Optionally redirect after success
-    // redirect(`/products/${newProduct.id}`);
-
-    return { success: true, data: newProduct };
+    
+    // Insert product into database
+    const { error } = await supabase.from("products").insert({
+      ...data,
+      user_id: session.user.id,
+    });
+    
+    if (error) throw new Error(error.message);
+    
+    // Revalidate relevant paths to update UI
+    revalidatePath("/products");
+    
+    // Redirect to products page
+    redirect("/products");
   } catch (error) {
-    console.error("Failed to create product:", error);
-    return {
-      success: false,
-      errors: { _form: ["Failed to create product. Please try again."] },
+    // Handle validation errors
+    return { 
+      error: error instanceof Error ? error.message : "Failed to create product"
     };
   }
 }
+```
 
-// Helper function for permission check
-async function checkUserPermission(permission: string): Promise<boolean> {
-  // Implementation would check user session/token permissions
+### Data Revalidation Strategies
+
+We implement multiple revalidation strategies based on the data type:
+
+1. **Time-based revalidation** - For data that changes predictably
+2. **On-demand revalidation** - For data updated through user actions
+3. **Tag-based revalidation** - For related data that should update together
+
+```tsx
+// Implementing tag-based revalidation
+export async function publishArticle(formData: FormData) {
+  'use server';
+  
+  const article = await db.article.create({
+    data: {
+      title: formData.get('title'),
+      content: formData.get('content'),
+    }
+  });
+  
+  // Revalidate multiple tags at once
+  revalidateTag('articles');
+  revalidateTag(`article-${article.id}`);
+  revalidateTag('sitemap');
+  
   return true; // Placeholder
 }
 ```
 
-### Client-Side Data Fetching
+### API Route Handlers in Next.js 15.2.4
 
-We use client-side data fetching only in these specific scenarios:
-
-1. When data depends on client-side user interactions
-2. For frequently changing data that doesn't need SEO indexing
-3. For user-specific data that requires client credentials
-4. For data that depends on browser-only APIs
-
-According to Next.js 15 best practices, client-side fetching should be minimized and only used when necessary:
-
-```tsx
-"use client";
-
-import { useState, useEffect } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-
-export function UserProfile() {
-  const [userData, setUserData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function fetchUserData() {
-      try {
-        setIsLoading(true);
-        const res = await fetch("/api/user/profile");
-
-        if (!res.ok) {
-          throw new Error(`Failed to fetch user profile: ${res.statusText}`);
-        }
-
-        const data = await res.json();
-
-        if (isMounted) {
-          setUserData(data);
-          setError(null);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        if (isMounted) {
-          setError(error.message);
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    }
-
-    fetchUserData();
-
-    // Cleanup function to prevent state updates after unmount
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  if (isLoading) {
-    return <UserProfileSkeleton />;
-  }
-
-  if (error) {
-    return <ErrorDisplay message={error} retry={() => setIsLoading(true)} />;
-  }
-
-  if (!userData) {
-    return <div>No profile data available</div>;
-  }
-
-  return (
-    <div className="user-profile-container">
-      <h1 className="text-2xl font-semibold mb-4">{userData.name}'s Profile</h1>
-      {/* User profile details */}
-    </div>
-  );
-}
-```
-
-### Route Handler Data Flow
-
-For external APIs and third-party integrations, we use Route Handlers that serve as API endpoints. In Next.js 15, Route Handlers have updated caching behavior where you must explicitly opt-in to caching:
+Next.js 15.2.4 introduces improved Route Handlers with better Promise handling and type safety:
 
 ```tsx
 // app/api/products/route.ts
-import { NextResponse } from "next/server";
-import { z } from "zod";
-import { checkApiAuth } from "@/lib/auth";
-
-// Schema for product validation
-const ProductSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  price: z.number().positive("Price must be positive"),
-  description: z.string().optional(),
-});
-
-/**
- * GET handler for products API
- * Note: In Next.js 15, Route Handlers are NOT cached by default
- * You must explicitly opt-in to caching if desired
- */
 export async function GET(request: Request) {
+  // URL and SearchParams handling
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
+
+  // Type-safe responses
   try {
-    // Example: Parse search params
-    const { searchParams } = new URL(request.url);
-    const category = searchParams.get("category");
-
-    // Example: You can use conditional caching based on parameters
-    // const cacheOption = category ? 'no-store' : { next: { revalidate: 60 } };
-
-    // Fetch products with optional filtering
-    const products = await db.products.findMany({
-      where: category ? { category } : undefined,
-    });
-
-    return NextResponse.json(products, {
-      status: 200,
-      headers: {
-        // Optional caching headers
-        "Cache-Control": "max-age=0, s-maxage=60",
-      },
-    });
+    const product = await db.product.findUnique({ where: { id } });
+    if (!product) {
+      return Response.json({ error: 'Not found' }, { status: 404 });
+    }
+    return Response.json(product);
   } catch (error) {
-    console.error("Error fetching products:", error);
-    return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });
+    return Response.json(
+      { error: 'Internal error' }, 
+      { status: 500 }
+    );
   }
 }
 
-/**
- * POST handler for creating products
- * This is dynamic (not cached) by default in Next.js 15
- */
+// Cleaner POST handling with structured data
 export async function POST(request: Request) {
   try {
-    // Authentication and authorization check
-    const authResult = await checkApiAuth(request);
-    if (!authResult.success) {
-      return NextResponse.json({ error: authResult.error }, { status: authResult.status });
-    }
-
-    // Parse and validate the request body
-    const rawData = await request.json();
-    const validation = ProductSchema.safeParse(rawData);
-
-    if (!validation.success) {
-      return NextResponse.json(
-        { error: "Validation failed", details: validation.error.flatten().fieldErrors },
-        { status: 400 }
-      );
-    }
-
-    // Create the product with validated data
-    const product = await db.products.create({
-      data: validation.data,
-      select: { id: true, name: true, price: true, createdAt: true },
-    });
-
-    return NextResponse.json(product, {
+    // Structured data parsing with zod
+    const body = await request.json();
+    const data = productSchema.parse(body);
+    
+    const product = await db.product.create({ data });
+    
+    // Headers and status in one response
+    return Response.json(product, { 
       status: 201,
       headers: {
-        // Set appropriate header for created resource
-        Location: `/api/products/${product.id}`,
-      },
+        'Location': `/api/products/${product.id}`
+      }
     });
   } catch (error) {
-    console.error("Error creating product:", error);
-    return NextResponse.json({ error: "Failed to create product" }, { status: 500 });
+    // Error handling
+    return Response.json(
+      { error: error instanceof Error ? error.message : 'Unknown error' }, 
+      { status: 400 }
+    );
   }
 }
 ```
 
-## Data Caching Strategies
+### Edge Runtime for Geolocation
 
-The application uses several caching strategies aligned with Next.js 15's updated caching model:
-
-### Caching Strategy
-
-Our caching strategy in Next.js 15 balances performance and freshness. Note that Next.js 15 has changed the default caching behavior - you must explicitly opt-in to caching:
-
-### Server Component Fetch Caching
-
-In Next.js 15, fetch requests in Server Components are **NOT cached by default**. We explicitly enable caching when needed:
+For location-aware features, our application correctly uses the Edge runtime in middleware and API routes:
 
 ```tsx
-// No caching (default in Next.js 15)
-fetch("https://api.example.com/data");
+// middleware.ts or app/api/geo/route.ts
 
-// Cached with revalidation every 60 seconds (explicit opt-in)
-fetch("https://api.example.com/data", { next: { revalidate: 60 } });
+// Required for geolocation access on Vercel
+export const runtime = "experimental-edge";
 
-// Cached until manually revalidated via tags
-fetch("https://api.example.com/data", { next: { tags: ["products"] } });
+// Extended request type with Vercel geolocation
+interface VercelGeoRequest extends Request {
+  geo?: {
+    city?: string;
+    country?: string;
+    region?: string;
+    latitude?: string;
+    longitude?: string;
+  }
+}
 
-// Force dynamic (though this is already the default in Next.js 15)
-fetch("https://api.example.com/data", { cache: "no-store" });
-```
-
-### Manual Revalidation Methods
-
-To manually revalidate cached data, we use one of these methods in Server Actions or Route Handlers:
-
-```tsx
-// In a Server Action or Route Handler
-import { revalidatePath, revalidateTag } from "next/cache";
-
-// Revalidate a specific path
-revalidatePath("/products");
-
-// Revalidate all fetch requests with a specific tag
-revalidateTag("products");
-```
-
-### Route Handler Caching
-
-In Next.js 15, Route Handlers are also **NOT cached by default**. To enable caching in a Route Handler:
-
-```tsx
-export async function GET() {
-  // Explicitly opt in to caching
-  const res = await fetch("https://api.example.com/data", {
-    next: { revalidate: 60 },
+// Edge API route with geolocation access
+export async function GET(request: Request) {
+  const geoRequest = request as VercelGeoRequest;
+  const geo = geoRequest.geo || null;
+  
+  // Use geolocation data
+  return Response.json({
+    location: geo?.city ? `${geo.city}, ${geo.region}` : 'Unknown',
+    detected: Boolean(geo)
   });
-  const data = await res.json();
-  return Response.json(data);
 }
 ```
 
-### React Cache
+Key implementation requirements:
+1. Middleware must be marked with `export const runtime = "experimental-edge"` 
+2. All geolocation-dependent routes must use Edge runtime
+3. Development mocking must be implemented for local testing
+4. Proper type extensions must be used for the Vercel request object
 
-The `cache()` function for request deduplication remains an important pattern:
+### Authentication Data Flow
 
-```tsx
-// Example of React's cache() function for request deduplication
-import { cache } from "react";
+Our authentication flow using Supabase follows these steps:
 
-export const getUser = cache(async (id: string) => {
-  const res = await fetch(`https://api.example.com/users/${id}`);
-  if (!res.ok) throw new Error(`Failed to fetch user ${id}`);
-  return res.json();
+```typescript
+// Cached data fetching with proper auth checks
+const getClientData = cache(async () => {
+  const supabase = createServerComponentClient({ cookies });
+  
+  // Session check handled by middleware and RLS
+  const { data, error } = await supabase
+    .from('clients')
+    .select(`
+      id,
+      name,
+      email,
+      created_at,
+      service_requests(id, status, service_type),
+      subscriptions(id, status, current_period_end)
+    `);
+  
+  if (error) throw new Error(error.message);
+  return data;
+});
+```
+
+### Service Request Flow
+
+Service requests follow this data flow pattern:
+
+```typescript
+// Server action for submitting service request
+export async function submitServiceRequest(formData: FormData) {
+  'use server';
+  
+  const session = await getServerSession();
+  if (!session) throw new Error('Unauthorized');
+  
+  // Validate input with Zod
+  const data = serviceRequestSchema.parse({
+    serviceType: formData.get('serviceType'),
+    details: formData.get('details'),
+    clientId: session.user.id
+  });
+  
+  // Store in Supabase with proper RLS
+  const { error } = await supabase
+    .from('service_requests')
+    .insert(data);
+  
+  if (error) throw new Error(error.message);
+  
+  // Revalidate affected paths
+  revalidatePath('/dashboard/services');
+  
+  // Trigger notifications
+  await sendNotification({
+    type: 'service_request',
+    userId: session.user.id
+  });
+}
+```
+
+### Payment Processing Flow
+
+The payment flow follows these steps:
+
+1. **Initiate Payment** - Server Action creates Stripe Checkout Session
+2. **Process Payment** - Client redirected to Stripe Checkout
+3. **Handle Webhook** - Stripe webhook notifies server of payment status
+4. **Update Database** - Server updates subscription status in Supabase
+5. **Notify Client** - Real-time notification via Supabase Realtime
+
+### Admin Data Access Pattern
+
+Admin dashboard implements specialized data access patterns:
+
+```typescript
+// Cached data fetching for admin dashboard with proper RLS
+const getClientData = cache(async () => {
+  const supabase = createServerComponentClient({ cookies });
+  
+  // Session check handled by middleware and RLS
+  const { data, error } = await supabase
+    .from('clients')
+    .select(`
+      id,
+      name,
+      email,
+      created_at,
+      service_requests(id, status, service_type),
+      subscriptions(id, status, current_period_end)
+    `);
+  
+  if (error) throw new Error(error.message);
+  return data;
 });
 ```
 
@@ -409,3 +456,4 @@ For more detailed information, refer to:
 - [Geolocation](../features/geolocation.md)
 - [Dependency Map](./dependency-map.md)
 - [Server Actions Documentation](https://nextjs.org/docs/app/api-reference/functions/server-actions)
+- [Next.js 15.2.4 Data Fetching](https://nextjs.org/docs/app/building-your-application/data-fetching)

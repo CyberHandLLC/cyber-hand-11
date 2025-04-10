@@ -7,9 +7,13 @@
  * Server Actions allow forms to be submitted directly to the server
  * without client-side JavaScript, providing a more efficient and
  * progressive enhancement approach.
+ * 
+ * Email functionality has been added to send real emails using Nodemailer
+ * and React Email components, following Next.js 15.2.4 best practices.
  */
 
 import { z } from "zod";
+import { sendContactFormEmail } from "@/lib/email/email-service";
 
 // Define validation schema for form data
 const FormSchema = z.object({
@@ -32,8 +36,8 @@ export type FormResponse = {
 /**
  * Submit contact form data
  *
- * This Server Action handles form submission, validation, and processing.
- * It can be called directly from a form using the action attribute.
+ * This Server Action handles form submission, validation, processing, and email sending.
+ * It can be called directly from a form using the action attribute or from client components.
  */
 export async function submitContactForm(formData: FormData): Promise<FormResponse> {
   try {
@@ -49,27 +53,31 @@ export async function submitContactForm(formData: FormData): Promise<FormRespons
       };
     }
 
-    // Form data is valid, process the submission
-    const _data = validatedData.data;
+    const data = validatedData.data;
 
-    // In a real application, this would send an email, store in database, etc.
-    // Process form data here (e.g., send email or save to database)
-
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // Send email notification using our email service
+    const emailResult = await sendContactFormEmail(data);
+    
+    if (!emailResult.success) {
+      console.error("Failed to send contact form email:", emailResult.error);
+      
+      // Return a user-friendly error message while logging the actual error
+      return {
+        success: false,
+        message: "We couldn't send your message at this time. Please try again later or contact us directly.",
+      };
+    }
 
     // Return success response
     return {
       success: true,
       message: "Thank you for your message! We will get back to you soon.",
     };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    // Error is intentionally not used but kept for potential future logging
-    // Log error to server-side logging system in production
-    // In development, we'd use error monitoring like Sentry
+    // Log the error for monitoring and debugging
+    console.error("Unexpected error in contact form submission:", error);
 
-    // Return error response
+    // Return a user-friendly error response
     return {
       success: false,
       message: "An unexpected error occurred. Please try again later.",

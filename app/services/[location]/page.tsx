@@ -117,7 +117,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 
   const { displayName } = locationInfo;
   // Use placeholder domain that's clearly not production if env var isn't set
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.example.com";
+  const _siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.example.com";
   // Use relative URLs where possible
   const canonical = `/services/${location}`;
   // Update to use the new amp-services path instead of query parameter

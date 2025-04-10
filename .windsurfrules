@@ -13,6 +13,11 @@ Use React's cache() for deduplication and parallel data fetching
 Keep UI components separate from data fetching logic
 API route parameter handling as Promises (Next.js 15 change)
 
+### SEO & Metadata
+Consistent metadata components, JSON-LD structured data
+Canonical URLs, semantic HTML, accessibility standards
+Privacy-focused analytics with custom event tracking
+
 ### Performance
 Budget: <3s initial load (3G), <300KB JS bundle
 Core Web Vitals targets: LCP <2.5s, TBT <200ms, CLS <0.1
@@ -32,7 +37,3 @@ Client component wrappers to prevent serialization errors
 Follow established component hierarchy and naming conventions
 Test files mirroring component structure
 
-### SEO & Metadata
-Consistent metadata components, JSON-LD structured data
-Canonical URLs, semantic HTML, accessibility standards
-Privacy-focused analytics with custom event tracking
