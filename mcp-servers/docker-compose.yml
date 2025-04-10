@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  architecture-guard:
+    build:
+      context: ..
+      dockerfile: mcp-servers/Dockerfile.architecture-guard
+    image: cyber-hand/architecture-guard:latest
+    stdin_open: true  # Keep stdin open for MCP communication
+    tty: true         # Allocate a pseudo-TTY
+    volumes:
+      - ../:/app/project  # Mount project directory for analysis
+    environment:
+      - PROJECT_ROOT=/app/project
+      - NODE_ENV=production
+
+  dependency-validator:
+    build:
+      context: ..
+      dockerfile: mcp-servers/Dockerfile.dependency-validator
+    image: cyber-hand/dependency-validator:latest
+    stdin_open: true
+    tty: true
+    volumes:
+      - ../:/app/project
+    environment:
+      - PROJECT_ROOT=/app/project
+      - NODE_ENV=production
+
+  style-validator:
+    build:
+      context: ..
+      dockerfile: mcp-servers/Dockerfile.style-validator
+    image: cyber-hand/style-validator:latest
+    stdin_open: true
+    tty: true
+    volumes:
+      - ../:/app/project
+    environment:
+      - PROJECT_ROOT=/app/project
+      - NODE_ENV=production

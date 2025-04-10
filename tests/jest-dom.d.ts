@@ -1,11 +1,11 @@
 /**
  * Type definitions for @testing-library/jest-dom
- * 
+ *
  * This file extends Jest's expect with the matchers from @testing-library/jest-dom
  * It ensures TypeScript properly recognizes these custom matchers in test files.
  */
 
-import '@testing-library/jest-dom';
+import "@testing-library/jest-dom";
 
 declare global {
   namespace jest {

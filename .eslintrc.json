@@ -15,7 +15,7 @@
     "react-hooks/exhaustive-deps": "warn",
     "@typescript-eslint/no-unused-vars": [
       "warn",
-      { 
+      {
         "argsIgnorePattern": "^_+",
         "varsIgnorePattern": "^_+"
       }
@@ -24,7 +24,6 @@
     "@typescript-eslint/no-explicit-any": "warn",
     "no-console": ["warn", { "allow": ["warn", "error"] }],
     "prefer-const": "warn",
-    // Next.js specific rules
     "@next/next/no-html-link-for-pages": "error",
     "@next/next/no-img-element": "warn",
     "@next/next/no-unwanted-polyfillio": "warn"

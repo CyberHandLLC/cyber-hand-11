@@ -1,25 +1,27 @@
 /**
- * Web Vitals configuration and reporting for Core Web Vitals monitoring 
- * 
+ * Web Vitals configuration and reporting for Core Web Vitals monitoring
+ *
  * This file implements real user monitoring for Core Web Vitals metrics
  * and sends the data to Vercel Analytics for performance analysis.
  */
 
-import { onCLS, onFID, onLCP, onFCP, onTTFB, onINP } from 'web-vitals';
-import type { CLSMetric, FCPMetric, FIDMetric, INPMetric, LCPMetric, TTFBMetric } from 'web-vitals';
+import { onCLS, onFID, onLCP, onFCP, onTTFB, onINP } from "web-vitals";
+import type { CLSMetric, FCPMetric, FIDMetric, INPMetric, LCPMetric, TTFBMetric } from "web-vitals";
 
-type SendToAnalytics = (metric: CLSMetric | FCPMetric | FIDMetric | INPMetric | LCPMetric | TTFBMetric) => void;
+type SendToAnalytics = (
+  metric: CLSMetric | FCPMetric | FIDMetric | INPMetric | LCPMetric | TTFBMetric
+) => void;
 
-const vitalsUrl = 'https://vitals.vercel-insights.com/v1/vitals';
+const vitalsUrl = "https://vitals.vercel-insights.com/v1/vitals";
 
 /**
  * Reports Web Vitals metrics to Vercel Analytics
- * 
+ *
  * @param metric The performance metric to report
  */
 const sendToVercelAnalytics: SendToAnalytics = (metric) => {
   const body = {
-    dsn: process.env.NEXT_PUBLIC_VERCEL_ANALYTICS_ID || '', // Set this ID in your project's environment variables
+    dsn: process.env.NEXT_PUBLIC_VERCEL_ANALYTICS_ID || "", // Set this ID in your project's environment variables
     id: metric.id,
     page: window.location.pathname,
     href: window.location.href,
@@ -27,8 +29,8 @@ const sendToVercelAnalytics: SendToAnalytics = (metric) => {
     value: metric.value.toString(),
     // Use a proper type guard for the Navigator connection API
     speed: (() => {
-      if (!('connection' in navigator)) return '';
-      
+      if (!("connection" in navigator)) return "";
+
       /**
        * NetworkInformation interface represents information about the connection a device is using to communicate with the network.
        * Since this API is experimental and not fully standardized, we use a specific interface instead of 'any'.
@@ -38,26 +40,26 @@ const sendToVercelAnalytics: SendToAnalytics = (metric) => {
         effectiveType?: string;
         [key: string]: unknown;
       }
-      
-      const conn = navigator['connection'] as NetworkInformation; // Cast to NetworkInformation for the experimental API
-      if (conn && 'effectiveType' in conn) {
+
+      const conn = navigator["connection"] as NetworkInformation; // Cast to NetworkInformation for the experimental API
+      if (conn && "effectiveType" in conn) {
         return conn.effectiveType;
       }
-      return '';
+      return "";
     })(),
   };
 
   // Use `navigator.sendBeacon()` if available
   if (navigator.sendBeacon) {
-    const blob = new Blob([JSON.stringify(body)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(body)], { type: "application/json" });
     navigator.sendBeacon(vitalsUrl, blob);
   } else {
     // Fall back to fetch() if sendBeacon isn't available
     fetch(vitalsUrl, {
       body: JSON.stringify(body),
-      method: 'POST',
+      method: "POST",
       keepalive: true,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
     }).catch(console.error);
   }
 };
@@ -68,7 +70,7 @@ const sendToVercelAnalytics: SendToAnalytics = (metric) => {
 export function reportWebVitals(): void {
   try {
     // Only load web-vitals in the browser
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       onCLS(sendToVercelAnalytics);
       onFID(sendToVercelAnalytics);
       onLCP(sendToVercelAnalytics);
@@ -77,13 +79,13 @@ export function reportWebVitals(): void {
       onTTFB(sendToVercelAnalytics);
     }
   } catch (err) {
-    console.error('[Web Vitals]', err);
+    console.error("[Web Vitals]", err);
   }
 }
 
 /**
  * Creates a Web Vitals budget configuration for performance monitoring
- * 
+ *
  * These values are based on Core Web Vitals guidelines:
  * - LCP: < 2.5s (good), < 4s (needs improvement), > 4s (poor)
  * - CLS: < 0.1 (good), < 0.25 (needs improvement), > 0.25 (poor)

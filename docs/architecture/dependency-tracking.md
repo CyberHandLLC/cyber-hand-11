@@ -18,101 +18,101 @@ As our application grows in complexity, it's crucial to:
 
 ### Layout System
 
-| Component | Location | Dependents | Last Updated |
-|-----------|----------|------------|--------------|
-| `PageLayout` | `components/custom/page-layout.tsx` | All app pages (`app/*.tsx`) | 2025-04-05 |
-| `SectionContainer` | `components/custom/page-layout.tsx` | All page sections | 2025-04-05 |
-| `PageLayoutClient` | `components/layout/page-layout-client.tsx` | `PageLayout` | 2025-04-05 |
-| `OptimizedLayoutWrapper` | `components/performance/optimized-layout-wrapper.tsx` | `PageLayout` | 2025-04-05 |
-| `Navbar` | `components/navigation/navbar.tsx` | `PageLayout` | 2025-04-02 |
-| `Footer` | `components/navigation/footer.tsx` | `PageLayout` | 2025-04-02 |
+| Component                | Location                                              | Dependents                  | Last Updated |
+| ------------------------ | ----------------------------------------------------- | --------------------------- | ------------ |
+| `PageLayout`             | `components/custom/page-layout.tsx`                   | All app pages (`app/*.tsx`) | 2025-04-05   |
+| `SectionContainer`       | `components/custom/page-layout.tsx`                   | All page sections           | 2025-04-05   |
+| `PageLayoutClient`       | `components/layout/page-layout-client.tsx`            | `PageLayout`                | 2025-04-05   |
+| `OptimizedLayoutWrapper` | `components/performance/optimized-layout-wrapper.tsx` | `PageLayout`                | 2025-04-05   |
+| `Navbar`                 | `components/navigation/navbar.tsx`                    | `PageLayout`                | 2025-04-02   |
+| `Footer`                 | `components/navigation/footer.tsx`                    | `PageLayout`                | 2025-04-02   |
 
 ### Location System
 
-| Component | Location | Dependents | Last Updated |
-|-----------|----------|------------|----------------|
-| `LocationProvider` | `lib/location/location-context.tsx` | `app/providers.tsx` | 2025-04-07 |
-| `LocationService` | `lib/location/location-service.ts` | `app/layout.tsx`, Server Components | 2025-04-07 |
-| `LocationConsent` | `components/location/location-consent.tsx` | `location-consent-wrapper.tsx` | 2025-04-07 |
-| `LocationConsentWrapper` | `components/location/location-consent-wrapper.tsx` | `app/page.tsx` | 2025-04-07 |
+| Component                | Location                                           | Dependents                          | Last Updated |
+| ------------------------ | -------------------------------------------------- | ----------------------------------- | ------------ |
+| `LocationProvider`       | `lib/location/location-context.tsx`                | `app/providers.tsx`                 | 2025-04-07   |
+| `LocationService`        | `lib/location/location-service.ts`                 | `app/layout.tsx`, Server Components | 2025-04-07   |
+| `LocationConsent`        | `components/location/location-consent.tsx`         | `location-consent-wrapper.tsx`      | 2025-04-07   |
+| `LocationConsentWrapper` | `components/location/location-consent-wrapper.tsx` | `app/page.tsx`                      | 2025-04-07   |
 
 ### UI Components
 
-| Component | Location | Dependents | Last Updated |
-|-----------|----------|------------|--------------|
-| `Button` | `components/ui/button.tsx` | Form components, CTAs | 2025-04-03 |
-| `FormElements` | `components/ui/form-elements.tsx` | `contact-form-client.tsx` | 2025-04-03 |
-| `Icons` | `components/ui/icons.tsx` | Multiple components | 2025-04-03 |
-| `OptimizedImage` | `components/ui/optimized-image.tsx` | Image-heavy components | 2025-04-05 |
-| `StaticImage` | `components/ui/static-image.tsx` | Static content sections | 2025-04-03 |
-| `Card` | `components/ui/card.tsx` | Case study cards, service cards | 2025-04-03 |
-| `Input` | `components/ui/input.tsx` | All form components | 2025-04-03 |
-| `CaseStudyCard` | `components/custom/case-study-card.tsx` | Case studies page | 2025-04-04 |
-| `ServiceCard` | `components/custom/service-card.tsx` | Services page | 2025-04-04 |
+| Component        | Location                                | Dependents                      | Last Updated |
+| ---------------- | --------------------------------------- | ------------------------------- | ------------ |
+| `Button`         | `components/ui/button.tsx`              | Form components, CTAs           | 2025-04-03   |
+| `FormElements`   | `components/ui/form-elements.tsx`       | `contact-form-client.tsx`       | 2025-04-03   |
+| `Icons`          | `components/ui/icons.tsx`               | Multiple components             | 2025-04-03   |
+| `OptimizedImage` | `components/ui/optimized-image.tsx`     | Image-heavy components          | 2025-04-05   |
+| `StaticImage`    | `components/ui/static-image.tsx`        | Static content sections         | 2025-04-03   |
+| `Card`           | `components/ui/card.tsx`                | Case study cards, service cards | 2025-04-03   |
+| `Input`          | `components/ui/input.tsx`               | All form components             | 2025-04-03   |
+| `CaseStudyCard`  | `components/custom/case-study-card.tsx` | Case studies page               | 2025-04-04   |
+| `ServiceCard`    | `components/custom/service-card.tsx`    | Services page                   | 2025-04-04   |
 
 ### Middleware
 
-| Middleware | Location | Dependents | Last Updated |
-|------------|----------|------------|--------------|  
-| `middleware` | `middleware.ts` | All pages, `lib/location/location-service.ts` | 2025-04-07 |
+| Middleware   | Location        | Dependents                                    | Last Updated |
+| ------------ | --------------- | --------------------------------------------- | ------------ |
+| `middleware` | `middleware.ts` | All pages, `lib/location/location-service.ts` | 2025-04-07   |
 
 ### Performance Utilities
 
-| Utility | Location | Dependents | Last Updated |
-|---------|----------|------------|--------------|
-| `PerformanceMetrics` | `lib/performance/performance-metrics.ts` | Performance dashboard, logger | 2025-04-06 |
-| `PerformanceLogger` | `lib/performance/performance-logger.ts` | App layout for production | 2025-04-06 |
-| `PerformanceDashboard` | `components/performance/performance-dashboard.tsx` | App layout for development | 2025-04-06 |
-| `CodeSplitting` | `lib/performance/code-splitting.tsx` | Dynamic component imports | 2025-04-05 |
-| `CriticalCSS` | `lib/performance/critical-css.ts` | Root layout | 2025-04-05 |
-| `DeferredLoading` | `lib/performance/deferred-loading.tsx` | Non-critical components | 2025-04-05 |
-| `OptimizedLayoutWrapper` | `components/performance/optimized-layout-wrapper.tsx` | Page layouts | 2025-04-05 |
-| `DynamicImportUtils` | `lib/dynamic-import-utils.tsx` | Dynamic component imports | 2025-04-05 |
+| Utility                  | Location                                              | Dependents                    | Last Updated |
+| ------------------------ | ----------------------------------------------------- | ----------------------------- | ------------ |
+| `PerformanceMetrics`     | `lib/performance/performance-metrics.ts`              | Performance dashboard, logger | 2025-04-06   |
+| `PerformanceLogger`      | `lib/performance/performance-logger.ts`               | App layout for production     | 2025-04-06   |
+| `PerformanceDashboard`   | `components/performance/performance-dashboard.tsx`    | App layout for development    | 2025-04-06   |
+| `CodeSplitting`          | `lib/performance/code-splitting.tsx`                  | Dynamic component imports     | 2025-04-05   |
+| `CriticalCSS`            | `lib/performance/critical-css.ts`                     | Root layout                   | 2025-04-05   |
+| `DeferredLoading`        | `lib/performance/deferred-loading.tsx`                | Non-critical components       | 2025-04-05   |
+| `OptimizedLayoutWrapper` | `components/performance/optimized-layout-wrapper.tsx` | Page layouts                  | 2025-04-05   |
+| `DynamicImportUtils`     | `lib/dynamic-import-utils.tsx`                        | Dynamic component imports     | 2025-04-05   |
 
 ### Server Actions
 
-| Action | Location | Dependents | Last Updated |
-|--------|----------|------------|--------------|
-| `ContactFormActions` | `lib/actions/contact/contact-form.ts` | `contact-form-client.tsx`, `contact-form.tsx` | 2025-04-06 |
-| `CaseStudyActions` | `lib/actions/case-studies/*.ts` | Case study components | - |
-| `ServiceActions` | `lib/actions/services/*.ts` | Service components | - |
+| Action               | Location                              | Dependents                                    | Last Updated |
+| -------------------- | ------------------------------------- | --------------------------------------------- | ------------ |
+| `ContactFormActions` | `lib/actions/contact/contact-form.ts` | `contact-form-client.tsx`, `contact-form.tsx` | 2025-04-06   |
+| `CaseStudyActions`   | `lib/actions/case-studies/*.ts`       | Case study components                         | -            |
+| `ServiceActions`     | `lib/actions/services/*.ts`           | Service components                            | -            |
 
 ### Server Actions
 
-| Action | Location | Dependents | Last Updated |
-|--------|----------|------------|--------------|  
-| `ContactFormActions` | `lib/actions/contact/contact-form.ts` | `contact-form-client.tsx`, `contact-form.tsx` | 2025-04-06 |
-| `CaseStudyActions` | `lib/actions/case-studies/*.ts` | Case study components | 2025-04-06 |
-| `ServiceActions` | `lib/actions/services/*.ts` | Service components | 2025-04-06 |
-| `UserPreferencesActions` | `lib/actions/user/preferences.ts` | Settings components | 2025-04-05 |
+| Action                   | Location                              | Dependents                                    | Last Updated |
+| ------------------------ | ------------------------------------- | --------------------------------------------- | ------------ |
+| `ContactFormActions`     | `lib/actions/contact/contact-form.ts` | `contact-form-client.tsx`, `contact-form.tsx` | 2025-04-06   |
+| `CaseStudyActions`       | `lib/actions/case-studies/*.ts`       | Case study components                         | 2025-04-06   |
+| `ServiceActions`         | `lib/actions/services/*.ts`           | Service components                            | 2025-04-06   |
+| `UserPreferencesActions` | `lib/actions/user/preferences.ts`     | Settings components                           | 2025-04-05   |
 
 ### API Routes
 
-| Route | Location | Consumers | Last Updated |
-|-------|----------|-----------|--------------|  
-| `api/geo-debug` | `app/api/geo-debug/route.ts` | Debugging tools | 2025-04-07 |
-| `api/placeholder/[category]` | `app/api/placeholder/[category]/route.ts` | Various page components | 2025-04-05 |
-| `api/analytics` | `app/api/analytics/route.ts` | Analytics components | 2025-04-05 |
-| `api/feedback` | `app/api/feedback/route.ts` | Feedback form | 2025-04-05 |
+| Route                        | Location                                  | Consumers               | Last Updated |
+| ---------------------------- | ----------------------------------------- | ----------------------- | ------------ |
+| `api/geo-debug`              | `app/api/geo-debug/route.ts`              | Debugging tools         | 2025-04-07   |
+| `api/placeholder/[category]` | `app/api/placeholder/[category]/route.ts` | Various page components | 2025-04-05   |
+| `api/analytics`              | `app/api/analytics/route.ts`              | Analytics components    | 2025-04-05   |
+| `api/feedback`               | `app/api/feedback/route.ts`               | Feedback form           | 2025-04-05   |
 
 ### Data Fetching Utilities
 
-| Utility | Location | Dependents | Last Updated |
-|---------|----------|------------|--------------|
-| `ServerUtils` | `lib/server-utils.ts` | All data fetching components, API routes | 2025-04-06 |
-| `CaseStudiesFetcher` | `lib/data/case-studies.ts` | Case study pages, `/api/case-studies/*` routes | 2025-04-06 |
-| `ServicesFetcher` | `lib/data/services.ts` | Service pages, `/api/services/*` routes | 2025-04-04 |
-| `ServerActions` | `lib/server-actions.ts` | API routes, server-side rendering | 2025-04-06 |
+| Utility              | Location                   | Dependents                                     | Last Updated |
+| -------------------- | -------------------------- | ---------------------------------------------- | ------------ |
+| `ServerUtils`        | `lib/server-utils.ts`      | All data fetching components, API routes       | 2025-04-06   |
+| `CaseStudiesFetcher` | `lib/data/case-studies.ts` | Case study pages, `/api/case-studies/*` routes | 2025-04-06   |
+| `ServicesFetcher`    | `lib/data/services.ts`     | Service pages, `/api/services/*` routes        | 2025-04-04   |
+| `ServerActions`      | `lib/server-actions.ts`    | API routes, server-side rendering              | 2025-04-06   |
 
 ### Type Definitions
 
-| Type File | Location | Dependents | Last Updated |
-|-----------|----------|------------|--------------|
-| `components.ts` | `types/components.ts` | UI and custom components | 2025-04-06 |
-| `case-studies.ts` | `types/case-studies.ts` | Case study components and pages | 2025-04-06 |
-| `services.ts` | `types/services.ts` | Service components and pages | 2025-04-06 |
-| `api.ts` | `types/api.ts` | API routes and data fetching | 2025-04-06 |
-| `case-study-types.ts` | `components/case-studies/case-study-types.ts` | Legacy types, being migrated to `/types` | 2025-04-04 |
+| Type File             | Location                                      | Dependents                               | Last Updated |
+| --------------------- | --------------------------------------------- | ---------------------------------------- | ------------ |
+| `components.ts`       | `types/components.ts`                         | UI and custom components                 | 2025-04-06   |
+| `case-studies.ts`     | `types/case-studies.ts`                       | Case study components and pages          | 2025-04-06   |
+| `services.ts`         | `types/services.ts`                           | Service components and pages             | 2025-04-06   |
+| `api.ts`              | `types/api.ts`                                | API routes and data fetching             | 2025-04-06   |
+| `case-study-types.ts` | `components/case-studies/case-study-types.ts` | Legacy types, being migrated to `/types` | 2025-04-04   |
 
 ## Update Checklist Template
 
@@ -125,36 +125,43 @@ When making significant changes to a component or utility, use this checklist to
 **Developer**: Your Name
 
 ### Changes Made
+
 - [ ] Describe change 1
 - [ ] Describe change 2
 
 ### Files Updated
+
 - [ ] Primary file: `path/to/file.tsx`
 - [ ] Dependent file: `path/to/dependent1.tsx`
 - [ ] Dependent file: `path/to/dependent2.tsx`
 
 ### Tests Affected
+
 - [ ] `tests/path/to/test1.tsx`
 - [ ] `tests/path/to/test2.tsx`
 
 ### Documentation Updated
+
 - [ ] Component documentation
 - [ ] Type definitions
 - [ ] This dependency tracking file
 
 ### Performance Impact Assessment
+
 - [ ] Bundle size effect: [Increased/Decreased/No change] (specify size if applicable)
 - [ ] Core Web Vitals impact: [LCP/FID/CLS/INP] (specify expected change)
 - [ ] Server-side rendering time: [Increased/Decreased/No change]
 - [ ] Client-side hydration time: [Increased/Decreased/No change]
 
 ### Browser & Device Compatibility
+
 - [ ] Cross-browser tested: [List browsers]
 - [ ] Mobile responsiveness verified
 - [ ] Touch interactions tested (if applicable)
 - [ ] High-DPI/Retina display support
 
 ### Accessibility Considerations
+
 - [ ] Contrast requirements met
 - [ ] Screen reader compatibility
 - [ ] Keyboard navigation supported
@@ -166,56 +173,58 @@ When making significant changes to a component or utility, use this checklist to
 
 The application uses various Next.js 15 data fetching patterns:
 
-| Pattern | Description | Used In | Last Updated |
-|---------|-------------|---------|--------------|  
-| `generateStaticParams` | Static generation of dynamic routes | `case-studies/[slug]/page.tsx`, `services/[id]/page.tsx` | 2025-04-05 |
-| `Suspense` Boundaries | Streaming and progressive rendering | Homepage, case studies page | 2025-04-07 |
-| `cache()` | Request deduplication | `lib/data/*.ts`, `lib/location/location-service.ts` | 2025-04-07 |
-| `revalidatePath` | On-demand revalidation | Contact form submission, feedback forms | 2025-04-06 |
-| `fetch` with `next: { revalidate }` | Time-based revalidation | Blog posts, service listings | 2025-04-05 |
-| `useFormStatus` | Form submission state tracking | All form components | 2025-04-06 |
-| `useFormState` | Form state management with Server Actions | Contact form, feedback forms | 2025-04-06 |
+| Pattern                             | Description                               | Used In                                                  | Last Updated |
+| ----------------------------------- | ----------------------------------------- | -------------------------------------------------------- | ------------ |
+| `generateStaticParams`              | Static generation of dynamic routes       | `case-studies/[slug]/page.tsx`, `services/[id]/page.tsx` | 2025-04-05   |
+| `Suspense` Boundaries               | Streaming and progressive rendering       | Homepage, case studies page                              | 2025-04-07   |
+| `cache()`                           | Request deduplication                     | `lib/data/*.ts`, `lib/location/location-service.ts`      | 2025-04-07   |
+| `revalidatePath`                    | On-demand revalidation                    | Contact form submission, feedback forms                  | 2025-04-06   |
+| `fetch` with `next: { revalidate }` | Time-based revalidation                   | Blog posts, service listings                             | 2025-04-05   |
+| `useFormStatus`                     | Form submission state tracking            | All form components                                      | 2025-04-06   |
+| `useFormState`                      | Form state management with Server Actions | Contact form, feedback forms                             | 2025-04-06   |
 
 ## Build Optimization Features
 
-| Feature | Purpose | Components Affected | Last Updated |
-|---------|---------|---------------------|--------------|  
-| `prefetch={false}` | Disable link prefetching | Low-priority navigation links | 2025-04-05 |
-| `Link prefetch={true}` | Prioritize prefetching | Primary navigation | 2025-04-05 |
-| Route Segments config | Control rendering strategy | Root layout, dashboard layout | 2025-04-05 |
-| Static/Dynamic Settings | Per-page rendering strategy | All pages | 2025-04-05 |
-| Image Optimization | Config in `next.config.js` | All `Image` components | 2025-04-05 |
-| Font Optimization | Local fonts & display settings | Typography components | 2025-04-05 |
-| Bundle Splitting | Code organization for optimal loading | All client components | 2025-04-06 |
+| Feature                 | Purpose                               | Components Affected           | Last Updated |
+| ----------------------- | ------------------------------------- | ----------------------------- | ------------ |
+| `prefetch={false}`      | Disable link prefetching              | Low-priority navigation links | 2025-04-05   |
+| `Link prefetch={true}`  | Prioritize prefetching                | Primary navigation            | 2025-04-05   |
+| Route Segments config   | Control rendering strategy            | Root layout, dashboard layout | 2025-04-05   |
+| Static/Dynamic Settings | Per-page rendering strategy           | All pages                     | 2025-04-05   |
+| Image Optimization      | Config in `next.config.js`            | All `Image` components        | 2025-04-05   |
+| Font Optimization       | Local fonts & display settings        | Typography components         | 2025-04-05   |
+| Bundle Splitting        | Code organization for optimal loading | All client components         | 2025-04-06   |
 
 ## Server/Client Boundaries
 
 The application implements a clear separation between Server and Client Components following Next.js 15 best practices:
 
-| Component Type | Purpose | Considerations | Examples |
-|---------------|---------|----------------|----------|
-| Server Components | Data fetching, SEO, initial HTML | Cannot use hooks, client-side APIs | Page components, layout components |
-| Client Components | Interactivity, state management, event handling | Add `'use client'` directive, avoid large bundles | `LocationProvider`, UI components |
-| Client Boundaries | Wrapper components that separate server/client concerns | Use dynamic imports and Suspense | `LocationConsentWrapper` |
+| Component Type    | Purpose                                                 | Considerations                                    | Examples                           |
+| ----------------- | ------------------------------------------------------- | ------------------------------------------------- | ---------------------------------- |
+| Server Components | Data fetching, SEO, initial HTML                        | Cannot use hooks, client-side APIs                | Page components, layout components |
+| Client Components | Interactivity, state management, event handling         | Add `'use client'` directive, avoid large bundles | `LocationProvider`, UI components  |
+| Client Boundaries | Wrapper components that separate server/client concerns | Use dynamic imports and Suspense                  | `LocationConsentWrapper`           |
 
 ## Next.js-Specific Dependencies
 
-| Feature | Used In | Considerations | Last Updated |
-|---------|---------|----------------|--------------|  
-| Edge Runtime | `middleware.ts` | Required for geolocation in Vercel | 2025-04-07 |
-| React Context | `location-context.tsx`, `theme-context.tsx` | Client Components only | 2025-04-07 |
-| Headers API | `location-service.ts` | Server Components only | 2025-04-07 |
-| Dynamic Imports | `location-consent-wrapper.tsx` | Used for code splitting | 2025-04-07 |
-| Root Layout | `app/layout.tsx` | Wraps all pages, includes Providers | 2025-04-07 |
+| Feature         | Used In                                     | Considerations                      | Last Updated |
+| --------------- | ------------------------------------------- | ----------------------------------- | ------------ |
+| Edge Runtime    | `middleware.ts`                             | Required for geolocation in Vercel  | 2025-04-07   |
+| React Context   | `location-context.tsx`, `theme-context.tsx` | Client Components only              | 2025-04-07   |
+| Headers API     | `location-service.ts`                       | Server Components only              | 2025-04-07   |
+| Dynamic Imports | `location-consent-wrapper.tsx`              | Used for code splitting             | 2025-04-07   |
+| Root Layout     | `app/layout.tsx`                            | Wraps all pages, includes Providers | 2025-04-07   |
 
 ## Update Workflow
 
 1. **Before Starting Work**:
+
    - Review this dependency tracking document
    - Identify all components affected by planned changes
    - Create a checklist in your issue/task ticket
 
 2. **During Development**:
+
    - Update the primary component/utility
    - Work through dependent components in order of their dependency
    - Update tests for all modified components
@@ -269,32 +278,32 @@ npm run analyze:server-client
 
 ## Testing Infrastructure
 
-| Test Category | Location | Covers | Last Updated |
-|--------------|----------|--------|---------------|
-| Component Tests | `tests/components/*` | UI components, interactive elements | 2025-04-05 |
-| Utility Tests | `tests/utils/*` | Helper functions, data processing | 2025-04-05 |
-| Performance Tests | TBD | Performance metrics, optimization utilities | - |
-| API Route Tests | TBD | API endpoints, server actions | - |
+| Test Category     | Location             | Covers                                      | Last Updated |
+| ----------------- | -------------------- | ------------------------------------------- | ------------ |
+| Component Tests   | `tests/components/*` | UI components, interactive elements         | 2025-04-05   |
+| Utility Tests     | `tests/utils/*`      | Helper functions, data processing           | 2025-04-05   |
+| Performance Tests | TBD                  | Performance metrics, optimization utilities | -            |
+| API Route Tests   | TBD                  | API endpoints, server actions               | -            |
 
 ## Client/Server Type Safety
 
-| Type or Interface | Location | Shared Between | Last Updated |
-|-------------------|----------|----------------|--------------|  
-| `LocationData` | `lib/location/location-context.tsx` | Server and Client | 2025-04-07 |
-| `ThemeOptions` | `lib/theme-context.tsx` | Server and Client | 2025-04-05 |
-| `UserProfile` | `types/user.ts` | Server and Client | 2025-04-05 |
-| `CaseStudyType` | `types/case-study.ts` | Server and Client | 2025-04-05 |
-| `ApiResponse` | `types/api.ts` | Server Actions and Client | 2025-04-06 |
-| `FormState` | `types/forms.ts` | Server Actions and Client | 2025-04-06 |
+| Type or Interface | Location                            | Shared Between            | Last Updated |
+| ----------------- | ----------------------------------- | ------------------------- | ------------ |
+| `LocationData`    | `lib/location/location-context.tsx` | Server and Client         | 2025-04-07   |
+| `ThemeOptions`    | `lib/theme-context.tsx`             | Server and Client         | 2025-04-05   |
+| `UserProfile`     | `types/user.ts`                     | Server and Client         | 2025-04-05   |
+| `CaseStudyType`   | `types/case-study.ts`               | Server and Client         | 2025-04-05   |
+| `ApiResponse`     | `types/api.ts`                      | Server Actions and Client | 2025-04-06   |
+| `FormState`       | `types/forms.ts`                    | Server Actions and Client | 2025-04-06   |
 
 ### Serialization Boundaries
 
-| Component | Props Serialized | Considerations | Last Updated |
-|-----------|------------------|----------------|--------------|  
-| `Providers` | `locationData` | JSON-serializable only | 2025-04-07 |
-| `CaseStudyPage` | `caseStudy` data | Complex data structure | 2025-04-05 |
-| `ContactForm` | Form initial state | Simple primitives only | 2025-04-05 |
-| `UserDashboard` | User profile data | Dates converted to strings | 2025-04-05 |
+| Component       | Props Serialized   | Considerations             | Last Updated |
+| --------------- | ------------------ | -------------------------- | ------------ |
+| `Providers`     | `locationData`     | JSON-serializable only     | 2025-04-07   |
+| `CaseStudyPage` | `caseStudy` data   | Complex data structure     | 2025-04-05   |
+| `ContactForm`   | Form initial state | Simple primitives only     | 2025-04-05   |
+| `UserDashboard` | User profile data  | Dates converted to strings | 2025-04-05   |
 
 ## Special Considerations
 

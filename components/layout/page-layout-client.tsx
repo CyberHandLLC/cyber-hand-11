@@ -2,7 +2,7 @@
 
 /**
  * Page Layout Client Component
- * 
+ *
  * This component handles the theme-dependent aspects of the page layout.
  * It needs to be a Client Component because it uses the useTheme hook.
  */
@@ -18,26 +18,22 @@ interface PageLayoutClientProps {
   className?: string;
 }
 
-export function PageLayoutClient({ 
+export function PageLayoutClient({
   children,
   showNavbar = true,
-  className = ""
+  className = "",
 }: PageLayoutClientProps) {
   const { theme } = useTheme();
-  
+
   // Theme-based background
-  const bgClass = theme === 'light' 
-    ? "bg-slate-50" 
-    : "bg-[#0c1117]";
-  
+  const bgClass = theme === "light" ? "bg-slate-50" : "bg-[#0c1117]";
+
   return (
     <>
       {showNavbar && <Navbar />}
       <main className={`min-h-screen ${bgClass} ${className}`}>
         <DecorativeElements />
-        <div className="relative z-10">
-          {children}
-        </div>
+        <div className="relative z-10">{children}</div>
       </main>
     </>
   );

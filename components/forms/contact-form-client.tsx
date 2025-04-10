@@ -2,13 +2,13 @@
 
 /**
  * Contact Form Client Component
- * 
+ *
  * This component handles the client-side aspects of the contact form:
  * - Form state management
  * - User input handling
  * - Error displays
  * - Loading states
- * 
+ *
  * It uses the Server Action for form submission, providing a hybrid
  * approach that combines client-side interactivity with server-side processing.
  */
@@ -32,42 +32,44 @@ export function ContactFormClient({ initialService, availableServices }: Contact
     message: "",
     service: initialService || "",
   });
-  
+
   // Form submission state
   const [response, setResponse] = useState<FormResponse | null>(null);
   const [isPending, startTransition] = useTransition();
-  
+
   // Field error tracking
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
-  
+
   // Handle form input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    
+
     // Clear any previous errors for this field
     if (fieldErrors[name]) {
-      setFieldErrors(prev => {
+      setFieldErrors((prev) => {
         const updated = { ...prev };
         delete updated[name];
         return updated;
       });
     }
-    
+
     // Update form data
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
-  
+
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     // Use transition to avoid blocking the UI during submission
     startTransition(async () => {
       const result = await submitContactForm(formData);
-      
+
       if (result.success) {
         // Clear form on success
         setFormData({
@@ -78,13 +80,13 @@ export function ContactFormClient({ initialService, availableServices }: Contact
           service: "",
         });
       }
-      
+
       // Store response data including any validation errors
       setResponse(result);
       setFieldErrors(result.errors || {});
     });
   };
-  
+
   // Display success message when form is submitted successfully
   if (response?.success) {
     return (
@@ -92,27 +94,26 @@ export function ContactFormClient({ initialService, availableServices }: Contact
         <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 dark:bg-green-900/50 mb-4">
           <CheckCircleIcon className="text-green-600 dark:text-green-400" size="lg" />
         </div>
-        <h3 className="text-lg font-medium text-green-800 dark:text-green-300 mb-2">Message Sent!</h3>
+        <h3 className="text-lg font-medium text-green-800 dark:text-green-300 mb-2">
+          Message Sent!
+        </h3>
         <p className="text-green-700 dark:text-green-400">{response.message}</p>
-        <Button 
-          variant="outline"
-          className="mt-4" 
-          onClick={() => setResponse(null)}
-        >
+        <Button variant="outline" className="mt-4" onClick={() => setResponse(null)}>
           Send Another Message
         </Button>
       </div>
     );
   }
-  
+
   // Input field classes that change based on validation errors
   const getInputClass = (fieldName: string) => {
-    const baseClass = "w-full rounded-md border bg-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500/50";
+    const baseClass =
+      "w-full rounded-md border bg-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500/50";
     return fieldErrors[fieldName]
       ? `${baseClass} border-red-500 dark:border-red-700`
       : `${baseClass} border-gray-300 dark:border-gray-700`;
   };
-  
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Show general error message if present */}
@@ -121,7 +122,7 @@ export function ContactFormClient({ initialService, availableServices }: Contact
           {response.message}
         </div>
       )}
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Name Field */}
         <div>
@@ -143,7 +144,7 @@ export function ContactFormClient({ initialService, availableServices }: Contact
             <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.name[0]}</p>
           )}
         </div>
-        
+
         {/* Email Field */}
         <div>
           <label htmlFor="email" className="block text-sm font-medium mb-1">
@@ -165,7 +166,7 @@ export function ContactFormClient({ initialService, availableServices }: Contact
           )}
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Company Field */}
         <div>
@@ -183,7 +184,7 @@ export function ContactFormClient({ initialService, availableServices }: Contact
             disabled={isPending}
           />
         </div>
-        
+
         {/* Service Field */}
         <div>
           <label htmlFor="service" className="block text-sm font-medium mb-1">
@@ -206,7 +207,7 @@ export function ContactFormClient({ initialService, availableServices }: Contact
           </select>
         </div>
       </div>
-      
+
       {/* Message Field */}
       <div>
         <label htmlFor="message" className="block text-sm font-medium mb-1">
@@ -227,15 +228,10 @@ export function ContactFormClient({ initialService, availableServices }: Contact
           <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.message[0]}</p>
         )}
       </div>
-      
+
       {/* Submit Button */}
       <div>
-        <Button
-          type="submit"
-          variant="primary"
-          className="w-full md:w-auto"
-          disabled={isPending}
-        >
+        <Button type="submit" variant="primary" className="w-full md:w-auto" disabled={isPending}>
           {isPending ? "Sending..." : "Send Message"}
         </Button>
       </div>

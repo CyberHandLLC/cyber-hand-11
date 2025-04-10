@@ -1,0 +1,16 @@
+{
+  "name": "mcp-documentation-synchronizer",
+  "version": "1.0.0",
+  "description": "Model Context Protocol server for synchronizing code with documentation patterns",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test-documentation-sync.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "latest"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  }
+}

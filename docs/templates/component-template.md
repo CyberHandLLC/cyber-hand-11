@@ -4,15 +4,15 @@
 
 ## Component Details
 
-| Field | Description |
-|-------|-------------|
-| **Name** | [PascalCase name of the component] |
-| **Type** | [Server Component / Client Component] |
-| **Location** | [Path where the component will live] |
-| **Purpose** | [Brief description of the component's purpose] |
-| **Dependencies** | [List of dependencies or related components] |
-| **Author** | [Your name] |
-| **Date** | [Creation date] |
+| Field            | Description                                    |
+| ---------------- | ---------------------------------------------- |
+| **Name**         | [PascalCase name of the component]             |
+| **Type**         | [Server Component / Client Component]          |
+| **Location**     | [Path where the component will live]           |
+| **Purpose**      | [Brief description of the component's purpose] |
+| **Dependencies** | [List of dependencies or related components]   |
+| **Author**       | [Your name]                                    |
+| **Date**         | [Creation date]                                |
 
 ## Component Requirements
 
@@ -30,6 +30,7 @@
 In Next.js 15, components are **Server Components by default**. This aligns with the recommended "server-first" approach from the Next.js team.
 
 ### When to use Server Components (default):
+
 - Data fetching: Move data fetching closer to the data source
 - Security: Keep sensitive data and logic on the server
 - Caching: Rendered results can be cached and reused
@@ -38,6 +39,7 @@ In Next.js 15, components are **Server Components by default**. This aligns with
 - SEO: Content that needs to be indexed by search engines
 
 ### When to use Client Components (add `'use client'` directive):
+
 - Interactivity: Components that use event listeners (`onClick`, etc.)
 - State management: Components that use React state (`useState`, `useReducer`)
 - Effects and lifecycles: Components that use effects (`useEffect`, `useLayoutEffect`)
@@ -46,6 +48,7 @@ In Next.js 15, components are **Server Components by default**. This aligns with
 - Class components: Legacy class components that extend React.Component
 
 ### Component Nesting and Boundaries:
+
 - Remember that once you add `'use client'`, all imported components and their children become part of the client bundle
 - Try to push the `'use client'` directive as deep as possible in your component tree
 - Create Client Component wrappers around interactive parts of your UI, keeping most logic in Server Components
@@ -57,9 +60,9 @@ In Next.js 15, components are **Server Components by default**. This aligns with
 ```tsx
 // components/[category]/[component-name].tsx
 
-import { OptimizedImage } from '@/components/ui/optimized-image';
-import { formatDate } from '@/lib/utils';
-import type { ComponentProps } from '@/types';
+import { OptimizedImage } from "@/components/ui/optimized-image";
+import { formatDate } from "@/lib/utils";
+import type { ComponentProps } from "@/types";
 
 interface ExampleComponentProps {
   title: string;
@@ -70,25 +73,20 @@ interface ExampleComponentProps {
 
 /**
  * ExampleComponent - [Brief description]
- * 
+ *
  * This component [describe what it does and when to use it]
- * 
+ *
  * @example
- * <ExampleComponent 
+ * <ExampleComponent
  *   title="Example Title"
  *   description="This is an example description"
  *   date="2025-01-01"
  * />
  */
-export function ExampleComponent({
-  title,
-  description,
-  date,
-  imageUrl,
-}: ExampleComponentProps) {
+export function ExampleComponent({ title, description, date, imageUrl }: ExampleComponentProps) {
   // Any server-side logic or data transformation goes here
   const formattedDate = date ? formatDate(date) : null;
-  
+
   return (
     <div className="example-component">
       <h2 className="text-xl font-bold">{title}</h2>
@@ -116,11 +114,11 @@ export function ExampleComponent({
 
 ```tsx
 // components/[category]/[component-name].tsx
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import type { ComponentProps } from '@/types';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import type { ComponentProps } from "@/types";
 
 interface InteractiveComponentProps {
   initialCount?: number;
@@ -129,11 +127,11 @@ interface InteractiveComponentProps {
 
 /**
  * InteractiveComponent - [Brief description]
- * 
+ *
  * This client component [describe what it does and when to use it]
- * 
+ *
  * @example
- * <InteractiveComponent 
+ * <InteractiveComponent
  *   initialCount={5}
  *   onCountChange={(count) => console.log(`New count: ${count}`)}
  * />
@@ -143,7 +141,7 @@ export function InteractiveComponent({
   onCountChange,
 }: InteractiveComponentProps) {
   const [count, setCount] = useState(initialCount);
-  
+
   const handleIncrement = () => {
     const newCount = count + 1;
     setCount(newCount);
@@ -151,14 +149,11 @@ export function InteractiveComponent({
       onCountChange(newCount);
     }
   };
-  
+
   return (
     <div className="interactive-component p-4 border rounded-lg">
       <p className="text-lg font-medium">Current count: {count}</p>
-      <Button 
-        onClick={handleIncrement}
-        className="mt-2"
-      >
+      <Button onClick={handleIncrement} className="mt-2">
         Increment
       </Button>
     </div>

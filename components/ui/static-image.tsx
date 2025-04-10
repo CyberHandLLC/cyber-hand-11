@@ -1,6 +1,6 @@
 /**
  * StaticImage Component
- * 
+ *
  * A server component wrapper for static images that don't need client-side interactivity.
  * This follows the pattern of keeping most components as Server Components
  * and only using Client Components when necessary.
@@ -23,7 +23,7 @@ export interface StaticImageProps {
   /** Set to true to fill its parent container */
   fill?: boolean;
   /** Image variant for sizing */
-  variant?: 'default' | 'hero' | 'card' | 'halfWidth' | 'portrait';
+  variant?: "default" | "hero" | "card" | "halfWidth" | "portrait";
   /** Quality of the image (1-100) */
   quality?: number;
   /** Whether this is a priority image (above the fold) */
@@ -36,7 +36,7 @@ export interface StaticImageProps {
 
 /**
  * Static image component for server-rendered images
- * 
+ *
  * @param props - Component properties
  * @returns React component
  */
@@ -47,18 +47,18 @@ export function StaticImage({
   width,
   height,
   fill = false,
-  variant = 'default',
+  variant = "default",
   quality = 85,
   priority = false,
   placeholderColor = "#1e293b",
-  objectFit = "cover"
+  objectFit = "cover",
 }: StaticImageProps) {
   // Generate sizes based on variant
   const sizes = getImageSizes(variant);
-  
+
   // Generate SVG placeholder
   const blurDataURL = generateSvgPlaceholder(placeholderColor);
-  
+
   return (
     <Image
       src={src}

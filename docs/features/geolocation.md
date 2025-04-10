@@ -62,22 +62,22 @@ Extracts geolocation headers from Vercel Edge Network and sets them as request h
 // Middleware extracts Vercel geolocation headers and makes them available to the application
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
-  
+
   // Extract headers from Vercel Edge Network
-  const country = request.headers.get('x-vercel-ip-country');
-  const city = request.headers.get('x-vercel-ip-city');
-  const region = request.headers.get('x-vercel-ip-country-region');
-  const latitude = request.headers.get('x-vercel-ip-latitude');
-  const longitude = request.headers.get('x-vercel-ip-longitude');
-  
+  const country = request.headers.get("x-vercel-ip-country");
+  const city = request.headers.get("x-vercel-ip-city");
+  const region = request.headers.get("x-vercel-ip-country-region");
+  const latitude = request.headers.get("x-vercel-ip-latitude");
+  const longitude = request.headers.get("x-vercel-ip-longitude");
+
   // Safely decode URI components to handle special characters
   // Set standardized headers for application use
-  if (country) response.headers.set('x-geo-country', safeDecodeURI(country));
-  if (city) response.headers.set('x-geo-city', safeDecodeURI(city));
-  if (region) response.headers.set('x-geo-region', safeDecodeURI(region));
-  if (latitude) response.headers.set('x-geo-latitude', latitude);
-  if (longitude) response.headers.set('x-geo-longitude', longitude);
-  
+  if (country) response.headers.set("x-geo-country", safeDecodeURI(country));
+  if (city) response.headers.set("x-geo-city", safeDecodeURI(city));
+  if (region) response.headers.set("x-geo-region", safeDecodeURI(region));
+  if (latitude) response.headers.set("x-geo-latitude", latitude);
+  if (longitude) response.headers.set("x-geo-longitude", longitude);
+
   return response;
 }
 ```
@@ -91,18 +91,18 @@ Provides utilities for accessing geolocation data in Server Components:
 export function getLocationData(): LocationData {
   // Access headers provided by middleware
   const headersList = headers();
-  
+
   // Extract and parse location information
-  const country = headersList.get('x-geo-country') || undefined;
-  const city = headersList.get('x-geo-city') || undefined;
+  const country = headersList.get("x-geo-country") || undefined;
+  const city = headersList.get("x-geo-city") || undefined;
   // Additional header parsing...
-  
+
   return {
     country,
     city,
     // Other location properties...
     isDetected: Boolean(country || city),
-    lastUpdated: Date.now()
+    lastUpdated: Date.now(),
   };
 }
 
@@ -134,16 +134,16 @@ export interface LocationData {
 // Context Provider for location data
 export function LocationProvider({ children, initialLocation }: LocationProviderProps) {
   const [location, setLocation] = useState<LocationData>(initialLocation);
-  
+
   // Functions to manage location data
   const overrideLocation = (newLocation: Partial<LocationData>) => {
     // Implementation details...
   };
-  
+
   const resetLocation = () => {
     // Implementation details...
   };
-  
+
   return (
     <LocationContext.Provider value={{ location, overrideLocation, resetLocation }}>
       {children}
@@ -169,25 +169,25 @@ interface LocationConsentProps {
 export function LocationConsent({ className }: LocationConsentProps) {
   const { location, overrideLocation } = useLocation();
   const [visible, setVisible] = useState(false);
-  
+
   // Logic to determine when to show consent notification
   useEffect(() => {
     // Check for existing consent
     const hasConsent = document.cookie.includes('location-consent=true');
     const hasDenied = document.cookie.includes('location-consent=false');
-    
+
     // Show in production regardless of detection state if no decision exists
     const isProduction = process.env.NODE_ENV === 'production';
-    if ((!isProduction && location.isDetected && !hasConsent && !hasDenied) || 
+    if ((!isProduction && location.isDetected && !hasConsent && !hasDenied) ||
         (isProduction && !hasConsent && !hasDenied)) {
       setVisible(true);
-      
+
       // Auto-dismiss after timeout
       const timer = setTimeout(() => setVisible(false), 15000);
       return () => clearTimeout(timer);
     }
   }, [location.isDetected]);
-  
+
   // Handle user declining location use
   const handleDecline = () => {
     overrideLocation({
@@ -196,9 +196,9 @@ export function LocationConsent({ className }: LocationConsentProps) {
     });
     setVisible(false);
   };
-  
+
   if (!visible) return null;
-  
+
   return (
     <CookieConsent
       location="bottom"
@@ -211,10 +211,10 @@ export function LocationConsent({ className }: LocationConsentProps) {
       style={{ /* Styles */ }}
     >
       {location.isDetected ? (
-        <>We detect your location ({location.city ? `${location.city}, ` : ''}{location.country || 'Unknown'}) 
+        <>We detect your location ({location.city ? `${location.city}, ` : ''}{location.country || 'Unknown'})
         to provide you with relevant content. Do you consent to this?</>
       ) : (
-        <>We use location data to provide you with region-specific content. 
+        <>We use location data to provide you with region-specific content.
         Do you consent to this?</>
       )}
     </CookieConsent>
@@ -267,18 +267,18 @@ The geolocation feature follows this data flow:
 Server Components can use location data through helper functions:
 
 ```tsx
-import { isInCountry, getFormattedLocation } from '@/lib/location/location-service';
+import { isInCountry, getFormattedLocation } from "@/lib/location/location-service";
 
 export default function WelcomeSection() {
   // Check if user is in a specific country
-  const isUS = isInCountry('US');
-  
+  const isUS = isInCountry("US");
+
   // Get a formatted string of the user's location
   const locationString = getFormattedLocation();
-  
+
   return (
     <section>
-      <h1>Welcome{isUS ? ' from the United States!' : '!'}</h1>
+      <h1>Welcome{isUS ? " from the United States!" : "!"}</h1>
       <p>You appear to be visiting from {locationString}</p>
       {/* Content tailored to location */}
     </section>
@@ -291,17 +291,17 @@ export default function WelcomeSection() {
 Client Components can access location data through the Context Hook:
 
 ```tsx
-'use client';
+"use client";
 
-import { useLocation } from '@/lib/location/location-context';
+import { useLocation } from "@/lib/location/location-context";
 
 export function LocalizedContent() {
   const { location } = useLocation();
-  
+
   return (
     <div>
       {location.isDetected ? (
-        <p>Content tailored for {location.city || location.country || 'your region'}</p>
+        <p>Content tailored for {location.city || location.country || "your region"}</p>
       ) : (
         <p>Default content for all regions</p>
       )}
@@ -315,28 +315,24 @@ export function LocalizedContent() {
 Allow users to manually override their detected location:
 
 ```tsx
-'use client';
+"use client";
 
-import { useLocation } from '@/lib/location/location-context';
+import { useLocation } from "@/lib/location/location-context";
 
 export function LocationSelector() {
   const { location, overrideLocation, resetLocation } = useLocation();
-  
+
   return (
     <div>
-      <h3>Your Location: {location.country || 'Unknown'}</h3>
-      
-      <button onClick={() => overrideLocation({ country: 'US', city: 'New York' })}>
+      <h3>Your Location: {location.country || "Unknown"}</h3>
+
+      <button onClick={() => overrideLocation({ country: "US", city: "New York" })}>
         Set to US
       </button>
-      
-      <button onClick={() => overrideLocation({ country: 'GB', city: 'London' })}>
-        Set to UK
-      </button>
-      
-      <button onClick={resetLocation}>
-        Reset to Detected Location
-      </button>
+
+      <button onClick={() => overrideLocation({ country: "GB", city: "London" })}>Set to UK</button>
+
+      <button onClick={resetLocation}>Reset to Detected Location</button>
     </div>
   );
 }
@@ -357,10 +353,12 @@ The geolocation implementation includes several privacy features:
 The geolocation feature can be configured through:
 
 1. **Environment Variables**:
+
    - `NEXT_PUBLIC_DISABLE_GEOLOCATION`: Set to 'true' to disable all geolocation features
    - `NEXT_PUBLIC_MOCK_LOCATION`: Set to a country code for testing (development only)
 
 2. **Middleware Configuration**:
+
    - Edit `middleware.ts` to modify which headers are extracted and set
 
 3. **Consent Settings**:
@@ -374,6 +372,7 @@ The geolocation feature can be configured through:
 For local testing with mock location data:
 
 1. Set the `NEXT_PUBLIC_MOCK_LOCATION` environment variable in `.env.local`:
+
    ```
    NEXT_PUBLIC_MOCK_LOCATION=US
    ```
@@ -395,21 +394,20 @@ A debugging endpoint is available at `/api/geo-debug` to view all detected locat
 // app/api/geo-debug/route.ts
 export async function GET(request: Request) {
   const location = getLocationData();
-  
+
   // In Next.js 15, this route is dynamic by default (not cached)
   // No need to specify export const dynamic = 'force-dynamic'
-  
+
   return Response.json({
     detected: location,
     headers: Object.fromEntries([...request.headers]),
-    timestamp: new Date().toISOString() // Always fresh
+    timestamp: new Date().toISOString(), // Always fresh
   });
 }
 
 // For production endpoints that should be cached:
 // export const dynamic = 'force-static';
 // export const revalidate = 3600; // Revalidate every hour
-
 ```
 
 ## Best Practices

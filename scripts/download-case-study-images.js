@@ -1,10 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-const https = require('https');
-const { execSync } = require('child_process');
+const fs = require("fs");
+const path = require("path");
+const https = require("https");
+const { execSync } = require("child_process");
 
 // Create directories if they don't exist
-const imagesDir = path.join(__dirname, '../public/images');
+const imagesDir = path.join(__dirname, "../public/images");
 if (!fs.existsSync(imagesDir)) {
   fs.mkdirSync(imagesDir, { recursive: true });
 }
@@ -22,10 +22,7 @@ const placeholderImageContent = `
 // - /public/images/hvac-case-study.jpg
 `;
 
-fs.writeFileSync(
-  path.join(imagesDir, 'image-instructions.txt'),
-  placeholderImageContent
-);
+fs.writeFileSync(path.join(imagesDir, "image-instructions.txt"), placeholderImageContent);
 
-console.log('Image instructions created at public/images/image-instructions.txt');
-console.log('Please add your HVAC case study image to the public/images directory.');
+console.log("Image instructions created at public/images/image-instructions.txt");
+console.log("Please add your HVAC case study image to the public/images directory.");

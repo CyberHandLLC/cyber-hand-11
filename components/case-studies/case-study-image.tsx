@@ -2,7 +2,7 @@
 
 /**
  * CaseStudyImage Component
- * 
+ *
  * A specialized image component for case study images with:
  * - Art direction based on usage context (hero, card, detail)
  * - Responsive sizing appropriate for case study layouts
@@ -12,15 +12,11 @@
 
 import React from "react";
 import { OptimizedImage, type OptimizedImageProps } from "@/components/ui/optimized-image";
-import { 
-  getImageSizes, 
-  generateSvgPlaceholder, 
-  shouldPrioritize,
-} from "@/lib/image-utils";
+import { getImageSizes, generateSvgPlaceholder, shouldPrioritize } from "@/lib/image-utils";
 
-export interface CaseStudyImageProps extends Omit<OptimizedImageProps, 'sizes' | 'blurDataURL'> {
+export interface CaseStudyImageProps extends Omit<OptimizedImageProps, "sizes" | "blurDataURL"> {
   /** Usage variant affects sizing, priority and art direction */
-  variant: 'hero' | 'card' | 'detail' | 'thumbnail';
+  variant: "hero" | "card" | "detail" | "thumbnail";
   /** Visual position in viewport (used for priority calculation) */
   position?: number;
   /** Optional dominant color for placeholder */
@@ -31,14 +27,14 @@ export interface CaseStudyImageProps extends Omit<OptimizedImageProps, 'sizes' |
 
 /**
  * Specialized image component for case studies
- * 
+ *
  * @param props - Component properties (see CaseStudyImageProps)
  * @returns React component
  */
 export function CaseStudyImage({
   src,
   alt,
-  variant = 'detail',
+  variant = "detail",
   position = 0,
   fill = true,
   className = "",
@@ -51,29 +47,31 @@ export function CaseStudyImage({
 }: CaseStudyImageProps) {
   // Determine optimal sizing strategy based on variant
   const sizes = getImageSizes(
-    variant === 'hero' ? 'hero' : 
-    variant === 'card' ? 'card' : 
-    variant === 'thumbnail' ? 'portrait' : 
-    'default'
+    variant === "hero"
+      ? "hero"
+      : variant === "card"
+        ? "card"
+        : variant === "thumbnail"
+          ? "portrait"
+          : "default"
   );
-  
+
   // Determine if this image should be prioritized (LCP optimization)
   const priority = shouldPrioritize(variant, position);
-  
+
   // Generate SVG placeholder with the dominant color
   const blurDataURL = generateSvgPlaceholder(placeholderColor);
-  
+
   // Apply aspect ratio if specified
-  const containerStyle = aspectRatio ? { 
-    aspectRatio, 
-    width: '100%'
-  } : undefined;
-  
+  const containerStyle = aspectRatio
+    ? {
+        aspectRatio,
+        width: "100%",
+      }
+    : undefined;
+
   return (
-    <div 
-      className={`${variant === 'hero' ? 'w-full' : ''} ${className}`}
-      style={containerStyle}
-    >
+    <div className={`${variant === "hero" ? "w-full" : ""} ${className}`} style={containerStyle}>
       <OptimizedImage
         src={src}
         alt={alt}

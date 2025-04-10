@@ -15,7 +15,7 @@
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 0, 0, 0;
   --background-end-rgb: 0, 0, 0;
-  
+
   /* Brand colors */
   --primary: 6, 182, 212; /* cyan-500 */
   --primary-light: 103, 232, 249; /* cyan-300 */
@@ -23,7 +23,7 @@
   --primary-glow: 14, 165, 233; /* sky-500 */
   --secondary: 42, 62, 80; /* Dark blue-gray from reference */
   --accent: 6, 182, 212; /* cyan-500 */
-  
+
   /* UI colors */
   --text-primary: 255, 255, 255;
   --text-secondary: 203, 213, 225; /* slate-300 */
@@ -32,7 +32,7 @@
   --bg-secondary: 15, 23, 42; /* slate-900 */
   --bg-accent: 6, 182, 212; /* cyan-500 */
   --border-color: 51, 65, 85; /* slate-700 */
-  
+
   /* Semantic UI variables (from critical.css) */
   --background: #030711;
   --foreground: #e1e7ef;
@@ -54,13 +54,13 @@
   --input: #1e293b;
   --ring: #3b82f6;
   --radius: 0.5rem;
-  
+
   /* Shadows & Effects */
   --shadow-sm: 0 0 6px rgba(6, 182, 212, 0.2);
   --shadow-md: 0 0 10px rgba(6, 182, 212, 0.3);
   --shadow-lg: 0 0 15px rgba(6, 182, 212, 0.5);
   --shadow-xl: 0 0 25px rgba(6, 182, 212, 0.7);
-  
+
   /* Animation timing */
   --transition-fast: 200ms;
   --transition-medium: 300ms;
@@ -68,12 +68,13 @@
 }
 
 /* Light theme variables */
-[data-theme="light"], .light {
+[data-theme="light"],
+.light {
   /* Color scheme */
   --foreground-rgb: 15, 23, 42; /* slate-900 */
   --background-start-rgb: 248, 250, 252; /* slate-50 */
   --background-end-rgb: 255, 255, 255;
-  
+
   /* UI colors */
   --text-primary: 15, 23, 42; /* slate-900 */
   --text-secondary: 71, 85, 105; /* slate-600 */
@@ -82,7 +83,7 @@
   --bg-secondary: 248, 250, 252; /* slate-50 */
   --bg-accent: 236, 254, 255; /* cyan-50 */
   --border-color: 226, 232, 240; /* slate-200 */
-  
+
   /* Semantic UI variables (from critical.css) */
   --background: #ffffff;
   --foreground: #171717;
@@ -103,7 +104,7 @@
   --border: #e2e8f0;
   --input: #e2e8f0;
   --ring: #2563eb;
-  
+
   /* Shadows & Effects - softer in light mode */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -113,16 +114,17 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb)))
     rgb(var(--background-start-rgb));
 }
 
 /* Base styles */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: bold;
   letter-spacing: -0.025em;
 }
@@ -142,59 +144,59 @@ a:hover {
   .text-theme-primary {
     @apply text-white dark:text-gray-900;
   }
-  
+
   .text-theme-secondary {
     @apply text-gray-300 dark:text-gray-600;
   }
-  
+
   .text-theme-accent {
     @apply text-cyan-300 dark:text-cyan-500;
   }
-  
+
   /* Background color variations */
   .bg-theme-primary {
     @apply bg-[#1a2c38] dark:bg-white;
   }
-  
+
   .bg-theme-secondary {
     @apply bg-slate-900 dark:bg-slate-50;
   }
-  
+
   .bg-theme-accent {
     @apply bg-cyan-500 dark:bg-cyan-50;
   }
-  
+
   .bg-theme-transparent {
     @apply bg-transparent backdrop-blur-sm;
   }
-  
+
   /* Border color variations */
   .border-theme-primary {
     @apply border-gray-800/30 dark:border-gray-200/30;
   }
-  
+
   .border-theme-secondary {
     @apply border-gray-800 dark:border-gray-200;
   }
-  
+
   .border-theme-accent {
     @apply border-cyan-500;
   }
-  
+
   /* Active state variations */
   .active-theme-item {
     @apply text-white bg-black/20 dark:text-black dark:bg-white/20;
   }
-  
+
   .inactive-theme-item {
     @apply text-gray-200 hover:text-white dark:text-gray-800 dark:hover:text-black;
   }
-  
+
   /* Card variations */
   .card-theme-default {
     @apply bg-[#161e29] border border-gray-800 hover:border-cyan-400 dark:bg-white dark:border-gray-200 dark:hover:border-cyan-400;
   }
-  
+
   /* Toggle button styles */
   .toggle-theme-button {
     @apply p-2 rounded-full bg-gray-800 text-gray-200 dark:bg-gray-200 dark:text-gray-800;
@@ -236,17 +238,23 @@ a:hover {
 }
 
 .cyber-circuit-bg::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   opacity: 0.1;
   pointer-events: none;
-  background-image: 
+  background-image:
     radial-gradient(rgba(6, 182, 212, 0.15) 1px, transparent 1px),
     linear-gradient(to right, rgba(6, 182, 212, 0.1) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(6, 182, 212, 0.1) 1px, transparent 1px);
-  background-size: 20px 20px, 20px 20px, 20px 20px;
-  background-position: 0 0, 10px 10px, 10px 10px;
+  background-size:
+    20px 20px,
+    20px 20px,
+    20px 20px;
+  background-position:
+    0 0,
+    10px 10px,
+    10px 10px;
   z-index: -1;
 }
 
@@ -275,74 +283,74 @@ a:hover {
  */
 @layer utilities {
   /* Basic Containment Types */
-  
+
   /* Layout containment - isolates layout impact to prevent layout thrashing */
   .contain-layout {
     contain: layout;
   }
-  
+
   /* Style containment - prevents styles from affecting elements outside */
   .contain-style {
     contain: style;
   }
-  
+
   /* Paint containment - defines an area that won't draw outside its bounds */
   .contain-paint {
     contain: paint;
   }
-  
+
   /* Size containment - element size doesn't depend on its content */
   .contain-size {
     contain: size;
   }
-  
+
   /* Content containment - combines layout, style and paint */
   .contain-content {
     contain: content;
   }
-  
+
   /* Strict containment - maximum isolation (all properties except 'size') */
   .contain-strict {
     contain: strict;
   }
-  
+
   /* Combined Containment Strategies */
-  
+
   /* For cards, panels, and section containers */
   .contain-card {
     contain: layout paint;
     content-visibility: auto;
   }
-  
+
   /* For hero sections and large layout blocks */
   .contain-section {
     contain: layout paint;
     content-visibility: auto;
     contain-intrinsic-size: 600px; /* Estimated height to reduce CLS */
   }
-  
+
   /* For navigation menus and headers */
   .contain-nav {
     contain: layout paint;
   }
-  
+
   /* For images and media that shouldn't affect layout */
   .contain-media {
     contain: layout size;
     content-visibility: auto;
   }
-  
+
   /* For interactive components with DOM changes */
   .contain-interactive {
     contain: content;
   }
-  
+
   /* For fixed-size components like avatars, icons */
   .contain-fixed {
     contain: strict;
     content-visibility: auto;
   }
-  
+
   /* For off-screen or initially hidden content */
   .contain-offscreen {
     contain: strict;
@@ -356,7 +364,8 @@ a:hover {
  * Consolidated animation keyframes and utilities.
  */
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.5));
   }
   50% {
@@ -365,15 +374,22 @@ a:hover {
 }
 
 @keyframes text-flicker {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.9;
-    text-shadow: 0 0 5px rgba(6, 182, 212, 0.5), 0 0 15px rgba(6, 182, 212, 0.3);
+    text-shadow:
+      0 0 5px rgba(6, 182, 212, 0.5),
+      0 0 15px rgba(6, 182, 212, 0.3);
   }
-  20%, 80% {
+  20%,
+  80% {
     opacity: 1;
-    text-shadow: 0 0 5px rgba(6, 182, 212, 0.5), 0 0 25px rgba(6, 182, 212, 0.5);
+    text-shadow:
+      0 0 5px rgba(6, 182, 212, 0.5),
+      0 0 25px rgba(6, 182, 212, 0.5);
   }
-  21%, 79% {
+  21%,
+  79% {
     opacity: 0.9;
   }
 }
@@ -418,13 +434,13 @@ img {
 /* Grid pattern for background texture */
 .bg-grid-pattern {
   background-size: 30px 30px;
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(81, 92, 111, 0.1) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(81, 92, 111, 0.1) 1px, transparent 1px);
 }
 
 [data-theme="light"] .bg-grid-pattern {
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(51, 65, 85, 0.1) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(51, 65, 85, 0.1) 1px, transparent 1px);
 }

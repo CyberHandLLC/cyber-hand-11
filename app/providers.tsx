@@ -2,17 +2,17 @@
 
 /**
  * Client-side Providers Component
- * 
+ *
  * Wraps the application with various context providers.
  * This component should be imported in your root layout.
  */
 
-import React, { ReactNode } from 'react';
-import { ThemeProvider } from '@/lib/theme-context';
-import type { LocationData } from '@/lib/location';
+import React, { ReactNode } from "react";
+import { ThemeProvider } from "@/lib/theme-context";
+import type { LocationData } from "@/lib/location";
 
 // Import context to create local provider
-import { createContext, useState } from 'react';
+import { createContext, useState } from "react";
 // Remove unused imports completely rather than trying to prefix them
 
 // Define proper type for LocationContext instead of using 'any'
@@ -24,7 +24,13 @@ interface LocationContextType {
 const LocationContext = createContext<LocationContextType | null>(null);
 
 // Simple provider wrapper matching the original API
-function LocationProvider({ children, initialLocation }: { children: ReactNode; initialLocation: LocationData }) {
+function LocationProvider({
+  children,
+  initialLocation,
+}: {
+  children: ReactNode;
+  initialLocation: LocationData;
+}) {
   const [location] = useState(initialLocation);
   return <LocationContext.Provider value={{ location }}>{children}</LocationContext.Provider>;
 }
@@ -42,9 +48,7 @@ interface ProvidersProps {
 export function Providers({ children, locationData }: ProvidersProps) {
   return (
     <ThemeProvider>
-      <LocationProvider initialLocation={locationData}>
-        {children}
-      </LocationProvider>
+      <LocationProvider initialLocation={locationData}>{children}</LocationProvider>
     </ThemeProvider>
   );
 }

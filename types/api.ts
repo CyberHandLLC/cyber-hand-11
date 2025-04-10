@@ -1,6 +1,6 @@
 /**
  * API Type Definitions
- * 
+ *
  * This file contains type definitions for API requests and responses
  * used across the Cyber Hand website.
  */
@@ -54,7 +54,7 @@ export interface DynamicImportOptions {
  * Deferred Loading Types
  */
 export interface DeferredLoadingOptions {
-  priority?: 'high' | 'medium' | 'low';
+  priority?: "high" | "medium" | "low";
   delay?: number; // milliseconds
   timeout?: number; // milliseconds
   fallback?: React.ReactNode;

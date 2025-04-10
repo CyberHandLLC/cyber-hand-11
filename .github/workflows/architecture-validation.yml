@@ -1,0 +1,47 @@
+name: Architecture Validation
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - '**/*.ts'
+      - '**/*.tsx'
+      - '**/*.js'
+      - '**/*.jsx'
+      - 'mcp-servers/**'
+      - '.github/workflows/architecture-validation.yml'
+
+jobs:
+  validate-architecture:
+    name: Validate Architecture Patterns
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.17.0'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: |
+          cd mcp-servers/architecture-guard
+          npm install
+      
+      - name: Run Architecture Guard
+        run: |
+          cd mcp-servers/architecture-guard
+          npm run start:ci
+        
+      - name: Report Results
+        if: ${{ always() }}
+        run: |
+          if [ $? -eq 0 ]; then
+            echo "✅ Architecture validation passed!"
+          else
+            echo "❌ Architecture validation failed! See above for details."
+            exit 1
+          fi

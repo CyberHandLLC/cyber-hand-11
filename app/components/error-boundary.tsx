@@ -2,7 +2,7 @@
 
 /**
  * Client-side Error Boundary wrapper components
- * 
+ *
  * These components provide standardized error boundaries for use throughout the application.
  * Each component encapsulates the react-error-boundary functionality in a client component
  * to prevent serialization issues when used in Server Components.
@@ -26,7 +26,7 @@ export function StandardErrorFallback({ error, resetErrorBoundary }: ErrorFallba
       <p className="text-sm text-red-100/80 mb-3">
         {error.message || "An unexpected error occurred"}
       </p>
-      <button 
+      <button
         onClick={resetErrorBoundary}
         className="px-4 py-2 bg-red-800/40 hover:bg-red-800/60 rounded-md text-sm transition-colors"
       >
@@ -41,7 +41,7 @@ export function StandardErrorFallback({ error, resetErrorBoundary }: ErrorFallba
  */
 export function ContentErrorBoundary({ children }: { children: ReactNode }) {
   return (
-    <ReactErrorBoundary 
+    <ReactErrorBoundary
       FallbackComponent={StandardErrorFallback}
       onReset={() => {
         // Optional: Any reset logic here
@@ -57,14 +57,14 @@ export function ContentErrorBoundary({ children }: { children: ReactNode }) {
  */
 export function FormErrorBoundary({ children }: { children: ReactNode }) {
   return (
-    <ReactErrorBoundary 
+    <ReactErrorBoundary
       FallbackComponent={({ error, resetErrorBoundary }) => (
         <div className="rounded-lg border border-red-700/50 p-8 bg-red-900/20 text-center">
           <h3 className="text-lg font-semibold mb-3 text-red-200">Form Error</h3>
           <p className="text-sm text-red-100/80 mb-4">
             {error.message || "There was a problem loading the form"}
           </p>
-          <button 
+          <button
             onClick={resetErrorBoundary}
             className="px-4 py-2 bg-red-800/40 hover:bg-red-800/60 rounded-md text-sm transition-colors"
           >
@@ -83,8 +83,6 @@ export function FormErrorBoundary({ children }: { children: ReactNode }) {
  */
 export function SectionErrorBoundary({ children }: { children: ReactNode }) {
   return (
-    <ReactErrorBoundary FallbackComponent={StandardErrorFallback}>
-      {children}
-    </ReactErrorBoundary>
+    <ReactErrorBoundary FallbackComponent={StandardErrorFallback}>{children}</ReactErrorBoundary>
   );
 }

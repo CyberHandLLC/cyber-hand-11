@@ -1,0 +1,185 @@
+name: MCP Validation
+
+on:
+  push:
+    branches: [ main, development ]
+  pull_request:
+    branches: [ main, development ]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate Code Quality
+    runs-on: ubuntu-latest
+    
+    services:
+      architecture-guard:
+        image: ghcr.io/cyberhandllc/architecture-guard:latest
+        ports:
+          - 3901:3901
+        env:
+          NODE_ENV: production
+          PORT: 3901
+          PROJECT_ROOT: /github/workspace
+      
+      dependency-validator:
+        image: ghcr.io/cyberhandllc/dependency-validator:latest
+        ports:
+          - 8002:8002
+        env:
+          NODE_ENV: production
+          PORT: 8002
+          PROJECT_ROOT: /github/workspace
+      
+      style-validator:
+        image: ghcr.io/cyberhandllc/style-validator:latest
+        ports:
+          - 8003:8003
+        env:
+          NODE_ENV: production
+          PORT: 8003
+          PROJECT_ROOT: /github/workspace
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Install validation CLI dependencies
+        run: npm install -g node-fetch commander
+      
+      - name: Wait for MCP servers to start
+        run: |
+          echo "Waiting for MCP servers to initialize..."
+          for i in {1..10}; do
+            if curl -s http://localhost:3901/health | grep -q "ok" && \
+               curl -s http://localhost:8002/health | grep -q "ok" && \
+               curl -s http://localhost:8003/health | grep -q "ok"; then
+              echo "All MCP servers are ready!"
+              break
+            fi
+            echo "Waiting for MCP servers (attempt $i/10)..."
+            sleep 5
+          done
+      
+      - name: Validate Architecture
+        run: |
+          echo "Validating architecture..."
+          curl -s -X POST http://localhost:3901/v1 \
+            -H "Content-Type: application/json" \
+            -d '{"name":"architecture_check","tool_call_id":"gh-action-arch","arguments":{"path":"./","options":{"ci":true}}}' \
+            | tee architecture-results.json
+          
+          if [[ $(cat architecture-results.json | jq -r '.success') != "true" || $(cat architecture-results.json | jq -r '.results.success') != "true" ]]; then
+            echo "::error::Architecture validation failed"
+            exit 1
+          fi
+      
+      - name: Validate Dependencies
+        run: |
+          echo "Validating dependencies..."
+          curl -s -X POST http://localhost:8002/v1 \
+            -H "Content-Type: application/json" \
+            -d '{"name":"dependency_check","tool_call_id":"gh-action-dep","arguments":{"path":"./","options":{"ci":true}}}' \
+            | tee dependency-results.json
+          
+          if [[ $(cat dependency-results.json | jq -r '.success') != "true" || $(cat dependency-results.json | jq -r '.results.success') != "true" ]]; then
+            echo "::error::Dependency validation failed"
+            exit 1
+          fi
+      
+      - name: Validate Style
+        run: |
+          echo "Validating code style..."
+          curl -s -X POST http://localhost:8003/v1 \
+            -H "Content-Type: application/json" \
+            -d '{"name":"style_check","tool_call_id":"gh-action-style","arguments":{"path":"./","options":{"ci":true}}}' \
+            | tee style-results.json
+          
+          if [[ $(cat style-results.json | jq -r '.success') != "true" || $(cat style-results.json | jq -r '.results.success') != "true" ]]; then
+            echo "::error::Style validation failed"
+            exit 1
+          fi
+      
+      - name: Upload validation results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: validation-results
+          path: |
+            architecture-results.json
+            dependency-results.json
+            style-results.json
+      
+      - name: Check TypeScript
+        run: npx tsc --noEmit
+      
+      - name: Check ESLint
+        run: npx eslint . --ext .ts,.tsx
+      
+      - name: Summarize validation results
+        if: always()
+        run: |
+          echo "## MCP Validation Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Architecture
+          if [[ -f architecture-results.json ]]; then
+            echo "### Architecture Validation" >> $GITHUB_STEP_SUMMARY
+            if [[ $(cat architecture-results.json | jq -r '.success') == "true" && $(cat architecture-results.json | jq -r '.results.success') == "true" ]]; then
+              echo "✅ **PASSED**" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "❌ **FAILED**" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "Errors:" >> $GITHUB_STEP_SUMMARY
+              cat architecture-results.json | jq -r '.results.errors[]' | while read line; do echo "- $line" >> $GITHUB_STEP_SUMMARY; done
+            fi
+            
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Warnings:" >> $GITHUB_STEP_SUMMARY
+            cat architecture-results.json | jq -r '.results.warnings[]' | while read line; do echo "- $line" >> $GITHUB_STEP_SUMMARY; done
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # Dependencies
+          if [[ -f dependency-results.json ]]; then
+            echo "### Dependency Validation" >> $GITHUB_STEP_SUMMARY
+            if [[ $(cat dependency-results.json | jq -r '.success') == "true" && $(cat dependency-results.json | jq -r '.results.success') == "true" ]]; then
+              echo "✅ **PASSED**" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "❌ **FAILED**" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "Errors:" >> $GITHUB_STEP_SUMMARY
+              cat dependency-results.json | jq -r '.results.errors[]' | while read line; do echo "- $line" >> $GITHUB_STEP_SUMMARY; done
+            fi
+            
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Warnings:" >> $GITHUB_STEP_SUMMARY
+            cat dependency-results.json | jq -r '.results.warnings[]' | while read line; do echo "- $line" >> $GITHUB_STEP_SUMMARY; done
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # Style
+          if [[ -f style-results.json ]]; then
+            echo "### Style Validation" >> $GITHUB_STEP_SUMMARY
+            if [[ $(cat style-results.json | jq -r '.success') == "true" && $(cat style-results.json | jq -r '.results.success') == "true" ]]; then
+              echo "✅ **PASSED**" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "❌ **FAILED**" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "Errors:" >> $GITHUB_STEP_SUMMARY
+              cat style-results.json | jq -r '.results.errors[]' | while read line; do echo "- $line" >> $GITHUB_STEP_SUMMARY; done
+            fi
+            
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Warnings:" >> $GITHUB_STEP_SUMMARY
+            cat style-results.json | jq -r '.results.warnings[]' | while read line; do echo "- $line" >> $GITHUB_STEP_SUMMARY; done
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi

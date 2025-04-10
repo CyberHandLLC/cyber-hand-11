@@ -25,20 +25,20 @@ The application distinguishes between several types of components:
 
 ```tsx
 // Example Server Component
-import { cache } from 'react';
-import { Suspense } from 'react';
-import { FeatureSkeleton } from '../ui/skeletons';
+import { cache } from "react";
+import { Suspense } from "react";
+import { FeatureSkeleton } from "../ui/skeletons";
 
 // Data fetching using cache for deduplication
 const getData = cache(async () => {
-  const res = await fetch('/api/data');
+  const res = await fetch("/api/data");
   return res.json();
 });
 
 export default async function FeatureComponent() {
   // Fetch data directly in the component
   const data = await getData();
-  
+
   return (
     <section>
       <h2>{data.title}</h2>
@@ -61,10 +61,10 @@ export default async function FeatureComponent() {
 
 ```tsx
 // Example Client Component
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useTheme } from '@/lib/theme-context';
+import { useState } from "react";
+import { useTheme } from "@/lib/theme-context";
 
 interface InteractiveFeatureProps {
   initialValue: number;
@@ -74,33 +74,30 @@ interface InteractiveFeatureProps {
 export function InteractiveFeature({ initialValue, onUpdate }: InteractiveFeatureProps) {
   const [value, setValue] = useState(initialValue);
   const { theme } = useTheme();
-  
+
   const handleClick = () => {
     const newValue = value + 1;
     setValue(newValue);
     if (onUpdate) onUpdate(newValue);
   };
-  
+
   return (
-    <button
-      onClick={handleClick}
-      className={theme === 'dark' ? 'btn-dark' : 'btn-light'}
-    >
+    <button onClick={handleClick} className={theme === "dark" ? "btn-dark" : "btn-light"}>
       Count: {value}
     </button>
   );
 }
 
 // Example of form handling with Next.js 15 Form component
-'use client';
+("use client");
 
-import { useFormState } from 'react-dom';
-import { submitForm } from '@/app/actions'; // Server Action
+import { useFormState } from "react-dom";
+import { submitForm } from "@/app/actions"; // Server Action
 
 export function ContactForm() {
   // Use the new useFormState hook with a Server Action
   const [state, formAction] = useFormState(submitForm, { success: false, errors: {} });
-  
+
   return (
     <form action={formAction}>
       <div>
@@ -108,15 +105,15 @@ export function ContactForm() {
         <input type="text" id="name" name="name" required />
         {state.errors?.name && <p className="error">{state.errors.name}</p>}
       </div>
-      
+
       <div>
         <label htmlFor="email">Email</label>
         <input type="email" id="email" name="email" required />
         {state.errors?.email && <p className="error">{state.errors.email}</p>}
       </div>
-      
+
       <button type="submit">Submit</button>
-      
+
       {state.success && <p className="success">Form submitted successfully!</p>}
     </form>
   );
@@ -133,28 +130,28 @@ export function ContactForm() {
 
 ```tsx
 // InteractiveFeatureWrapper.tsx (Client Component)
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { InteractiveFeature, InteractiveFeatureProps } from './interactive-feature';
+import { useState } from "react";
+import { InteractiveFeature, InteractiveFeatureProps } from "./interactive-feature";
 
 export function InteractiveFeatureWrapper(props: InteractiveFeatureProps) {
   const [state, setState] = useState<number>(props.initialValue);
-  
+
   const handleUpdate = (newValue: number) => {
     setState(newValue);
     if (props.onUpdate) props.onUpdate(newValue);
   };
-  
+
   return <InteractiveFeature {...props} onUpdate={handleUpdate} />;
 }
 
 // Usage in a Server Component
-import { Suspense } from 'react';
-import dynamic from 'next/dynamic';
+import { Suspense } from "react";
+import dynamic from "next/dynamic";
 
-const DynamicInteractiveFeature = dynamic(() => 
-  import('./interactive-feature-wrapper').then(mod => mod.InteractiveFeatureWrapper),
+const DynamicInteractiveFeature = dynamic(
+  () => import("./interactive-feature-wrapper").then((mod) => mod.InteractiveFeatureWrapper),
   { ssr: false } // Optionally disable SSR for this component
 );
 
@@ -272,7 +269,7 @@ function Container({ children }: { children: React.ReactNode }) {
 <Container>
   <Child1 />
   <Child2 />
-</Container>
+</Container>;
 ```
 
 ### Composition through Suspense
@@ -286,7 +283,7 @@ function ProductPage({ id }: { id: string }) {
       <Suspense fallback={<ProductSkeleton />}>
         <ProductDetails id={id} />
       </Suspense>
-      
+
       <h2>Related Products</h2>
       <Suspense fallback={<RelatedProductsSkeleton />}>
         <RelatedProducts productId={id} />
@@ -300,16 +297,16 @@ function ProductPage({ id }: { id: string }) {
 
 ```tsx
 // Server action defined separately - Next.js 15 pattern
-'use server';
+"use server";
 export async function submitData(formData: FormData) {
   // Process form data
   return { success: true };
 }
 
 // Client component using the server action
-'use client';
-import { useFormState } from 'react-dom';
-import { submitData } from './actions';
+("use client");
+import { useFormState } from "react-dom";
+import { submitData } from "./actions";
 
 export function DataForm() {
   const [state, formAction] = useFormState(submitData, {});
@@ -328,19 +325,19 @@ Components are tested using Jest and React Testing Library with a focus on:
 
 ```tsx
 // Example component test
-import { render, screen, fireEvent } from '@testing-library/react';
-import { Button } from './button';
+import { render, screen, fireEvent } from "@testing-library/react";
+import { Button } from "./button";
 
-describe('Button', () => {
-  it('renders with correct text', () => {
+describe("Button", () => {
+  it("renders with correct text", () => {
     render(<Button>Click me</Button>);
-    expect(screen.getByRole('button', { name: /click me/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /click me/i })).toBeInTheDocument();
   });
-  
-  it('calls onClick when clicked', () => {
+
+  it("calls onClick when clicked", () => {
     const handleClick = jest.fn();
     render(<Button onClick={handleClick}>Click me</Button>);
-    fireEvent.click(screen.getByRole('button', { name: /click me/i }));
+    fireEvent.click(screen.getByRole("button", { name: /click me/i }));
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 });
@@ -355,15 +352,15 @@ Components should be documented with:
 - Notes about state management or side effects
 - Accessibility considerations
 
-```tsx
+````tsx
 /**
  * Button component that follows the design system guidelines.
- * 
+ *
  * @param variant - The visual style of the button
  * @param size - The size of the button
  * @param children - The content of the button
  * @param onClick - Function called when the button is clicked
- * 
+ *
  * @example
  * ```tsx
  * <Button variant="primary" size="md" onClick={handleClick}>
@@ -371,15 +368,10 @@ Components should be documented with:
  * </Button>
  * ```
  */
-export function Button({
-  variant = 'primary',
-  size = 'md',
-  children,
-  onClick,
-}: ButtonProps) {
+export function Button({ variant = "primary", size = "md", children, onClick }: ButtonProps) {
   // Implementation
 }
-```
+````
 
 ## Related Documentation
 

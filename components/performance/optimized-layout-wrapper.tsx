@@ -2,21 +2,21 @@
 
 /**
  * OptimizedLayoutWrapper Component
- * 
+ *
  * A high-performance layout wrapper that implements:
  * - CSS containment for better rendering performance
  * - Route-based code splitting
  * - Deferred hydration of non-critical components
  * - Performance monitoring
- * 
+ *
  * This is a client component because it handles runtime optimizations.
  */
 
-import React, { useEffect } from 'react';
-import { usePathname } from 'next/navigation';
-import { usePerformanceMetrics, METRIC_NAMES } from '@/lib/performance/performance-metrics';
-import { DeferredContent } from '@/lib/performance/deferred-loading';
-import { CSS_CONTAINMENT_SELECTORS } from '@/lib/performance/critical-css';
+import React, { useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { usePerformanceMetrics, METRIC_NAMES } from "@/lib/performance/performance-metrics";
+import { DeferredContent } from "@/lib/performance/deferred-loading";
+import { CSS_CONTAINMENT_SELECTORS } from "@/lib/performance/critical-css";
 
 interface OptimizedLayoutWrapperProps {
   /** The children to render */
@@ -35,8 +35,8 @@ interface OptimizedLayoutWrapperProps {
 
 /**
  * Performance-optimized layout wrapper component
- * 
- * @param props - Component properties 
+ *
+ * @param props - Component properties
  * @returns React component with performance optimizations
  */
 export function OptimizedLayoutWrapper({
@@ -44,12 +44,12 @@ export function OptimizedLayoutWrapper({
   isLCP = false,
   containment = true,
   deferHydration = false,
-  className = '',
-  id = 'optimized-section',
+  className = "",
+  id = "optimized-section",
 }: OptimizedLayoutWrapperProps) {
   const pathname = usePathname();
   const reportWebVitals = usePerformanceMetrics();
-  
+
   // Track when this component is rendered for performance analysis
   useEffect(() => {
     if (isLCP) {
@@ -59,39 +59,39 @@ export function OptimizedLayoutWrapper({
         value: performance.now(),
         id: id,
       });
-      
+
       // Mark the component as visible in the performance timeline
-      if (typeof window.performance?.mark === 'function') {
+      if (typeof window.performance?.mark === "function") {
         window.performance.mark(`visible-${id}`);
       }
     }
   }, [isLCP, id, reportWebVitals]);
-  
+
   // Apply CSS containment classes using our standardized utility classes
-  const containmentClass = containment ? (isLCP ? 'contain-section' : 'contain-interactive') : '';
-  const lcpClass = isLCP ? 'lcp-container' : '';
-  
+  const containmentClass = containment ? (isLCP ? "contain-section" : "contain-interactive") : "";
+  const lcpClass = isLCP ? "lcp-container" : "";
+
   // Construct the final component
   const content = (
-    <div 
+    <div
       id={id}
       className={`${className} ${containmentClass} ${lcpClass}`}
       data-route={pathname}
-      data-lcp={isLCP ? 'true' : 'false'}
+      data-lcp={isLCP ? "true" : "false"}
     >
       {children}
-      
+
       {/* CSS containment is now applied via utility classes */}
     </div>
   );
-  
+
   // Apply deferred hydration if requested
   if (deferHydration && !isLCP) {
     return (
       <DeferredContent
         delay={100}
         loadOnlyWhenVisible={true}
-        priority={isLCP ? 'high' : 'medium'}
+        priority={isLCP ? "high" : "medium"}
         metricName="deferred-hydration"
         fallback={<div className={`${className} skeleton-loader`} aria-hidden="true" />}
       >
@@ -99,7 +99,7 @@ export function OptimizedLayoutWrapper({
       </DeferredContent>
     );
   }
-  
+
   return content;
 }
 
@@ -110,9 +110,11 @@ export function OptimizedLayoutWrapper({
 export function CSSContainmentStyles() {
   // Only include this component once in your app, ideally in the root layout
   return (
-    <style dangerouslySetInnerHTML={{ __html: `
+    <style
+      dangerouslySetInnerHTML={{
+        __html: `
       /* Apply CSS containment to appropriate elements using standardized classes */
-      ${CSS_CONTAINMENT_SELECTORS.join(', ')} {
+      ${CSS_CONTAINMENT_SELECTORS.join(", ")} {
         /* These elements use the contain-interactive class */
       }
       
@@ -149,6 +151,8 @@ export function CSSContainmentStyles() {
       .below-fold {
         /* Use the contain-card class instead of inline styles */
       }
-    `}} />
+    `,
+      }}
+    />
   );
 }

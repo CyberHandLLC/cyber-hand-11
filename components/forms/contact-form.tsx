@@ -1,6 +1,6 @@
 /**
  * Contact Form Server Component
- * 
+ *
  * This is a Server Component that wraps the client-side form.
  * It fetches the necessary data (available services) on the server
  * and passes it to the client component, demonstrating the
@@ -20,16 +20,13 @@ export async function ContactForm({ initialService }: ContactFormProps) {
   // This data fetching happens during server rendering and doesn't
   // require any client-side JavaScript
   const availableServices = await getAvailableServices();
-  
+
   return (
     <div className="bg-gray-50/50 dark:bg-gray-800/20 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
       <h2 className="text-2xl font-bold mb-6 text-center">Get In Touch</h2>
-      
+
       {/* Pass the server-fetched data to the client component */}
-      <ContactFormClient 
-        initialService={initialService}
-        availableServices={availableServices}
-      />
+      <ContactFormClient initialService={initialService} availableServices={availableServices} />
     </div>
   );
 }

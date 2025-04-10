@@ -1,6 +1,6 @@
 /**
  * Get Started Page - Server Component with Client Component Islands
- * 
+ *
  * This page leverages Next.js 15's built-in streaming capabilities with:
  * - The page itself as a Server Component
  * - Static content rendered immediately
@@ -10,11 +10,11 @@
  * - Comprehensive error boundaries for graceful error recovery
  */
 
-import { Suspense } from 'react';
+import { Suspense } from "react";
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
-import { AuthForm } from "./components/auth-form";
+import { AuthFormClient } from "./components/auth-form-client";
 import { HeadingSkeleton, TextSkeleton, Skeleton } from "@/components/ui/skeleton";
-import { ContentErrorBoundary } from "@/app/components/error-boundary";
+import { ContentErrorBoundaryClient } from "@/app/components/error-boundary-client";
 
 /**
  * Auth Form Skeleton Component
@@ -27,29 +27,29 @@ function AuthFormSkeleton() {
         <HeadingSkeleton level={1} width="60%" className="mx-auto mb-2" />
         <TextSkeleton width="80%" className="mx-auto" />
       </div>
-      
+
       <div className="space-y-6">
         {/* Email field */}
         <div>
           <TextSkeleton className="h-5 w-16 mb-2" />
           <Skeleton className="h-12 w-full rounded" />
         </div>
-        
+
         {/* Password field */}
         <div>
           <TextSkeleton className="h-5 w-20 mb-2" animationDelay="0.15s" />
           <Skeleton className="h-12 w-full rounded" animationDelay="0.15s" />
         </div>
-        
+
         {/* Submit button */}
         <Skeleton className="h-11 w-full rounded mt-6" animationDelay="0.2s" />
       </div>
-      
+
       {/* Toggle link */}
       <div className="text-center mt-8">
         <TextSkeleton width="60%" className="mx-auto" animationDelay="0.25s" />
       </div>
-      
+
       {/* Back link */}
       <div className="text-center mt-6">
         <Skeleton className="h-9 w-32 rounded-md mx-auto" animationDelay="0.3s" />
@@ -62,8 +62,8 @@ function AuthFormSkeleton() {
  * Export metadata for SEO
  */
 export const metadata = {
-  title: 'Get Started | Cyber Hand',
-  description: 'Sign up or log in to your Cyber Hand account to access our services and resources.',
+  title: "Get Started | Cyber Hand",
+  description: "Sign up or log in to your Cyber Hand account to access our services and resources.",
 };
 
 /**
@@ -74,11 +74,11 @@ export default function GetStarted() {
   return (
     <PageLayout>
       <SectionContainer className="min-h-screen flex items-center justify-center py-20">
-        <ContentErrorBoundary>
+        <ContentErrorBoundaryClient>
           <Suspense fallback={<AuthFormSkeleton />}>
-            <AuthForm />
+            <AuthFormClient />
           </Suspense>
-        </ContentErrorBoundary>
+        </ContentErrorBoundaryClient>
       </SectionContainer>
     </PageLayout>
   );

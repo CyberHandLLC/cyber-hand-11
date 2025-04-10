@@ -27,6 +27,7 @@ Next.js 15's Metadata API provides a powerful way to define metadata for our pag
 2. **Dynamic Metadata**: Generated on-demand using the `generateMetadata` function
 
 This API allows us to set:
+
 - Page titles and descriptions
 - Open Graph metadata for social sharing
 - Twitter card metadata
@@ -89,31 +90,27 @@ For shared metadata across multiple pages, define metadata in a layout file:
 
 ```tsx
 // app/blog/layout.tsx
-import { Metadata } from 'next';
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Cyber Hand Blog',
-    default: 'Cyber Hand Blog', // for the blog index page
+    template: "%s | Cyber Hand Blog",
+    default: "Cyber Hand Blog", // for the blog index page
   },
-  description: 'Insights and articles from the Cyber Hand team',
+  description: "Insights and articles from the Cyber Hand team",
   openGraph: {
     title: {
-      template: '%s | Cyber Hand Blog',
-      default: 'Cyber Hand Blog',
+      template: "%s | Cyber Hand Blog",
+      default: "Cyber Hand Blog",
     },
-    description: 'Insights and articles from the Cyber Hand team',
-    type: 'website',
-    siteName: 'Cyber Hand',
+    description: "Insights and articles from the Cyber Hand team",
+    type: "website",
+    siteName: "Cyber Hand",
   },
 };
 
 export default function BlogLayout({ children }) {
-  return (
-    <div className="blog-layout">
-      {children}
-    </div>
-  );
+  return <div className="blog-layout">{children}</div>;
 }
 ```
 
@@ -139,15 +136,15 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   // Fetch case study data
   const caseStudy = await getCaseStudyBySlug(params.slug);
-  
+
   // Return 404 if case study doesn't exist
   if (!caseStudy) {
     return notFound();
   }
-  
+
   // Get parent metadata (from layout)
   const previousImages = (await parent).openGraph?.images || [];
-  
+
   return {
     title: caseStudy.title,
     description: caseStudy.summary,
@@ -175,11 +172,11 @@ export async function generateMetadata(
 
 export default async function CaseStudyPage({ params }: Props) {
   const caseStudy = await getCaseStudyBySlug(params.slug);
-  
+
   if (!caseStudy) {
     return notFound();
   }
-  
+
   return (
     // Page content
   );
@@ -192,31 +189,31 @@ Adding structured data helps search engines understand our content better. Next.
 
 ```tsx
 // app/case-studies/[slug]/page.tsx
-import { getCaseStudyBySlug } from '@/lib/case-studies';
-import { notFound } from 'next/navigation';
-import { JsonLd } from '@/components/json-ld';
+import { getCaseStudyBySlug } from "@/lib/case-studies";
+import { notFound } from "next/navigation";
+import { JsonLd } from "@/components/json-ld";
 
 export default async function CaseStudyPage({ params }) {
   const caseStudy = await getCaseStudyBySlug(params.slug);
-  
+
   if (!caseStudy) {
     return notFound();
   }
-  
+
   const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
+    "@context": "https://schema.org",
+    "@type": "Article",
     headline: caseStudy.title,
     description: caseStudy.summary,
     image: caseStudy.coverImage,
     datePublished: caseStudy.publishedAt,
     author: {
-      '@type': 'Organization',
-      name: 'Cyber Hand',
-      url: 'https://cyber-hand.com',
+      "@type": "Organization",
+      name: "Cyber Hand",
+      url: "https://cyber-hand.com",
     },
   };
-  
+
   return (
     <>
       <JsonLd data={jsonLd} />
@@ -228,10 +225,7 @@ export default async function CaseStudyPage({ params }) {
 // components/json-ld.tsx
 export function JsonLd({ data }: { data: any }) {
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
   );
 }
 ```
@@ -250,7 +244,7 @@ Next.js 15's Image component automatically optimizes images for better Core Web 
 
 ```tsx
 // components/optimized-image.tsx
-import Image from 'next/image';
+import Image from "next/image";
 
 interface OptimizedImageProps {
   src: string;
@@ -289,13 +283,7 @@ export function OptimizedImage({
 For hero images or content visible above the fold, always use the `priority` prop to preload the image:
 
 ```tsx
-<OptimizedImage
-  src="/images/hero.jpg"
-  alt="Hero image"
-  width={1200}
-  height={600}
-  priority
-/>
+<OptimizedImage src="/images/hero.jpg" alt="Hero image" width={1200} height={600} priority />
 ```
 
 ## Performance Considerations
@@ -309,12 +297,12 @@ Performance is a critical SEO factor. Our Next.js 15 implementation includes:
 
 ```tsx
 // app/layout.tsx
-import { Inter } from 'next/font/google';
+import { Inter } from "next/font/google";
 
 // Load Inter font optimized for performance
 const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap', // Use 'swap' to prevent text from being invisible while the font loads
+  subsets: ["latin"],
+  display: "swap", // Use 'swap' to prevent text from being invisible while the font loads
 });
 
 export default function RootLayout({ children }) {
@@ -334,7 +322,7 @@ We implement canonical URLs to prevent duplicate content issues:
 // Layout or page component
 export const metadata = {
   alternates: {
-    canonical: 'https://cyber-hand.com/path/to/page',
+    canonical: "https://cyber-hand.com/path/to/page",
   },
 };
 ```

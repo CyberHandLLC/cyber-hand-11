@@ -18,7 +18,7 @@ We use React's built-in `cache()` function for efficient data fetching in Server
 
 ```typescript
 // lib/data/case-studies.ts
-import { cache } from 'react';
+import { cache } from "react";
 
 export const getCaseStudies = cache(async () => {
   // Fetch data here
@@ -27,6 +27,7 @@ export const getCaseStudies = cache(async () => {
 ```
 
 Benefits:
+
 - Automatic deduplication of data fetching
 - Results are cached for the duration of a request
 - Improves performance by eliminating redundant fetches
@@ -36,6 +37,7 @@ Benefits:
 For components that need both server rendering and client interactivity, we split them into two parts:
 
 1. **Server Component**: Handles data fetching and static rendering
+
    - Filename: `component-name-server.tsx`
    - Contains main UI structure and passes data to client parts
 
@@ -48,7 +50,7 @@ Example:
 
 ```tsx
 // Server Component
-import { ClientPart } from './component-name-client';
+import { ClientPart } from "./component-name-client";
 
 export function ServerComponent({ data }) {
   return (
@@ -76,18 +78,18 @@ Pages should follow this structure:
 
 ```tsx
 // Server Component Page
-import { Suspense } from 'react';
-import { ClientPart } from './components/client-part';
+import { Suspense } from "react";
+import { ClientPart } from "./components/client-part";
 
 export default async function Page() {
   // Server-side data fetching
   const data = await getData();
-  
+
   return (
     <main>
       {/* Static content rendered on server */}
       <h1>Page Title</h1>
-      
+
       {/* Client component boundary with suspense */}
       <Suspense fallback={<div>Loading...</div>}>
         <ClientPart data={data} />
@@ -100,6 +102,7 @@ export default async function Page() {
 ## Component Classification Guidelines
 
 ### Server Components
+
 - Page layout components
 - Data display components
 - SEO-critical content
@@ -107,6 +110,7 @@ export default async function Page() {
 - Navigation structure (non-interactive parts)
 
 ### Client Components
+
 - Interactive UI elements (buttons, forms, etc.)
 - Components that use React hooks
 - Animation containers
@@ -137,24 +141,21 @@ We've implemented a structured approach to integrate performance optimization wi
 
 ```tsx
 // Server Component (app/case-studies/page.tsx)
-import { Suspense } from 'react';
-import { CaseStudiesClientWrapper } from '@/app/case-studies/components/case-studies-client-wrapper';
+import { Suspense } from "react";
+import { CaseStudiesClientWrapper } from "@/app/case-studies/components/case-studies-client-wrapper";
 
 export default async function CaseStudiesPage() {
   // Server-side data fetching
   const caseStudies = await getCaseStudies();
   const industries = getAllIndustries();
-  
+
   return (
     <main>
       <h1>Case Studies</h1>
-      
+
       {/* Client boundary with Suspense */}
       <Suspense fallback={<div className="skeleton-loader">Loading...</div>}>
-        <CaseStudiesClientWrapper 
-          caseStudies={caseStudies} 
-          _industries={industries} 
-        />
+        <CaseStudiesClientWrapper caseStudies={caseStudies} _industries={industries} />
       </Suspense>
     </main>
   );
@@ -165,14 +166,14 @@ export default async function CaseStudiesPage() {
 // Client Component with Dynamic Import (app/case-studies/components/dynamic-case-study-grid.tsx)
 "use client";
 
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
 // Dynamic import with loading state
 const DynamicCaseStudyGrid = dynamic(
-  () => import('@/app/case-studies/components/case-study-grid').then(mod => mod.CaseStudyGrid),
+  () => import("@/app/case-studies/components/case-study-grid").then((mod) => mod.CaseStudyGrid),
   {
     loading: () => <SkeletonLoaderGrid />,
-    ssr: false
+    ssr: false,
   }
 );
 

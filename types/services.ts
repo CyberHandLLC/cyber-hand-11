@@ -1,6 +1,6 @@
 /**
  * Services Type Definitions
- * 
+ *
  * This file contains all type definitions related to services
  * across the Cyber Hand website.
  */
@@ -44,7 +44,7 @@ export interface ServiceCarouselProps {
 }
 
 export interface NavigationButtonProps {
-  direction: 'prev' | 'next';
+  direction: "prev" | "next";
   onClick: () => void;
 }
 

@@ -30,12 +30,14 @@ The Cyber Hand website is a cutting-edge digital presence designed using Next.js
 ### Development Environment Setup
 
 1. Clone the repository
+
    ```bash
    git clone [repository-url]
    cd cyber-hand.com
    ```
 
 2. Install dependencies
+
    ```bash
    npm install
    # or
@@ -43,6 +45,7 @@ The Cyber Hand website is a cutting-edge digital presence designed using Next.js
    ```
 
 3. Start the development server
+
    ```bash
    npm run dev
    # or
@@ -61,13 +64,21 @@ yarn build
 
 ## Documentation Structure
 
-The project documentation is organized as follows:
+> **Note**: The project documentation has been migrated from root files to a comprehensive structure in the `/docs` directory. See [DOCUMENTATION.md](DOCUMENTATION.md) for migration details.
 
-### Root-level Strategy Documents
+### Core Documentation Files
 
-- [ARCHITECTURE.md](ARCHITECTURE.md) - File structure and component relationships
-- [PLANNING.md](PLANNING.md) - Development strategy and technical decisions
-- [TASK.md](TASK.md) - Implementation tasks and progress tracking
+These 5 key documents provide everything needed to understand and build the application:
+
+1. [**Development Guide**](/docs/getting-started/development-guide.md) - Comprehensive onboarding for developers
+2. [**System Reference**](/docs/architecture/system-reference.md) - Complete system architecture reference
+3. [**Feature Registry**](/docs/features/feature-registry.md) - Feature catalog and implementation status
+4. [**Component Audit**](/docs/components/audit.md) - Component inventory and classification
+5. [**Supabase Integration**](/docs/integrations/supabase-integration.md) - Database integration patterns
+
+### Documentation Hub
+
+For all documentation resources, start with the [Documentation Hub](/docs/README.md).
 
 ### Getting Started
 
@@ -189,12 +200,12 @@ The site is deployed on Vercel with the following pipeline:
 
 ## Contributing
 
-1. Read the [ARCHITECTURE.md](ARCHITECTURE.md) and [PLANNING.md](PLANNING.md) documents
-2. Follow the code style and organization patterns
+1. Read the [Development Guide](/docs/getting-started/development-guide.md) and [System Reference](/docs/architecture/system-reference.md) documents
+2. Follow the code style and organization patterns in [Code Standards](/docs/getting-started/code-standards.md)
 3. Ensure all TypeScript files use proper typing without 'any'
 4. Maintain or improve current Lighthouse scores
 5. Verify functionality in different network conditions
-6. Add/update documentation for significant changes
+6. Add/update documentation for significant changes using the [templates](/docs/templates/)
 
 ## License
 

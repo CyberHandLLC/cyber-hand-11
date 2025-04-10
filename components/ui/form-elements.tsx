@@ -5,7 +5,8 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "@/lib/theme-context";
 
 // Base input styles that match the cyber aesthetic
-const baseInputStyles = "w-full rounded border bg-black/30 backdrop-blur-sm text-white/90 focus:outline-none focus:border-cyan-500/70 transition-all duration-200";
+const baseInputStyles =
+  "w-full rounded border bg-black/30 backdrop-blur-sm text-white/90 focus:outline-none focus:border-cyan-500/70 transition-all duration-200";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -15,15 +16,11 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, label, error, ...props }, ref) => {
     const { theme } = useTheme();
-    const borderColor = theme === 'dark' ? 'border-gray-700/50' : 'border-gray-600/30';
-    
+    const borderColor = theme === "dark" ? "border-gray-700/50" : "border-gray-600/30";
+
     return (
       <div className="mb-4">
-        {label && (
-          <label className="block text-sm font-medium text-white/90 mb-1">
-            {label}
-          </label>
-        )}
+        {label && <label className="block text-sm font-medium text-white/90 mb-1">{label}</label>}
         <input
           className={cn(
             baseInputStyles,
@@ -35,9 +32,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           {...props}
         />
-        {error && (
-          <p className="mt-1 text-xs text-red-400">{error}</p>
-        )}
+        {error && <p className="mt-1 text-xs text-red-400">{error}</p>}
       </div>
     );
   }
@@ -53,15 +48,11 @@ interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, label, error, ...props }, ref) => {
     const { theme } = useTheme();
-    const borderColor = theme === 'dark' ? 'border-gray-700/50' : 'border-gray-600/30';
-    
+    const borderColor = theme === "dark" ? "border-gray-700/50" : "border-gray-600/30";
+
     return (
       <div className="mb-4">
-        {label && (
-          <label className="block text-sm font-medium text-white/90 mb-1">
-            {label}
-          </label>
-        )}
+        {label && <label className="block text-sm font-medium text-white/90 mb-1">{label}</label>}
         <textarea
           className={cn(
             baseInputStyles,
@@ -73,9 +64,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           {...props}
         />
-        {error && (
-          <p className="mt-1 text-xs text-red-400">{error}</p>
-        )}
+        {error && <p className="mt-1 text-xs text-red-400">{error}</p>}
       </div>
     );
   }
@@ -89,9 +78,5 @@ interface FormGroupProps {
 }
 
 export const FormGroup: React.FC<FormGroupProps> = ({ children, className }) => {
-  return (
-    <div className={cn("space-y-4", className)}>
-      {children}
-    </div>
-  );
+  return <div className={cn("space-y-4", className)}>{children}</div>;
 };

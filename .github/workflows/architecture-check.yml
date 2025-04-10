@@ -1,0 +1,58 @@
+name: Architecture Validation
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  push:
+    branches: [ main, develop ]
+    
+jobs:
+  validate:
+    name: Validate Architecture
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run Architecture Check
+        run: node check-architecture.js --ci
+        
+      - name: Validate Dependencies
+        run: node check-architecture.js --path=. --ci
+
+      - name: Post Comment on PR
+        if: github.event_name == 'pull_request' && failure()
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `❌ Architecture validation failed!
+            
+            The code in this PR doesn't meet the architectural standards. Please run:
+            
+            \`\`\`bash
+            # Check architecture issues
+            node check-architecture.js
+            
+            # Format code with Prettier
+            npm run format
+            \`\`\`
+            
+            See the action logs for more details.`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })

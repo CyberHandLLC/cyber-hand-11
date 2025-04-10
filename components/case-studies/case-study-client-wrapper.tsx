@@ -24,14 +24,14 @@ interface CaseStudyClientWrapperProps {
 export function CaseStudyClientWrapper({ caseStudy }: CaseStudyClientWrapperProps) {
   const router = useRouter();
   const { theme } = useTheme();
-  
+
   // If case study not found, redirect to case studies page
   useEffect(() => {
     if (!caseStudy) {
       router.push("/case-studies");
     }
   }, [caseStudy, router]);
-  
+
   // Return enhanced loading state if case study still shows as not found on client
   if (!caseStudy) {
     return (
@@ -43,11 +43,17 @@ export function CaseStudyClientWrapper({ caseStudy }: CaseStudyClientWrapperProp
       </SectionContainer>
     );
   }
-  
+
   /**
    * Error fallback component - handles errors within the client components
    */
-  const CaseStudyClientErrorFallback = ({ error, resetErrorBoundary }: { error: Error; resetErrorBoundary: () => void }) => {
+  const CaseStudyClientErrorFallback = ({
+    error,
+    resetErrorBoundary,
+  }: {
+    error: Error;
+    resetErrorBoundary: () => void;
+  }) => {
     const [isRetrying, setIsRetrying] = useState(false);
 
     const handleRetry = () => {
@@ -64,15 +70,18 @@ export function CaseStudyClientWrapper({ caseStudy }: CaseStudyClientWrapperProp
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             {error.message || "There was an error loading this case study content."}
           </p>
-          <button 
+          <button
             onClick={handleRetry}
             disabled={isRetrying}
-            className={`px-6 py-2 rounded-lg ${getThemeStyle('bg-primary hover:bg-primary-dark', theme)} text-white transition-colors disabled:opacity-50`}
+            className={`px-6 py-2 rounded-lg ${getThemeStyle("bg-primary hover:bg-primary-dark", theme)} text-white transition-colors disabled:opacity-50`}
           >
             {isRetrying ? "Retrying..." : "Retry"}
           </button>
           <div className="mt-4">
-            <Link href="/case-studies" className={`${getThemeStyle('text-primary hover:underline', theme)}`}>
+            <Link
+              href="/case-studies"
+              className={`${getThemeStyle("text-primary hover:underline", theme)}`}
+            >
               Return to all case studies
             </Link>
           </div>
@@ -85,12 +94,14 @@ export function CaseStudyClientWrapper({ caseStudy }: CaseStudyClientWrapperProp
     <ErrorBoundary FallbackComponent={CaseStudyClientErrorFallback}>
       {/* Header section */}
       <CaseStudyHeader caseStudy={caseStudy} theme={theme} />
-      
+
       {/* Main content section */}
       <CaseStudyContent caseStudy={caseStudy} theme={theme} router={router} />
-      
+
       {/* Inject custom styles for the diagonal clip-path */}
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         .clip-diagonal {
           clip-path: polygon(100% 0, 100% 100%, 0 100%, 30% 0);
         }
@@ -100,7 +111,9 @@ export function CaseStudyClientWrapper({ caseStudy }: CaseStudyClientWrapperProp
             clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 30%);
           }
         }
-      `}} />
+      `,
+        }}
+      />
     </ErrorBoundary>
   );
 }

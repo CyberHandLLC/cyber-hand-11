@@ -2,7 +2,7 @@
 
 /**
  * CircuitEffectsWrapper - Client Component
- * 
+ *
  * This component wraps the dynamic import of CircuitEffects to handle
  * client-side loading with useEffect for better performance.
  * It's isolated as a Client Component to keep dynamic imports and
@@ -15,10 +15,10 @@ import { Suspense } from "react";
 
 // Lazy-loaded circuit components for better performance
 const CircuitEffects = dynamic(
-  () => import('@/components/custom/circuit-effects').then(mod => mod.CircuitEffects), 
+  () => import("@/components/custom/circuit-effects").then((mod) => mod.CircuitEffects),
   {
     ssr: false,
-    loading: () => <div className="absolute inset-0 z-5 opacity-30 pointer-events-none" />
+    loading: () => <div className="absolute inset-0 z-5 opacity-30 pointer-events-none" />,
   }
 );
 
@@ -36,9 +36,7 @@ export function CircuitEffectsWrapper() {
   }
 
   return (
-    <Suspense fallback={
-      <div className="absolute inset-0 z-5 opacity-30 pointer-events-none" />
-    }>
+    <Suspense fallback={<div className="absolute inset-0 z-5 opacity-30 pointer-events-none" />}>
       <CircuitEffects />
     </Suspense>
   );

@@ -1,0 +1,16 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Install required dependencies directly
+RUN npm init -y && npm install @modelcontextprotocol/sdk zod
+
+# Copy MCP server code
+COPY mcp-servers/style-validator/standalone-server.js ./
+
+# Set environment variables
+ENV NODE_ENV=production
+
+# No need to expose ports since we're using stdin/stdout
+# Keep the process alive and readable/writable on stdin/stdout
+CMD ["node", "standalone-server.js"]

@@ -3,46 +3,54 @@
  *
  * This module provides React components for generating JSON-LD structured data
  * for different page types according to Schema.org specifications.
- * 
+ *
  * @see https://schema.org/
  * @see https://developers.google.com/search/docs/advanced/structured-data
  */
 
-import React from 'react';
-import { Organization, WithContext, WebSite, WebPage, BreadcrumbList, Article, Service } from 'schema-dts';
+import React from "react";
+import {
+  Organization,
+  WithContext,
+  WebSite,
+  WebPage,
+  BreadcrumbList,
+  Article,
+  Service,
+} from "schema-dts";
 
 /**
  * Renders organization structured data
- * 
+ *
  * @returns A script element with JSON-LD organization data
  */
 export function OrganizationSchema() {
   const organizationData: WithContext<Organization> = {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: 'CyberHand',
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com',
-    logo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com'}/images/logo.svg`,
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "CyberHand",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://cyber-hand.com",
+    logo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://cyber-hand.com"}/images/logo.svg`,
     sameAs: [
-      'https://twitter.com/CyberHandAgency',
-      'https://www.linkedin.com/company/cyberhand',
-      'https://github.com/CyberHandLLC'
+      "https://twitter.com/CyberHandAgency",
+      "https://www.linkedin.com/company/cyberhand",
+      "https://github.com/CyberHandLLC",
     ],
     contactPoint: {
-      '@type': 'ContactPoint',
-      telephone: '+1-555-123-4567',
-      contactType: 'customer service',
-      email: 'hello@cyber-hand.com',
-      availableLanguage: ['English']
+      "@type": "ContactPoint",
+      telephone: "+1-555-123-4567",
+      contactType: "customer service",
+      email: "hello@cyber-hand.com",
+      availableLanguage: ["English"],
     },
     address: {
-      '@type': 'PostalAddress',
-      streetAddress: '123 Tech Avenue',
-      addressLocality: 'San Francisco',
-      addressRegion: 'CA',
-      postalCode: '94103',
-      addressCountry: 'US'
-    }
+      "@type": "PostalAddress",
+      streetAddress: "123 Tech Avenue",
+      addressLocality: "San Francisco",
+      addressRegion: "CA",
+      postalCode: "94103",
+      addressCountry: "US",
+    },
   };
 
   return (
@@ -55,21 +63,21 @@ export function OrganizationSchema() {
 
 /**
  * Renders website structured data
- * 
+ *
  * @returns A script element with JSON-LD website data
  */
 export function WebsiteSchema() {
   const websiteData: WithContext<WebSite> = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'CyberHand',
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com',
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "CyberHand",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://cyber-hand.com",
     potentialAction: {
-      '@type': 'SearchAction',
-      target: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com'}/search?q={search_term_string}`,
+      "@type": "SearchAction",
+      target: `${process.env.NEXT_PUBLIC_SITE_URL || "https://cyber-hand.com"}/search?q={search_term_string}`,
       // Update the query input format to match schema-dts type definitions
-      query: 'required name=search_term_string'
-    }
+      query: "required name=search_term_string",
+    },
   };
 
   return (
@@ -91,45 +99,47 @@ interface WebPageSchemaProps {
 
 /**
  * Renders webpage structured data
- * 
+ *
  * @param props - The webpage schema properties
  * @returns A script element with JSON-LD webpage data
  */
-export function WebPageSchema({ 
-  title, 
-  description, 
+export function WebPageSchema({
+  title,
+  description,
   url,
   datePublished,
   dateModified,
-  imageUrl
+  imageUrl,
 }: WebPageSchemaProps) {
   const webpageData: WithContext<WebPage> = {
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
+    "@context": "https://schema.org",
+    "@type": "WebPage",
     name: title,
     description,
     url,
     datePublished,
     dateModified,
     isPartOf: {
-      '@type': 'WebSite',
-      name: 'CyberHand',
-      url: process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com'
+      "@type": "WebSite",
+      name: "CyberHand",
+      url: process.env.NEXT_PUBLIC_SITE_URL || "https://cyber-hand.com",
     },
     ...(imageUrl && {
       image: {
-        '@type': 'ImageObject',
-        url: imageUrl.startsWith('http') ? imageUrl : `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com'}${imageUrl}`,
-      }
+        "@type": "ImageObject",
+        url: imageUrl.startsWith("http")
+          ? imageUrl
+          : `${process.env.NEXT_PUBLIC_SITE_URL || "https://cyber-hand.com"}${imageUrl}`,
+      },
     }),
     publisher: {
-      '@type': 'Organization',
-      name: 'CyberHand',
+      "@type": "Organization",
+      name: "CyberHand",
       logo: {
-        '@type': 'ImageObject',
-        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com'}/images/logo.svg`
-      }
-    }
+        "@type": "ImageObject",
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://cyber-hand.com"}/images/logo.svg`,
+      },
+    },
   };
 
   return (
@@ -149,22 +159,22 @@ interface BreadcrumbSchemaProps {
 
 /**
  * Renders breadcrumb structured data
- * 
+ *
  * @param props - The breadcrumb schema properties
  * @returns A script element with JSON-LD breadcrumb data
  */
 export function BreadcrumbSchema({ items }: BreadcrumbSchemaProps) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com';
-  
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cyber-hand.com";
+
   const breadcrumbData: WithContext<BreadcrumbList> = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
     itemListElement: items.map((item, index) => ({
-      '@type': 'ListItem',
+      "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: item.url.startsWith('http') ? item.url : `${baseUrl}${item.url}`
-    }))
+      item: item.url.startsWith("http") ? item.url : `${baseUrl}${item.url}`,
+    })),
   };
 
   return (
@@ -189,7 +199,7 @@ interface ArticleSchemaProps {
 
 /**
  * Renders article structured data (for case studies, blog posts, etc.)
- * 
+ *
  * @param props - The article schema properties
  * @returns A script element with JSON-LD article data
  */
@@ -202,37 +212,37 @@ export function ArticleSchema({
   dateModified,
   authorName,
   category,
-  tags
+  tags,
 }: ArticleSchemaProps) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com';
-  
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cyber-hand.com";
+
   const articleData: WithContext<Article> = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
+    "@context": "https://schema.org",
+    "@type": "Article",
     headline: title,
     description,
-    image: imageUrl.startsWith('http') ? imageUrl : `${baseUrl}${imageUrl}`,
+    image: imageUrl.startsWith("http") ? imageUrl : `${baseUrl}${imageUrl}`,
     datePublished,
     dateModified: dateModified || datePublished,
     author: {
-      '@type': 'Person',
-      name: authorName
+      "@type": "Person",
+      name: authorName,
     },
     publisher: {
-      '@type': 'Organization',
-      name: 'CyberHand',
+      "@type": "Organization",
+      name: "CyberHand",
       logo: {
-        '@type': 'ImageObject',
-        url: `${baseUrl}/images/logo.svg`
-      }
+        "@type": "ImageObject",
+        url: `${baseUrl}/images/logo.svg`,
+      },
     },
-    url: url.startsWith('http') ? url : `${baseUrl}${url}`,
+    url: url.startsWith("http") ? url : `${baseUrl}${url}`,
     mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': url.startsWith('http') ? url : `${baseUrl}${url}`
+      "@type": "WebPage",
+      "@id": url.startsWith("http") ? url : `${baseUrl}${url}`,
     },
     ...(category && { articleSection: category }),
-    ...(tags && tags.length > 0 && { keywords: tags.join(', ') })
+    ...(tags && tags.length > 0 && { keywords: tags.join(", ") }),
   };
 
   return (
@@ -256,7 +266,7 @@ interface ServiceSchemaProps {
 
 /**
  * Renders service structured data (for service pages)
- * 
+ *
  * @param props - The service schema properties
  * @returns A script element with JSON-LD service data
  */
@@ -265,41 +275,41 @@ export function ServiceSchema({
   description,
   url,
   imageUrl,
-  provider = 'CyberHand',
-  serviceArea = 'Worldwide',
+  provider = "CyberHand",
+  serviceArea = "Worldwide",
   price,
-  priceCurrency = 'USD'
+  priceCurrency = "USD",
 }: ServiceSchemaProps) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com';
-  
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cyber-hand.com";
+
   const serviceData: WithContext<Service> = {
-    '@context': 'https://schema.org',
-    '@type': 'Service',
+    "@context": "https://schema.org",
+    "@type": "Service",
     name,
     description,
-    url: url.startsWith('http') ? url : `${baseUrl}${url}`,
+    url: url.startsWith("http") ? url : `${baseUrl}${url}`,
     provider: {
-      '@type': 'Organization',
+      "@type": "Organization",
       name: provider,
       logo: {
-        '@type': 'ImageObject',
-        url: `${baseUrl}/images/logo.svg`
-      }
+        "@type": "ImageObject",
+        url: `${baseUrl}/images/logo.svg`,
+      },
     },
     serviceArea: {
-      '@type': 'Place',
-      name: serviceArea
+      "@type": "Place",
+      name: serviceArea,
     },
     ...(imageUrl && {
-      image: imageUrl.startsWith('http') ? imageUrl : `${baseUrl}${imageUrl}`
+      image: imageUrl.startsWith("http") ? imageUrl : `${baseUrl}${imageUrl}`,
     }),
     ...(price && {
       offers: {
-        '@type': 'Offer',
+        "@type": "Offer",
         price,
-        priceCurrency
-      }
-    })
+        priceCurrency,
+      },
+    }),
   };
 
   return (
@@ -312,7 +322,7 @@ export function ServiceSchema({
 
 /**
  * Main SEO component that combines all structured data
- * 
+ *
  * This component can be placed in the layout for base structured data
  * and extended with page-specific schemas as needed.
  */

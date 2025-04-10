@@ -1,0 +1,16 @@
+{
+  "name": "mcp-architecture-guard",
+  "version": "1.0.0",
+  "description": "MCP server for enforcing Cyber Hand architectural patterns",
+  "main": "standalone-server.js",
+  "scripts": {
+    "start": "node standalone-server.js",
+    "start:ci": "node standalone-server.js --ci"
+  },
+  "devDependencies": {
+    "@types/node": "^18.17.0"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  }
+}

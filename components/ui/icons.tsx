@@ -1,6 +1,6 @@
 /**
  * Icon component library for common SVG icons
- * 
+ *
  * Server Component: This is a static UI component that renders SVG icons.
  * It doesn't use any client-side features like useState, useEffect, or event handlers,
  * making it an ideal candidate for a Server Component.
@@ -30,7 +30,7 @@ function BaseIcon({
   color = "currentColor",
 }: IconProps & { children: React.ReactNode }) {
   const pixelSize = typeof size === "string" ? sizeMap[size] : size;
-  
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

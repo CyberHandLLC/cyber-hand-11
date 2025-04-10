@@ -3,7 +3,7 @@
  */
 
 // Theme type definition
-export type Theme = 'light' | 'dark';
+export type Theme = "light" | "dark";
 
 // Reusable theme style patterns
 interface ThemeStyleSet {
@@ -14,67 +14,67 @@ interface ThemeStyleSet {
 // Defines all theme-based style variations used across the app
 const themeStyles: Record<string, ThemeStyleSet> = {
   // Background styles
-  'bg-primary': {
-    light: 'bg-white',
-    dark: 'bg-[#161e29]',
+  "bg-primary": {
+    light: "bg-white",
+    dark: "bg-[#161e29]",
   },
-  'bg-secondary': {
-    light: 'bg-gray-50',
-    dark: 'bg-[#0c1117]',
+  "bg-secondary": {
+    light: "bg-gray-50",
+    dark: "bg-[#0c1117]",
   },
-  'bg-card': {
-    light: 'bg-white border border-gray-200 hover:border-cyan-400',
-    dark: 'bg-[#161e29] border border-gray-800 hover:border-cyan-400',
+  "bg-card": {
+    light: "bg-white border border-gray-200 hover:border-cyan-400",
+    dark: "bg-[#161e29] border border-gray-800 hover:border-cyan-400",
   },
-  'bg-accent': {
-    light: 'bg-cyan-100',
-    dark: 'bg-cyan-900/50',
+  "bg-accent": {
+    light: "bg-cyan-100",
+    dark: "bg-cyan-900/50",
   },
-  
+
   // Text styles
-  'text-primary': {
-    light: 'text-gray-900',
-    dark: 'text-white',
+  "text-primary": {
+    light: "text-gray-900",
+    dark: "text-white",
   },
-  'text-secondary': {
-    light: 'text-gray-600',
-    dark: 'text-gray-300',
+  "text-secondary": {
+    light: "text-gray-600",
+    dark: "text-gray-300",
   },
-  'text-muted': {
-    light: 'text-gray-400',
-    dark: 'text-gray-600',
+  "text-muted": {
+    light: "text-gray-400",
+    dark: "text-gray-600",
   },
-  'text-accent': {
-    light: 'text-cyan-800',
-    dark: 'text-cyan-300',
+  "text-accent": {
+    light: "text-cyan-800",
+    dark: "text-cyan-300",
   },
-  
+
   // Button styles
-  'button-primary': {
-    light: 'bg-cyan-500 text-white hover:bg-cyan-600',
-    dark: 'bg-cyan-600 text-white hover:bg-cyan-700',
+  "button-primary": {
+    light: "bg-cyan-500 text-white hover:bg-cyan-600",
+    dark: "bg-cyan-600 text-white hover:bg-cyan-700",
   },
-  'button-secondary': {
-    light: 'bg-gray-100 text-gray-800 hover:bg-gray-200',
-    dark: 'bg-gray-800 text-white hover:bg-gray-700',
+  "button-secondary": {
+    light: "bg-gray-100 text-gray-800 hover:bg-gray-200",
+    dark: "bg-gray-800 text-white hover:bg-gray-700",
   },
-  'button-outline': {
-    light: 'border border-gray-300 text-gray-700 hover:bg-gray-50',
-    dark: 'border border-gray-700 text-gray-300 hover:bg-gray-800',
+  "button-outline": {
+    light: "border border-gray-300 text-gray-700 hover:bg-gray-50",
+    dark: "border border-gray-700 text-gray-300 hover:bg-gray-800",
   },
-  
+
   // Interactive element styles
-  'nav-link-active': {
-    light: 'text-cyan-700 font-medium',
-    dark: 'text-white font-medium',
+  "nav-link-active": {
+    light: "text-cyan-700 font-medium",
+    dark: "text-white font-medium",
   },
-  'nav-link-inactive': {
-    light: 'text-gray-600 hover:text-cyan-700',
-    dark: 'text-gray-400 hover:text-white',
+  "nav-link-inactive": {
+    light: "text-gray-600 hover:text-cyan-700",
+    dark: "text-gray-400 hover:text-white",
   },
-  'badge': {
-    light: 'bg-cyan-100 text-cyan-800',
-    dark: 'bg-cyan-900/50 text-cyan-300',
+  badge: {
+    light: "bg-cyan-100 text-cyan-800",
+    dark: "bg-cyan-900/50 text-cyan-300",
   },
 };
 
@@ -87,9 +87,9 @@ const themeStyles: Record<string, ThemeStyleSet> = {
 export function getThemeStyle(styleKey: string, theme: Theme): string {
   if (!themeStyles[styleKey]) {
     console.warn(`Theme style '${styleKey}' not found`);
-    return '';
+    return "";
   }
-  
+
   return themeStyles[styleKey][theme];
 }
 
@@ -100,16 +100,20 @@ export function getThemeStyle(styleKey: string, theme: Theme): string {
  * @param fallback - Fallback style to use if theme style is not found
  * @returns The theme-specific CSS classes or fallback
  */
-export function applyThemeStyle(styleKey: string, theme: Theme, fallback?: { light: string, dark: string }): string {
+export function applyThemeStyle(
+  styleKey: string,
+  theme: Theme,
+  fallback?: { light: string; dark: string }
+): string {
   if (themeStyles[styleKey]) {
     return themeStyles[styleKey][theme];
   }
-  
+
   if (fallback) {
     return fallback[theme];
   }
-  
-  return '';
+
+  return "";
 }
 
 /**
@@ -118,7 +122,7 @@ export function applyThemeStyle(styleKey: string, theme: Theme, fallback?: { lig
  * @returns A function that gets styles for the current theme
  */
 export function createThemeStyler(theme: Theme) {
-  return (styleKey: string, fallback?: { light: string, dark: string }): string => {
+  return (styleKey: string, fallback?: { light: string; dark: string }): string => {
     return applyThemeStyle(styleKey, theme, fallback);
   };
 }

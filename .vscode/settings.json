@@ -4,11 +4,7 @@
   "scss.validate": false,
   "css.lint.unknownAtRules": "ignore",
   "css.lint.unknownProperties": "ignore",
-  "css.lint.validProperties": [
-    "composes",
-    "compose-with",
-    "font-named-instance"
-  ],
+  "css.lint.validProperties": ["composes", "compose-with", "font-named-instance"],
   "editor.quickSuggestions": {
     "strings": true
   },

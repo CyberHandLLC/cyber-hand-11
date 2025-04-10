@@ -1,0 +1,23 @@
+{
+  "name": "style-validator-mcp",
+  "version": "1.0.0",
+  "description": "Style Validator MCP Server for CyberHand project",
+  "main": "standalone-server.js",
+  "scripts": {
+    "start": "node standalone-server.js",
+    "build": "mkdir -p dist && cp -r *.js dist/",
+    "dev": "nodemon standalone-server.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

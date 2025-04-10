@@ -5,7 +5,13 @@ import { CASE_STUDY_STYLES } from "@/lib/case-study-styles";
 import { SectionContainer } from "@/components/custom/page-layout";
 import { getThemeStyle } from "@/lib/theme-utils";
 import { StaggeredGroup, StaggeredItem, AnimatedElement } from "@/lib/animation-utils";
-import { SectionHeader, ApproachStep, ResultItem, Testimonial, SidebarCard } from "./common-elements";
+import {
+  SectionHeader,
+  ApproachStep,
+  ResultItem,
+  Testimonial,
+  SidebarCard,
+} from "./common-elements";
 import { caseStudies } from "@/data/case-studies";
 import { useRouter } from "next/navigation";
 import { Theme } from "@/lib/theme-context";
@@ -14,13 +20,13 @@ import { ArrowRightIcon } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
 // Component for services band
-const ServicesBand = ({ services, theme }: { services: string[], theme: Theme }) => (
-  <div className={`${getThemeStyle('bg-secondary', theme)} py-6 border-y border-gray-800/50`}>
+const ServicesBand = ({ services, theme }: { services: string[]; theme: Theme }) => (
+  <div className={`${getThemeStyle("bg-secondary", theme)} py-6 border-y border-gray-800/50`}>
     <SectionContainer>
       <div className="flex flex-wrap gap-4 justify-center">
         {services.map((service, index) => (
-          <div 
-            key={index} 
+          <div
+            key={index}
             className="px-4 py-2 rounded-md border border-gray-700/30 bg-black/30 backdrop-blur-sm text-sm font-medium text-white/80"
           >
             {service}
@@ -32,32 +38,36 @@ const ServicesBand = ({ services, theme }: { services: string[], theme: Theme })
 );
 
 // Component for related case studies in sidebar
-const RelatedCaseStudies = ({ currentStudyId, theme }: { currentStudyId: string, theme: Theme }) => {
-  const relatedStudies = caseStudies
-    .filter(cs => cs.id !== currentStudyId)
-    .slice(0, 2);
-    
+const RelatedCaseStudies = ({
+  currentStudyId,
+  theme,
+}: {
+  currentStudyId: string;
+  theme: Theme;
+}) => {
+  const relatedStudies = caseStudies.filter((cs) => cs.id !== currentStudyId).slice(0, 2);
+
   // Don't render if there are no related studies
   if (relatedStudies.length === 0) return null;
-  
+
   return (
     <div className={`p-6 ${CASE_STUDY_STYLES.card}`}>
       <h3 className={`text-lg ${CASE_STUDY_STYLES.headings.h3} mb-4 text-white`}>
         Explore More Case Studies
       </h3>
       <div className="space-y-2 mb-4">
-        {relatedStudies.map(cs => (
-          <Link 
+        {relatedStudies.map((cs) => (
+          <Link
             key={cs.id}
             href={`/case-studies/${cs.slug}`}
-            className={`block p-3 rounded border border-gray-800/30 ${CASE_STUDY_STYLES.cardHover} ${getThemeStyle('text-secondary', theme)}`}
+            className={`block p-3 rounded border border-gray-800/30 ${CASE_STUDY_STYLES.cardHover} ${getThemeStyle("text-secondary", theme)}`}
           >
             <div className="text-sm font-medium text-white mb-1">{cs.clientName}</div>
             <div className="text-xs">{cs.industry}</div>
           </Link>
         ))}
       </div>
-      <Link 
+      <Link
         href="/case-studies"
         className={`inline-flex items-center text-sm ${CASE_STUDY_STYLES.textAccent} hover:text-cyan-400 transition-colors`}
       >
@@ -69,19 +79,16 @@ const RelatedCaseStudies = ({ currentStudyId, theme }: { currentStudyId: string,
 };
 
 // Component for approach section
-const ApproachSection = ({ approach, theme }: { approach: string[], theme: Theme }) => (
+const ApproachSection = ({ approach, theme }: { approach: string[]; theme: Theme }) => (
   <StaggeredItem>
     <div className={CASE_STUDY_STYLES.section.spacing}>
       <SectionHeader title="Our Approach" theme={theme} />
-      
-      <div className={`${CASE_STUDY_STYLES.section.contentSpacing} pl-4 border-l border-gray-800/50`}>
+
+      <div
+        className={`${CASE_STUDY_STYLES.section.contentSpacing} pl-4 border-l border-gray-800/50`}
+      >
         {approach.map((step, index) => (
-          <ApproachStep 
-            key={index} 
-            step={step} 
-            index={index} 
-            theme={theme} 
-          />
+          <ApproachStep key={index} step={step} index={index} theme={theme} />
         ))}
       </div>
     </div>
@@ -89,18 +96,14 @@ const ApproachSection = ({ approach, theme }: { approach: string[], theme: Theme
 );
 
 // Component for results section
-const ResultsSection = ({ results, theme }: { results: string[], theme: Theme }) => (
+const ResultsSection = ({ results, theme }: { results: string[]; theme: Theme }) => (
   <StaggeredItem>
     <div className={CASE_STUDY_STYLES.section.spacing}>
       <SectionHeader title="The Results" theme={theme} />
-      
+
       <div className={CASE_STUDY_STYLES.grid.twoColumn}>
         {results.map((result, index) => (
-          <ResultItem 
-            key={index} 
-            result={result} 
-            theme={theme} 
-          />
+          <ResultItem key={index} result={result} theme={theme} />
         ))}
       </div>
     </div>
@@ -108,18 +111,27 @@ const ResultsSection = ({ results, theme }: { results: string[], theme: Theme })
 );
 
 // Component for bottom CTA section
-const CallToAction = ({ router, theme }: { router: ReturnType<typeof useRouter>, theme: Theme }) => (
+const CallToAction = ({
+  router,
+  theme,
+}: {
+  router: ReturnType<typeof useRouter>;
+  theme: Theme;
+}) => (
   <div className="relative py-16 overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-r from-blue-900/20 to-cyan-900/20"></div>
-    
+
     <SectionContainer className="relative z-10">
       <div className="max-w-2xl mx-auto text-center">
         <AnimatedElement animation="fadeInUp">
-          <h2 className={`text-2xl md:text-3xl ${CASE_STUDY_STYLES.headings.h2} mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent`}>
+          <h2
+            className={`text-2xl md:text-3xl ${CASE_STUDY_STYLES.headings.h2} mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent`}
+          >
             Ready to achieve similar results?
           </h2>
-          <p className={`mb-8 ${getThemeStyle('text-secondary', theme)}`}>
-            Let&apos;s discuss how we can help your business establish a strong online presence and achieve your digital marketing goals.
+          <p className={`mb-8 ${getThemeStyle("text-secondary", theme)}`}>
+            Let&apos;s discuss how we can help your business establish a strong online presence and
+            achieve your digital marketing goals.
           </p>
           <Button
             variant="primary"
@@ -132,11 +144,14 @@ const CallToAction = ({ router, theme }: { router: ReturnType<typeof useRouter>,
         </AnimatedElement>
       </div>
     </SectionContainer>
-    
+
     {/* Decorative grid lines */}
     <div className="absolute inset-0 grid grid-cols-6 gap-4 opacity-5 pointer-events-none">
       {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className={`h-full w-px ${CASE_STUDY_STYLES.accent} justify-self-center`}></div>
+        <div
+          key={i}
+          className={`h-full w-px ${CASE_STUDY_STYLES.accent} justify-self-center`}
+        ></div>
       ))}
     </div>
   </div>
@@ -148,13 +163,17 @@ export const CaseStudyContent = ({ caseStudy, theme, router }: CaseStudyContentP
     <>
       {/* Services band */}
       <ServicesBand services={caseStudy.services} theme={theme} />
-      
+
       {/* Main content with hexagonal accents */}
       <div className="py-16 relative overflow-hidden">
         {/* Hexagonal accent shapes */}
-        <div className={`absolute -left-20 top-40 w-40 h-40 border ${CASE_STUDY_STYLES.borderAccent}/20 transform rotate-45 opacity-30`}></div>
-        <div className={`absolute -right-20 bottom-40 w-60 h-60 border ${CASE_STUDY_STYLES.borderAccent}/20 transform rotate-12 opacity-20`}></div>
-        
+        <div
+          className={`absolute -left-20 top-40 w-40 h-40 border ${CASE_STUDY_STYLES.borderAccent}/20 transform rotate-45 opacity-30`}
+        ></div>
+        <div
+          className={`absolute -right-20 bottom-40 w-60 h-60 border ${CASE_STUDY_STYLES.borderAccent}/20 transform rotate-12 opacity-20`}
+        ></div>
+
         <SectionContainer className="relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             {/* Main content column */}
@@ -162,23 +181,23 @@ export const CaseStudyContent = ({ caseStudy, theme, router }: CaseStudyContentP
               <StaggeredGroup>
                 {/* Our Approach section with numbered steps */}
                 <ApproachSection approach={caseStudy.approach} theme={theme} />
-                
+
                 {/* Results section with highlight cards */}
                 <ResultsSection results={caseStudy.results} theme={theme} />
-                
+
                 {/* Testimonial with modern highlight design */}
                 {caseStudy.testimonial && (
                   <StaggeredItem>
-                    <Testimonial 
-                      quote={caseStudy.testimonial} 
-                      author={caseStudy.clientName} 
-                      theme={theme} 
+                    <Testimonial
+                      quote={caseStudy.testimonial}
+                      author={caseStudy.clientName}
+                      theme={theme}
                     />
                   </StaggeredItem>
                 )}
               </StaggeredGroup>
             </div>
-            
+
             {/* Sidebar column */}
             <div className="lg:col-span-4">
               <div className="sticky top-24">
@@ -191,7 +210,7 @@ export const CaseStudyContent = ({ caseStudy, theme, router }: CaseStudyContentP
                   onClick={() => router.push("/contact")}
                   theme={theme}
                 />
-                
+
                 {/* Related case studies teaser */}
                 <RelatedCaseStudies currentStudyId={caseStudy.id} theme={theme} />
               </div>
@@ -199,7 +218,7 @@ export const CaseStudyContent = ({ caseStudy, theme, router }: CaseStudyContentP
           </div>
         </SectionContainer>
       </div>
-      
+
       {/* Call to action section with diagonal design */}
       <CallToAction router={router} theme={theme} />
     </>

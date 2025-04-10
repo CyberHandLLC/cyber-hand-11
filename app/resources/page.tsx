@@ -1,6 +1,6 @@
 /**
  * Resources Page - Server Component with Client Component Islands
- * 
+ *
  * This page leverages Next.js 15's built-in streaming capabilities with:
  * - The page itself as a Server Component
  * - Static content rendered immediately
@@ -11,7 +11,7 @@
  * - Comprehensive error boundaries for graceful error recovery
  */
 
-import { Suspense } from 'react';
+import { Suspense } from "react";
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
 import { ResourcesContent } from "./components/resources-content";
 import { HeadingSkeleton, TextSkeleton, Skeleton } from "@/components/ui/skeleton";
@@ -27,13 +27,13 @@ function ResourcesContentSkeleton() {
       <HeadingSkeleton level={1} width="60%" className="mx-auto mb-6" />
       <div className="w-24 h-1 bg-gray-700 mx-auto mb-8"></div>
       <TextSkeleton width="90%" className="mx-auto mb-8" />
-      
+
       <div className="rounded-lg border border-gray-800/30 bg-gray-900/30 p-8 mb-12">
         <div className="flex items-center justify-center mb-6">
           <Skeleton className="w-12 h-12 rounded-full mr-4" />
           <HeadingSkeleton level={2} width="40%" />
         </div>
-        
+
         <div className="space-y-4 text-left mb-8">
           {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="flex items-start">
@@ -42,13 +42,13 @@ function ResourcesContentSkeleton() {
             </div>
           ))}
         </div>
-        
+
         <div className="text-center mt-8">
           <TextSkeleton width="70%" className="mx-auto mb-4" />
           <Skeleton className="h-10 w-40 mx-auto rounded-md" />
         </div>
       </div>
-      
+
       <div className="flex flex-wrap justify-center gap-4 mt-8">
         <Skeleton className="h-10 w-32 rounded-md" />
         <Skeleton className="h-10 w-32 rounded-md" animationDelay="0.15s" />
@@ -61,8 +61,9 @@ function ResourcesContentSkeleton() {
  * Export metadata for SEO
  */
 export const metadata = {
-  title: 'Resources | Cyber Hand',
-  description: 'Access our comprehensive library of digital marketing and web development resources to help grow your business.',
+  title: "Resources | Cyber Hand",
+  description:
+    "Access our comprehensive library of digital marketing and web development resources to help grow your business.",
 };
 
 /**

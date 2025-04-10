@@ -63,8 +63,8 @@ When updating a component, consider its impact on other parts of the application
 
 Use this table to track affected dependencies:
 
-| Dependency | Path | Impact | Action Required |
-|------------|------|--------|-----------------|
+| Dependency       | Path             | Impact                  | Action Required                   |
+| ---------------- | ---------------- | ----------------------- | --------------------------------- |
 | [Component name] | [Component path] | [Description of impact] | [Description of required changes] |
 
 ## Accessibility Verification

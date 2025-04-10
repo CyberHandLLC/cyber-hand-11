@@ -2,29 +2,29 @@
 const nextConfig = {
   reactStrictMode: true,
   // Exclude backup directory from build process
-  distDir: '.next',
+  distDir: ".next",
   // Exclude backup directory from file tracing (moved from experimental per Next.js 15.2.4)
   outputFileTracingExcludes: {
-    '*': ['./backup/**/*'],
+    "*": ["./backup/**/*"],
   },
   images: {
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '',
-        pathname: '/**',
+        protocol: "http",
+        hostname: "localhost",
+        port: "",
+        pathname: "/**",
       },
       {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
+        protocol: "https",
+        hostname: "images.unsplash.com",
       },
       {
-        protocol: 'https',
-        hostname: '*.cloudinary.com',
+        protocol: "https",
+        hostname: "*.cloudinary.com",
       },
     ],
-    formats: ['image/avif', 'image/webp'],
+    formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60,
     // Optimize image breakpoints for responsive design
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
@@ -32,46 +32,46 @@ const nextConfig = {
   },
   // This ensures that we can properly work with the Shadcn-UI components
   transpilePackages: [],
-  
+
   // Security headers with relaxed CSP for Next.js compatibility
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: "/(.*)",
         headers: [
           {
             // Allow necessary content for Next.js to function properly
-            key: 'Content-Security-Policy',
+            key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // Required for Next.js
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com", 
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' blob: data: https://images.unsplash.com",
               "font-src 'self' data: https://fonts.gstatic.com",
               "connect-src 'self' ws: wss: https://vitals.vercel-insights.com",
               "frame-src 'self'",
               "base-uri 'self'",
-              "form-action 'self'"
-            ].join('; ')
+              "form-action 'self'",
+            ].join("; "),
           },
           {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff'
+            key: "X-Content-Type-Options",
+            value: "nosniff",
           },
           {
-            key: 'X-Frame-Options',
-            value: 'DENY'
+            key: "X-Frame-Options",
+            value: "DENY",
           },
           {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block'
+            key: "X-XSS-Protection",
+            value: "1; mode=block",
           },
           {
-            key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin'
-          }
-        ]
-      }
+            key: "Referrer-Policy",
+            value: "origin-when-cross-origin",
+          },
+        ],
+      },
     ];
   },
 
@@ -79,25 +79,25 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: false, // Disable source maps in production for smaller bundle
-  
+
   // Configure webpack for better performance
   // Module path aliases already set in tsconfig.json
   // Next.js automatically reads these from tsconfig.json
-  
+
   webpack: (config, { dev, isServer }) => {
     // Production optimizations only
     if (!dev && !isServer) {
       // Split chunks more aggressively for better caching
       config.optimization.splitChunks = {
-        chunks: 'all',
+        chunks: "all",
         maxInitialRequests: 25,
         minSize: 20000,
       };
-      
+
       // Enable tree shaking
       config.optimization.usedExports = true;
     }
-    
+
     return config;
   },
 };

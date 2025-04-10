@@ -51,17 +51,17 @@ This approach aligns with the Next.js 15 best practices:
 ```tsx
 // Example of a streaming page pattern
 // app/example/page.tsx
-import { Suspense } from 'react';
-import { ContentErrorBoundary } from '@/components/error-boundary';
-import { DataComponent } from './data-component';
-import { DataSkeleton } from './data-skeleton';
+import { Suspense } from "react";
+import { ContentErrorBoundary } from "@/components/error-boundary";
+import { DataComponent } from "./data-component";
+import { DataSkeleton } from "./data-skeleton";
 
 export default function ExamplePage() {
   return (
     <PageLayout>
       {/* Static content renders immediately */}
       <StaticHeader />
-      
+
       {/* Data-dependent content streams in with proper error handling */}
       <ContentErrorBoundary>
         <Suspense fallback={<DataSkeleton />}>
@@ -88,11 +88,8 @@ export default function CaseStudiesPage() {
     <PageLayout>
       <SectionContainer>
         {/* Static content renders immediately */}
-        <PageHeader 
-          title="Case Studies" 
-          description="Explore our latest work" 
-        />
-        
+        <PageHeader title="Case Studies" description="Explore our latest work" />
+
         {/* Streaming content with error boundary */}
         <ContentErrorBoundary>
           <Suspense fallback={<CaseStudyGridSkeleton />}>
@@ -108,7 +105,7 @@ export default function CaseStudiesPage() {
 async function CaseStudiesContent() {
   // Data fetching happens directly in the component
   const caseStudies = await getCaseStudies();
-  
+
   // Return the component with the data
   return <CaseStudyGrid caseStudies={caseStudies} />;
 }
@@ -120,11 +117,7 @@ We use the Next.js 15 `loading.js` pattern for route-level loading states:
 
 ```tsx
 // app/case-studies/loading.tsx
-import { 
-  PageSkeleton, 
-  HeadingSkeleton, 
-  CardGridSkeleton 
-} from '@/components/ui/skeleton';
+import { PageSkeleton, HeadingSkeleton, CardGridSkeleton } from "@/components/ui/skeleton";
 
 export default function CaseStudiesLoading() {
   return (
@@ -142,19 +135,19 @@ Server Components fetch data directly using async/await:
 
 ```tsx
 // app/case-studies/[slug]/components/case-study-content.tsx
-import { getCaseStudyBySlug } from '@/lib/case-studies';
-import { CaseStudyNotFound } from './case-study-not-found';
-import { CaseStudyDisplay } from './case-study-display';
+import { getCaseStudyBySlug } from "@/lib/case-studies";
+import { CaseStudyNotFound } from "./case-study-not-found";
+import { CaseStudyDisplay } from "./case-study-display";
 
 export async function CaseStudyContent({ slug }) {
   // Data fetching happens directly in the component
   const caseStudy = await getCaseStudyBySlug(slug);
-  
+
   // Handle not found case
   if (!caseStudy) {
     return <CaseStudyNotFound />;
   }
-  
+
   // Return the component with the data
   return <CaseStudyDisplay caseStudy={caseStudy} />;
 }
@@ -167,17 +160,17 @@ export async function CaseStudyContent({ slug }) {
 For optimized performance, we use parallel data fetching patterns:
 
 ```tsx
-import { cache } from 'react';
+import { cache } from "react";
 
 // Data fetching function with caching
 export const getCaseStudyBySlug = cache(async (slug: string) => {
   // Fetch data from API or database
   const response = await fetch(`/api/case-studies/${slug}`);
-  
+
   if (!response.ok) {
     throw new Error(`Failed to fetch case study: ${response.statusText}`);
   }
-  
+
   return response.json();
 });
 
@@ -186,11 +179,11 @@ async function CaseStudyPage({ params }) {
   // Start data fetches in parallel
   const caseStudyPromise = getCaseStudyBySlug(params.slug);
   const relatedStudiesPromise = getRelatedCaseStudies(params.slug);
-  
+
   // Await results when needed
   const caseStudy = await caseStudyPromise;
   const relatedStudies = await relatedStudiesPromise;
-  
+
   return (
     <>
       <CaseStudyDisplay caseStudy={caseStudy} />
@@ -225,17 +218,11 @@ export function ContentErrorBoundary({ children }) {
 function ContentErrorFallback({ error, resetErrorBoundary }) {
   return (
     <div className="p-6 rounded-lg bg-red-50 dark:bg-red-900/20 my-6">
-      <h3 className="text-lg font-medium text-red-800 dark:text-red-200">
-        Something went wrong
-      </h3>
+      <h3 className="text-lg font-medium text-red-800 dark:text-red-200">Something went wrong</h3>
       <p className="mt-2 text-sm text-red-700 dark:text-red-300">
         {error.message || "Failed to load content. Please try again."}
       </p>
-      <Button
-        onClick={resetErrorBoundary}
-        className="mt-4"
-        variant="outline"
-      >
+      <Button onClick={resetErrorBoundary} className="mt-4" variant="outline">
         Try again
       </Button>
     </div>
@@ -267,19 +254,10 @@ interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   animationDelay?: string;
 }
 
-export function Skeleton({
-  className,
-  width,
-  height,
-  animationDelay,
-  ...props
-}: SkeletonProps) {
+export function Skeleton({ className, width, height, animationDelay, ...props }: SkeletonProps) {
   return (
     <div
-      className={cn(
-        "animate-pulse rounded bg-gray-200 dark:bg-gray-700",
-        className
-      )}
+      className={cn("animate-pulse rounded bg-gray-200 dark:bg-gray-700", className)}
       style={{
         width,
         height,
@@ -292,25 +270,15 @@ export function Skeleton({
   );
 }
 
-export function TextSkeleton({ 
-  width = "100%", 
-  className, 
-  ...props 
-}: SkeletonProps) {
-  return (
-    <Skeleton
-      className={cn("h-4 my-2", className)}
-      style={{ width }}
-      {...props}
-    />
-  );
+export function TextSkeleton({ width = "100%", className, ...props }: SkeletonProps) {
+  return <Skeleton className={cn("h-4 my-2", className)} style={{ width }} {...props} />;
 }
 
-export function HeadingSkeleton({ 
-  level = 2, 
-  width = "100%", 
-  className, 
-  ...props 
+export function HeadingSkeleton({
+  level = 2,
+  width = "100%",
+  className,
+  ...props
 }: SkeletonProps & { level?: 1 | 2 | 3 | 4 | 5 | 6 }) {
   const sizeClasses = {
     1: "h-8 mb-4",
@@ -320,14 +288,8 @@ export function HeadingSkeleton({
     5: "h-4 mb-2",
     6: "h-3 mb-1",
   };
-  
-  return (
-    <Skeleton
-      className={cn(sizeClasses[level], className)}
-      style={{ width }}
-      {...props}
-    />
-  );
+
+  return <Skeleton className={cn(sizeClasses[level], className)} style={{ width }} {...props} />;
 }
 
 export function CardSkeleton({ className, ...props }: SkeletonProps) {
@@ -341,30 +303,27 @@ export function CardSkeleton({ className, ...props }: SkeletonProps) {
   );
 }
 
-export function CardGridSkeleton({ 
-  count = 6, 
+export function CardGridSkeleton({
+  count = 6,
   columns = 3,
-  className, 
-  ...props 
-}: SkeletonProps & { count?: number, columns?: number }) {
+  className,
+  ...props
+}: SkeletonProps & { count?: number; columns?: number }) {
   return (
-    <div 
+    <div
       className={cn(
-        "grid gap-6", 
+        "grid gap-6",
         {
-          'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3': columns === 3,
-          'grid-cols-1 sm:grid-cols-2': columns === 2,
-          'grid-cols-1': columns === 1,
+          "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3": columns === 3,
+          "grid-cols-1 sm:grid-cols-2": columns === 2,
+          "grid-cols-1": columns === 1,
         },
         className
-      )} 
+      )}
       {...props}
     >
       {Array.from({ length: count }).map((_, i) => (
-        <CardSkeleton 
-          key={i} 
-          style={{ animationDelay: `${i * 0.1}s` }}
-        />
+        <CardSkeleton key={i} style={{ animationDelay: `${i * 0.1}s` }} />
       ))}
     </div>
   );
@@ -388,14 +347,17 @@ Streaming provides significant performance benefits:
 Our streaming implementation has been applied throughout the application:
 
 ### Pages Using Optimized Streaming with Standardized Components
+
 - ✅ `app/case-studies/[slug]/page.tsx` - Using standardized skeleton components and error boundaries
 - ✅ `app/case-studies/page.tsx` - Using standardized skeleton components in loading.js
 
 ### Pages Using Basic Streaming (In Progress)
+
 - 🔄 `app/page.tsx` (Homepage) - Uses Suspense boundaries but needs standardized skeletons
 - 🔄 `app/contact/page.tsx` - Uses multiple Suspense boundaries but needs standardized skeletons
 
 ### Pages Pending Streaming Implementation
+
 - ⏩ `app/get-started/page.tsx` - Has loading.js file but no Suspense boundaries yet
 - ⏩ `app/resources/page.tsx` - Has loading.js file but no Suspense boundaries yet
 - ⏩ `app/services/page.tsx` - Has loading.js file but no Suspense boundaries yet
@@ -405,14 +367,17 @@ Our streaming implementation has been applied throughout the application:
 To verify the streaming implementation is working correctly, consider these verification approaches:
 
 1. **Visual Verification**:
+
    - Observe rendering of loading states in different network conditions
    - Ensure skeleton dimensions match final content to prevent layout shifts
 
 2. **Performance Verification**:
+
    - Use Chrome DevTools to observe progressive HTML chunks
    - Review Core Web Vitals metrics in production environment
 
 3. **Accessibility Verification**:
+
    - Ensure loading states communicate properly to assistive technologies
    - Verify error states provide meaningful information
 
@@ -425,20 +390,24 @@ To verify the streaming implementation is working correctly, consider these veri
 If you're implementing streaming on a new page, follow this checklist:
 
 1. **Implement Loading States**:
+
    - Create a `loading.js` file in the route directory
    - Use standardized skeleton components for consistent UI
 
 2. **Structure Your Page Component**:
+
    - Place static content outside of Suspense boundaries
    - Wrap data-dependent content in Suspense boundaries
    - Apply ContentErrorBoundary around Suspense boundaries
 
 3. **Implement Async Data Fetching**:
+
    - Use async/await directly in Server Components
    - Use React's cache() for request deduplication
    - Implement parallel data fetching where appropriate
 
 4. **Add Error Handling**:
+
    - Wrap Suspense boundaries with error boundaries
    - Add retry functionality for failed operations
    - Provide user-friendly error messages

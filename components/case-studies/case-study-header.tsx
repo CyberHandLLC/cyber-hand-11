@@ -17,21 +17,16 @@ export const CaseStudyHeader = ({ caseStudy, theme }: CaseStudyHeaderProps) => {
       <div className="relative z-20 pt-24 pb-4">
         <SectionContainer>
           <div className="flex justify-between items-center">
-            <Link 
-              href="/case-studies" 
-              className={CASE_STUDY_STYLES.button}
-            >
+            <Link href="/case-studies" className={CASE_STUDY_STYLES.button}>
               <ArrowLeftIcon className="mr-2 h-4 w-4" />
               Back to Case Studies
             </Link>
-            
-            <span className={CASE_STUDY_STYLES.pill}>
-              {caseStudy.industry}
-            </span>
+
+            <span className={CASE_STUDY_STYLES.pill}>{caseStudy.industry}</span>
           </div>
         </SectionContainer>
       </div>
-      
+
       {/* Different layouts for mobile and desktop */}
       <div className="relative">
         {/* Mobile layout - stacked design (image on top, content below) */}
@@ -51,7 +46,7 @@ export const CaseStudyHeader = ({ caseStudy, theme }: CaseStudyHeaderProps) => {
               />
             )}
           </div>
-          
+
           {/* Content below image on mobile */}
           <SectionContainer className="relative z-10 pb-8">
             <div className="w-full">
@@ -59,21 +54,15 @@ export const CaseStudyHeader = ({ caseStudy, theme }: CaseStudyHeaderProps) => {
                 <h1 className={`text-2xl sm:text-3xl ${CASE_STUDY_STYLES.headings.h1} mb-6`}>
                   {caseStudy.title}
                 </h1>
-                
-                <ClientInfo 
-                  clientName={caseStudy.clientName} 
-                  location={caseStudy.location} 
-                />
-                
-                <ChallengeSection 
-                  challenge={caseStudy.challenge} 
-                  _theme={theme} 
-                />
+
+                <ClientInfo clientName={caseStudy.clientName} location={caseStudy.location} />
+
+                <ChallengeSection challenge={caseStudy.challenge} _theme={theme} />
               </AnimatedElement>
             </div>
           </SectionContainer>
         </div>
-        
+
         {/* Desktop layout - diagonal split design */}
         <div className="hidden md:block relative">
           {/* Content side */}
@@ -81,24 +70,20 @@ export const CaseStudyHeader = ({ caseStudy, theme }: CaseStudyHeaderProps) => {
             <SectionContainer>
               <div className="max-w-2xl">
                 <AnimatedElement animation="fadeInUp" delay={0.1}>
-                  <h1 className={`text-3xl sm:text-4xl md:text-5xl ${CASE_STUDY_STYLES.headings.h1} mb-6`}>
+                  <h1
+                    className={`text-3xl sm:text-4xl md:text-5xl ${CASE_STUDY_STYLES.headings.h1} mb-6`}
+                  >
                     {caseStudy.title}
                   </h1>
-                  
-                  <ClientInfo 
-                    clientName={caseStudy.clientName} 
-                    location={caseStudy.location} 
-                  />
-                  
-                  <ChallengeSection 
-                    challenge={caseStudy.challenge} 
-                    _theme={theme} 
-                  />
+
+                  <ClientInfo clientName={caseStudy.clientName} location={caseStudy.location} />
+
+                  <ChallengeSection challenge={caseStudy.challenge} _theme={theme} />
                 </AnimatedElement>
               </div>
             </SectionContainer>
           </div>
-          
+
           {/* Image side with diagonal effect - desktop only */}
           <div className="absolute top-0 right-0 w-1/2 h-full bg-black z-0 clip-diagonal">
             <div className="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent z-10"></div>

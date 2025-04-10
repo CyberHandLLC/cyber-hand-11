@@ -1,15 +1,15 @@
 /**
  * Case Studies List Skeleton Components
- * 
+ *
  * This file contains skeleton loading components specifically for the case studies list page.
  * These components provide a consistent loading experience with proper animation
  * and accessibility attributes.
- * 
+ *
  * @file app/case-studies/components/case-studies-list-skeleton.tsx
  * @module CaseStudies
  */
 
-import React from 'react';
+import React from "react";
 
 /**
  * FilterSkeleton Component
@@ -17,8 +17,8 @@ import React from 'react';
  */
 export function CaseStudiesFilterSkeleton() {
   return (
-    <div 
-      className="h-12 bg-gray-100 dark:bg-gray-800 rounded animate-pulse mb-8" 
+    <div
+      className="h-12 bg-gray-100 dark:bg-gray-800 rounded animate-pulse mb-8"
       aria-busy="true"
       aria-live="polite"
     />
@@ -31,14 +31,14 @@ export function CaseStudiesFilterSkeleton() {
  */
 export function CaseStudiesGridSkeleton() {
   return (
-    <div 
+    <div
       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8"
       aria-busy="true"
       aria-live="polite"
     >
       {Array.from({ length: 6 }).map((_, i) => (
-        <div 
-          key={i} 
+        <div
+          key={i}
           className="bg-gray-100 dark:bg-gray-800 rounded-lg p-6 h-64 animate-pulse"
           style={{ animationDelay: `${i * 0.1}s` }}
         >

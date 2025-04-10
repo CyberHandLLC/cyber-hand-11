@@ -37,10 +37,10 @@ We've established three standardized patterns for implementing streaming through
 
 ```tsx
 // app/example/page.tsx
-import { Suspense } from 'react';
-import { ContentErrorBoundary } from '@/app/components/error-boundary';
-import { ExampleContent } from './components/example-content';
-import { ExampleSkeleton } from './components/example-skeleton';
+import { Suspense } from "react";
+import { ContentErrorBoundary } from "@/app/components/error-boundary";
+import { ExampleContent } from "./components/example-content";
+import { ExampleSkeleton } from "./components/example-skeleton";
 
 export default function ExamplePage() {
   return (
@@ -48,7 +48,7 @@ export default function ExamplePage() {
       <SectionContainer>
         {/* Static content renders immediately */}
         <StaticHeader />
-        
+
         {/* Interactive content streams in with error handling */}
         <ContentErrorBoundary>
           <Suspense fallback={<ExampleSkeleton />}>
@@ -104,11 +104,7 @@ import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
 
 export function ContentErrorBoundary({ children }: { children: ReactNode }) {
   return (
-    <ReactErrorBoundary 
-      FallbackComponent={StandardErrorFallback}
-    >
-      {children}
-    </ReactErrorBoundary>
+    <ReactErrorBoundary FallbackComponent={StandardErrorFallback}>{children}</ReactErrorBoundary>
   );
 }
 ```
@@ -157,7 +153,7 @@ export default function ContactPage() {
           <div className="max-w-4xl mx-auto">
             {/* Static header content renders immediately */}
             <ContactHeader />
-            
+
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
               {/* Contact form with error boundary */}
               <div className="lg:col-span-3">
@@ -167,7 +163,7 @@ export default function ContactPage() {
                   </Suspense>
                 </FormErrorBoundary>
               </div>
-              
+
               {/* Contact information */}
               <div className="lg:col-span-2">
                 <ContentErrorBoundary>
@@ -196,7 +192,7 @@ export default function Services() {
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">{title}</h1>
         <p className="text-gray-300 max-w-3xl mx-auto text-lg mb-16">{subtitle}</p>
       </SectionContainer>
-      
+
       <SectionContainer>
         {/* Desktop Service Grid */}
         <div className="hidden md:block">
@@ -206,7 +202,7 @@ export default function Services() {
             </Suspense>
           </ContentErrorBoundary>
         </div>
-        
+
         {/* Mobile Service Carousel */}
         <div className="md:hidden">
           <ContentErrorBoundary>
@@ -230,30 +226,32 @@ Our data fetching approach for streaming uses Next.js 15's Server Component patt
 - **Proper Error Handling**: We implement error boundaries around data fetches
 - **Clear Separation**: Data fetching is separated from UI rendering for better maintainability
 
- * while the main content is loading. It leverages Next.js 15's built-in
- * loading.js pattern for route-level loading states.
- */
+* while the main content is loading. It leverages Next.js 15's built-in
+* loading.js pattern for route-level loading states.
+  \*/
 
 export default function CaseStudiesLoading() {
-  return (
-    <div className="py-24 px-4 md:px-6">
-      {/* Static header placeholder */}
-      <div className="text-center max-w-3xl mx-auto mb-16">
-        <div className="h-12 bg-gray-100 dark:bg-gray-800 rounded animate-pulse mb-4 w-1/2 mx-auto"></div>
-        <div className="h-6 bg-gray-100 dark:bg-gray-800 rounded animate-pulse w-3/4 mx-auto"></div>
-      </div>
-      
+return (
+<div className="py-24 px-4 md:px-6">
+{/_ Static header placeholder _/}
+<div className="text-center max-w-3xl mx-auto mb-16">
+<div className="h-12 bg-gray-100 dark:bg-gray-800 rounded animate-pulse mb-4 w-1/2 mx-auto"></div>
+<div className="h-6 bg-gray-100 dark:bg-gray-800 rounded animate-pulse w-3/4 mx-auto"></div>
+</div>
+
       {/* Filter placeholder */}
       <div className="h-12 bg-gray-100 dark:bg-gray-800 rounded animate-pulse mb-8"></div>
-      
+
       {/* Grid placeholder */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {/* Skeleton items */}
       </div>
     </div>
-  );
+
+);
 }
-```
+
+````
 
 ## Implementing Streaming in Your Components
 
@@ -264,13 +262,14 @@ To implement streaming in your own components:
    async function DataComponent({ id }: { id: string }) {
      // Data fetching happens directly in the component
      const data = await fetchData(id);
-     
+
      // Return the component with the data
      return <YourComponent data={data} />;
    }
-   ```
+````
 
 2. **Wrap with Suspense and ErrorBoundary**:
+
    ```tsx
    <ErrorBoundary fallback={<ErrorFallback />}>
      <Suspense fallback={<StandardizedSkeleton />}>
@@ -280,9 +279,10 @@ To implement streaming in your own components:
    ```
 
 3. **Use standardized skeleton components**:
+
    ```tsx
    import { HeadingSkeleton, TextSkeleton, ImageSkeleton } from "@/components/ui/skeleton";
-   
+
    function StandardizedSkeleton() {
      return (
        <div className="space-y-4">
@@ -296,9 +296,10 @@ To implement streaming in your own components:
 
 4. **Create loading.js files**:
    Create a loading.js file in the same directory as your page.tsx to provide a route-level loading UI using the standardized skeleton components.
+
    ```tsx
    import { SectionSkeleton, CardGridSkeleton } from "@/components/ui/skeleton";
-   
+
    export default function Loading() {
      return (
        <div className="space-y-8">
@@ -308,7 +309,6 @@ To implement streaming in your own components:
      );
    }
    ```
-   
 
 ## Performance Benefits
 

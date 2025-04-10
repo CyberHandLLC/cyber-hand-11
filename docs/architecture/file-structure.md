@@ -40,7 +40,7 @@ cyber-hand.com/
 │   ├── actions/          # Server actions for mutations
 │   │   ├── contact/      # Contact form actions
 │   │   │   └── contact-form.ts  # Contact form actions (2.9 KB)
-│   │   ├── case-studies/ # Case study actions 
+│   │   ├── case-studies/ # Case study actions
 │   │   └── services/     # Services-related actions
 │   ├── data/             # Data fetching and processing
 │   ├── performance/      # Performance optimization utilities
@@ -131,6 +131,7 @@ app/
 ```
 
 Each route directory typically contains:
+
 - `page.tsx` - The main page component (Server Component by default)
 - `layout.tsx` - Layout wrapper for the route (optional)
 - `loading.tsx` - Loading UI (optional)
@@ -264,18 +265,21 @@ Tests use Jest and React Testing Library following the patterns specified in pro
 ### Configuration Files
 
 - **`next.config.js`** (2.8 KB): Next.js configuration including:
+
   - Image optimization settings
   - Bundle analyzer configuration
   - Environment variable handling
   - Redirects and rewrites
 
 - **`tailwind.config.js`** (1.4 KB): Tailwind CSS configuration including:
+
   - Custom theme colors
   - Font configuration
   - Extended utilities
   - Plugin configuration
 
 - **`.eslintrc.json`** (1.1 KB): ESLint rules enforcing:
+
   - TypeScript best practices
   - React component patterns
   - Import ordering
@@ -296,12 +300,14 @@ Tests use Jest and React Testing Library following the patterns specified in pro
 ### Documentation Files
 
 - **`ARCHITECTURE.md`**: High-level architecture documentation covering:
+
   - Technology stack
   - Design patterns
   - State management approach
   - Data flow strategy
 
 - **`PLANNING.md`**: Project planning including:
+
   - Feature roadmap
   - Implementation status
   - Architectural decisions
@@ -318,11 +324,13 @@ Tests use Jest and React Testing Library following the patterns specified in pro
 The performance optimization implementation follows a structured approach:
 
 1. **Root Level Integration**:
+
    - `app/performance-wrapper.tsx` (3.6 KB): Applied at the root layout level to provide global optimizations
    - Intercepts and manages all page transitions and initial loads
    - Coordinates performance metric reporting
 
 2. **Dedicated Performance Utilities**:
+
    - `lib/performance/`: Contains specialized utilities for different optimization strategies
      - `code-splitting.tsx` (2.3 KB): Dynamic import utilities with error handling
      - `critical-css.ts` (3.0 KB): Critical CSS extraction and management
@@ -332,12 +340,14 @@ The performance optimization implementation follows a structured approach:
      - `optimized-layout-wrapper.tsx` (2.8 KB): Layout optimization wrapper
 
 3. **CSS Optimization**:
+
    - Critical CSS extraction for above-the-fold content
    - CSS containment strategies for layout isolation (`contain: content` attribute)
    - Deferred loading for non-critical styles using browser idle time
    - Font optimization with preloading for key fonts
 
 4. **JavaScript Optimization**:
+
    - Code splitting via Next.js dynamic imports
    - Component-level lazy loading with skeleton placeholders
    - Deferred hydration for non-critical UI components
@@ -362,12 +372,12 @@ The codebase follows several key implementation patterns:
 export default async function ExamplePage() {
   // Server-side data fetching
   const data = await fetchData();
-  
+
   return (
     <main>
       <h1>Example Page</h1>
       <ServerRenderedContent data={data} />
-      
+
       {/* Client boundary with Suspense */}
       <Suspense fallback={<LoadingUI />}>
         <ClientInteractiveComponent initialData={data} />
@@ -383,15 +393,12 @@ export default async function ExamplePage() {
 // Client Component with Dynamic Import
 "use client";
 
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
-const DynamicComponent = dynamic(
-  () => import('@/components/heavy-component'),
-  {
-    loading: () => <SkeletonLoader />,
-    ssr: false
-  }
-);
+const DynamicComponent = dynamic(() => import("@/components/heavy-component"), {
+  loading: () => <SkeletonLoader />,
+  ssr: false,
+});
 
 export function DynamicComponentWrapper(props) {
   return <DynamicComponent {...props} />;
@@ -407,7 +414,7 @@ export default function ProgressiveComponent() {
     <div>
       {/* Base functionality that works without JS */}
       <ServerRenderedContent />
-      
+
       {/* Enhanced functionality with JS */}
       <Suspense fallback={<div>Loading enhanced features...</div>}>
         <ClientEnhancement />
@@ -422,11 +429,13 @@ export default function ProgressiveComponent() {
 The testing implementation follows a structured approach with:
 
 1. **Component Tests**:
+
    - Unit tests for isolated component behavior
    - Snapshot tests for UI consistency
    - Interaction tests for user events
 
 2. **Integration Tests**:
+
    - Tests for component interactions
    - Data flow validation
    - API integration verification
@@ -441,6 +450,7 @@ The testing implementation follows a structured approach with:
 This document provides a comprehensive overview of the Cyber Hand website's file structure and organization. By following the patterns and principles outlined here, we can maintain a consistent and maintainable codebase as the project evolves.
 
 For specific implementation guidance, refer to:
+
 - `docs/server-components.md` for Server Components patterns
 - `docs/component-audit.md` for component classification
 - `PLANNING.md` for feature implementation status

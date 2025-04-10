@@ -1,0 +1,113 @@
+{
+  "mcpServers": {
+    "architecture-guard": {
+      "serverUrl": "http://localhost:8001/mcp",
+      "tools": [
+        {
+          "name": "architecture_check",
+          "description": "Validates code architecture according to project standards, checking for component organization, naming conventions, and proper use of React patterns in Next.js 15.2.4.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "The path to check. Defaults to the project root."
+              },
+              "options": {
+                "type": "object",
+                "description": "Additional options for the validation."
+              }
+            },
+            "required": []
+          }
+        }
+      ]
+    },
+    "dependency-guard": {
+      "serverUrl": "http://localhost:8002/mcp",
+      "tools": [
+        {
+          "name": "dependency_check",
+          "description": "Validates project dependencies against policy, ensuring consistent versioning and preventing problematic imports.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "The path to check. Defaults to the project root."
+              },
+              "options": {
+                "type": "object",
+                "description": "Additional options for the validation."
+              }
+            },
+            "required": []
+          }
+        },
+        {
+          "name": "check_import_allowed",
+          "description": "Checks if an import from one module to another is allowed according to the project's architecture rules.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "type": "string",
+                "description": "The source module or file path."
+              },
+              "target": {
+                "type": "string",
+                "description": "The target module or file path being imported."
+              },
+              "options": {
+                "type": "object",
+                "description": "Additional options for the check."
+              }
+            },
+            "required": ["source", "target"]
+          }
+        }
+      ]
+    },
+    "style-validator": {
+      "serverUrl": "http://localhost:8003/mcp",
+      "tools": [
+        {
+          "name": "style_check",
+          "description": "Validates code style according to project ESLint and Prettier rules.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "The path to check. Defaults to the project root."
+              },
+              "options": {
+                "type": "object",
+                "description": "Additional options for the validation."
+              }
+            },
+            "required": []
+          }
+        },
+        {
+          "name": "check_file_style",
+          "description": "Checks a specific file for style issues according to project standards.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "filePath": {
+                "type": "string",
+                "description": "The path to the file to check."
+              },
+              "options": {
+                "type": "object",
+                "description": "Additional options for the validation."
+              }
+            },
+            "required": ["filePath"]
+          }
+        }
+      ]
+    }
+  }
+}

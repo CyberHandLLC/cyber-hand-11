@@ -22,16 +22,19 @@ The development dashboard provides real-time visualization of performance metric
 #### Key Features
 
 - **Real-time Metric Visualization**
+
   - Captures metrics from both Core Web Vitals and custom application events
   - Displays metrics with color-coded severity (good/needs-improvement/poor)
   - Shows timestamps and detailed attribution data when available
 
 - **Filtering & Sorting**
+
   - Filter by metric name (LCP, FID, CLS, etc.) or performance category
   - Sort by timestamp, value, or name
   - Quick toggle to focus on specific problem areas
 
 - **Threshold-Based Analysis**
+
   - Built-in thresholds for Core Web Vitals aligned with Google's recommendations
   - Customizable thresholds for application-specific metrics
   - Visual indicators make it easy to spot performance regressions
@@ -44,19 +47,21 @@ The development dashboard provides real-time visualization of performance metric
 
 ```tsx
 // Example of using the dashboard in a layout or test component
-import { PerformanceDashboard } from '@/components/performance/performance-dashboard';
+import { PerformanceDashboard } from "@/components/performance/performance-dashboard";
 
 // Add this during development
-{process.env.NODE_ENV === 'development' && (
-  <PerformanceDashboard 
-    position="bottom-right" 
-    initiallyOpen={false} 
-    thresholds={{
-      // Custom thresholds (optional)
-      LCP: { poor: 3000, good: 2000 }, // milliseconds
-    }}
-  />
-)}
+{
+  process.env.NODE_ENV === "development" && (
+    <PerformanceDashboard
+      position="bottom-right"
+      initiallyOpen={false}
+      thresholds={{
+        // Custom thresholds (optional)
+        LCP: { poor: 3000, good: 2000 }, // milliseconds
+      }}
+    />
+  );
+}
 ```
 
 ### 2. Production Logging Service
@@ -68,16 +73,19 @@ The production logging service is designed for efficient, production-grade perfo
 #### Key Architecture Components
 
 - **Batched Logging System**
+
   - Metrics are collected in batches and sent periodically (default: every 10 seconds)
   - Reduces network overhead compared to sending metrics individually
   - Final batch is sent on page unload to capture late-occurring metrics
 
 - **Intelligent Sampling**
+
   - Default 10% sampling rate in production to minimize data volume while maintaining statistical relevance
   - Configurable sampling rate for different environments (100% in development, 10% in production)
   - Statistically valid approach for high-traffic applications
 
 - **Metric Filtering Strategy**
+
   - Built-in filters for Core Web Vitals and high-volume metrics
   - Prioritizes critical user experience metrics
   - Reduces noise by filtering out high-frequency metrics that are performing well
@@ -91,20 +99,20 @@ The production logging service is designed for efficient, production-grade perfo
 
 ```typescript
 // Import and create logger instance (singleton pattern)
-import { createPerformanceLogger } from '@/lib/performance/performance-logger';
+import { createPerformanceLogger } from "@/lib/performance/performance-logger";
 
 // Get the logger instance (configured based on environment)
 const logger = createPerformanceLogger();
 
 // Log custom performance metrics
 logger.logMetric({
-  id: 'unique-id',
-  name: 'component-render-time',
+  id: "unique-id",
+  name: "component-render-time",
   value: 120, // milliseconds
-  attribution: { 
-    component: 'HeroSection',
-    route: '/home' 
-  }
+  attribution: {
+    component: "HeroSection",
+    route: "/home",
+  },
 });
 ```
 
@@ -115,14 +123,14 @@ The logging service supports several configuration options:
 ```typescript
 // Custom configuration example
 const logger = createPerformanceLogger({
-  batchInterval: 5000,        // Send metrics every 5 seconds
-  sampleRate: 0.2,            // Sample 20% of sessions
+  batchInterval: 5000, // Send metrics every 5 seconds
+  sampleRate: 0.2, // Sample 20% of sessions
   shouldLogMetric: (metric) => {
     // Custom filtering logic
     return metric.value > 1000; // Only log metrics over 1000ms
   },
-  consoleLog: true,           // Also log to console in production
-  endpoint: '/api/analytics'  // Custom endpoint
+  consoleLog: true, // Also log to console in production
+  endpoint: "/api/analytics", // Custom endpoint
 });
 ```
 
@@ -131,10 +139,12 @@ const logger = createPerformanceLogger({
 The performance monitoring system integrates with the existing performance optimization work:
 
 1. **Web Vitals Integration**
+
    - Works with the existing `web-vitals.ts` and performance metric hooks
    - Captures the same custom events already being tracked
 
 2. **Code Splitting Analysis**
+
    - Adds visibility to the effectiveness of code splitting implementation
    - Helps identify components that might benefit from dynamic imports
 

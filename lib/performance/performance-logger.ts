@@ -1,6 +1,6 @@
 /**
  * Performance Logging Service
- * 
+ *
  * A dedicated service for logging performance metrics in production.
  * This service provides:
  * - Batched logging to reduce network requests
@@ -9,8 +9,8 @@
  * - Integration with analytics services
  */
 
-import { CustomPerformanceMetric } from '@/types/api';
-import { METRIC_NAMES } from './performance-metrics';
+import { CustomPerformanceMetric } from "@/types/api";
+import { METRIC_NAMES } from "./performance-metrics";
 
 interface LoggerOptions {
   /** How often to send batched metrics (ms) */
@@ -38,18 +38,18 @@ class PerformanceLogger {
       sampleRate: options.sampleRate || 0.1, // 10% of sessions
       shouldLogMetric: options.shouldLogMetric || (() => true),
       consoleLog: options.consoleLog || false,
-      endpoint: options.endpoint || '/api/performance/log'
+      endpoint: options.endpoint || "/api/performance/log",
     };
 
     // Only enable logging based on sampling rate
     this.isEnabled = Math.random() < this.options.sampleRate;
-    
+
     // Initialize batch processing if enabled
-    if (this.isEnabled && typeof window !== 'undefined') {
+    if (this.isEnabled && typeof window !== "undefined") {
       this.startBatchProcessing();
 
       // Ensure metrics are sent before page unload
-      window.addEventListener('beforeunload', () => this.sendMetrics());
+      window.addEventListener("beforeunload", () => this.sendMetrics());
     }
   }
 
@@ -108,11 +108,11 @@ class PerformanceLogger {
 
     try {
       // Only send in production
-      if (process.env.NODE_ENV === 'production') {
+      if (process.env.NODE_ENV === "production") {
         const response = await fetch(this.options.endpoint, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             metrics: metricsToSend,
@@ -125,12 +125,12 @@ class PerformanceLogger {
         });
 
         if (!response.ok) {
-          console.error('Failed to send performance metrics:', await response.text());
+          console.error("Failed to send performance metrics:", await response.text());
         }
       }
     } catch (error) {
-      console.error('Error sending performance metrics:', error);
-      
+      console.error("Error sending performance metrics:", error);
+
       // Put the metrics back in the queue if sending failed
       this.metrics = [...metricsToSend, ...this.metrics];
     }
@@ -141,30 +141,25 @@ class PerformanceLogger {
 export const metricFilters = {
   // Only log core web vitals
   coreWebVitalsOnly: (metric: CustomPerformanceMetric) => {
-    const coreMetrics = [
-      METRIC_NAMES.LCP,
-      METRIC_NAMES.FID, 
-      METRIC_NAMES.CLS,
-      METRIC_NAMES.INP
-    ];
-    return coreMetrics.includes(metric.name as typeof coreMetrics[number]);
+    const coreMetrics = [METRIC_NAMES.LCP, METRIC_NAMES.FID, METRIC_NAMES.CLS, METRIC_NAMES.INP];
+    return coreMetrics.includes(metric.name as (typeof coreMetrics)[number]);
   },
-  
+
   // Log all metrics but filter out frequent ones to reduce volume
   production: (metric: CustomPerformanceMetric) => {
     // Always log core web vitals
     const coreMetrics = [METRIC_NAMES.LCP, METRIC_NAMES.FID, METRIC_NAMES.CLS, METRIC_NAMES.INP];
-    if (coreMetrics.includes(metric.name as typeof coreMetrics[number])) {
+    if (coreMetrics.includes(metric.name as (typeof coreMetrics)[number])) {
       return true;
     }
-    
+
     // For high-frequency metrics, only log poor performance
     if (metric.name === METRIC_NAMES.DYNAMIC_IMPORT && metric.value < 500) {
       return false;
     }
-    
+
     return true;
-  }
+  },
 };
 
 // Singleton instance with production settings
@@ -178,30 +173,29 @@ export function createPerformanceLogger(options: LoggerOptions = {}): Performanc
     // Production default settings
     const productionDefaults: LoggerOptions = {
       batchInterval: 10000, // 10 seconds
-      sampleRate: 0.1,      // 10% of users
+      sampleRate: 0.1, // 10% of users
       shouldLogMetric: metricFilters.production,
-      consoleLog: false
+      consoleLog: false,
     };
-    
+
     // Development default settings
     const developmentDefaults: LoggerOptions = {
-      batchInterval: 5000,  // 5 seconds
-      sampleRate: 1.0,      // 100% of users
+      batchInterval: 5000, // 5 seconds
+      sampleRate: 1.0, // 100% of users
       shouldLogMetric: () => true,
-      consoleLog: true
+      consoleLog: true,
     };
-    
+
     // Use environment-specific defaults
-    const defaults = process.env.NODE_ENV === 'production' 
-      ? productionDefaults 
-      : developmentDefaults;
-      
+    const defaults =
+      process.env.NODE_ENV === "production" ? productionDefaults : developmentDefaults;
+
     // Create the instance with merged options
     loggerInstance = new PerformanceLogger({
       ...defaults,
-      ...options
+      ...options,
     });
   }
-  
+
   return loggerInstance;
 }

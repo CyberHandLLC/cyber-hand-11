@@ -1,0 +1,162 @@
+name: MCP Validation
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  push:
+    branches: [ main, develop ]
+
+jobs:
+  mcp-validate:
+    name: Run MCP Validators
+    runs-on: ubuntu-latest
+    
+    services:
+      architecture-guard:
+        image: ${GITHUB_REPOSITORY}/architecture-guard:latest
+        ports:
+          - 8001:8001
+        volumes:
+          - ${{ github.workspace }}:/app/project
+        env:
+          NODE_ENV: production
+          PROJECT_ROOT: /app/project
+      
+      dependency-guard:
+        image: ${GITHUB_REPOSITORY}/dependency-guard:latest
+        ports:
+          - 8002:8002
+        volumes:
+          - ${{ github.workspace }}:/app/project
+        env:
+          NODE_ENV: production
+          PROJECT_ROOT: /app/project
+      
+      style-validator:
+        image: ${GITHUB_REPOSITORY}/style-validator:latest
+        ports:
+          - 8003:8003
+        volumes:
+          - ${{ github.workspace }}:/app/project
+        env:
+          NODE_ENV: production
+          PROJECT_ROOT: /app/project
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for comparing changes
+
+      - name: Wait for MCP servers to start
+        run: |
+          echo "Waiting for MCP servers to initialize..."
+          sleep 15s
+          echo "Checking MCP server health..."
+          curl -f http://localhost:8001/health || { echo "Architecture Guard not ready"; exit 1; }
+          curl -f http://localhost:8002/health || { echo "Dependency Guard not ready"; exit 1; }
+          curl -f http://localhost:8003/health || { echo "Style Validator not ready"; exit 1; }
+          echo "All MCP servers are ready"
+
+      - name: Run Architecture Validation
+        id: architecture
+        run: |
+          RESPONSE=$(curl -s -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"path": "${{ github.workspace }}", "options": {"ci": true}}' \
+            http://localhost:8001/validate)
+          echo "Architecture validation response: $RESPONSE"
+          
+          SUCCESS=$(echo $RESPONSE | jq -r '.success')
+          SUMMARY=$(echo $RESPONSE | jq -r '.summary')
+          
+          echo "::set-output name=success::$SUCCESS"
+          echo "::set-output name=summary::$SUMMARY"
+          
+          if [ "$SUCCESS" != "true" ]; then
+            echo "Architecture validation failed!"
+            exit 1
+          fi
+
+      - name: Run Dependency Validation
+        id: dependencies
+        run: |
+          RESPONSE=$(curl -s -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"path": "${{ github.workspace }}", "options": {"ci": true}}' \
+            http://localhost:8002/validate)
+          echo "Dependency validation response: $RESPONSE"
+          
+          SUCCESS=$(echo $RESPONSE | jq -r '.success')
+          SUMMARY=$(echo $RESPONSE | jq -r '.summary')
+          
+          echo "::set-output name=success::$SUCCESS"
+          echo "::set-output name=summary::$SUMMARY"
+          
+          if [ "$SUCCESS" != "true" ]; then
+            echo "Dependency validation failed!"
+            exit 1
+          fi
+
+      - name: Run Style Validation
+        id: styles
+        run: |
+          RESPONSE=$(curl -s -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"path": "${{ github.workspace }}", "options": {"ci": true}}' \
+            http://localhost:8003/validate)
+          echo "Style validation response: $RESPONSE"
+          
+          SUCCESS=$(echo $RESPONSE | jq -r '.success')
+          SUMMARY=$(echo $RESPONSE | jq -r '.summary')
+          
+          echo "::set-output name=success::$SUCCESS"
+          echo "::set-output name=summary::$SUMMARY"
+          
+          if [ "$SUCCESS" != "true" ]; then
+            echo "Style validation failed!"
+            exit 1
+          fi
+
+      - name: Post Validation Summary Comment
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const architectureSuccess = process.env.ARCHITECTURE_SUCCESS === 'true';
+            const dependenciesSuccess = process.env.DEPENDENCIES_SUCCESS === 'true';
+            const stylesSuccess = process.env.STYLES_SUCCESS === 'true';
+            
+            const architectureSummary = process.env.ARCHITECTURE_SUMMARY;
+            const dependenciesSummary = process.env.DEPENDENCIES_SUCCESS;
+            const stylesSummary = process.env.STYLES_SUMMARY;
+            
+            const createStatusIcon = (success) => success ? '✅' : '❌';
+            
+            const comment = `## MCP Validation Results
+            
+            | Validator | Status | Summary |
+            |-----------|--------|---------|
+            | Architecture Guard | ${createStatusIcon(architectureSuccess)} | ${architectureSummary} |
+            | Dependency Guard | ${createStatusIcon(dependenciesSuccess)} | ${dependenciesSummary} |
+            | Style Validator | ${createStatusIcon(stylesSuccess)} | ${stylesSummary} |
+            
+            ${(!architectureSuccess || !dependenciesSuccess || !stylesSuccess) ? 
+              '### Validation Failed\nPlease fix the issues before merging this pull request.' :
+              '### Validation Passed\nAll MCP validators approved these changes.'
+            }`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+        env:
+          ARCHITECTURE_SUCCESS: ${{ steps.architecture.outputs.success }}
+          DEPENDENCIES_SUCCESS: ${{ steps.dependencies.outputs.success }}
+          STYLES_SUCCESS: ${{ steps.styles.outputs.success }}
+          ARCHITECTURE_SUMMARY: ${{ steps.architecture.outputs.summary }}
+          DEPENDENCIES_SUMMARY: ${{ steps.dependencies.outputs.summary }}
+          STYLES_SUMMARY: ${{ steps.styles.outputs.summary }}

@@ -1,11 +1,11 @@
 /**
  * SEO Metadata Utilities
- * 
+ *
  * This module provides a standardized approach to generating metadata for pages
  * using Next.js 15's metadata API.
  */
 
-import { Metadata } from 'next';
+import { Metadata } from "next";
 
 /**
  * MetadataProps interface for generating consistent page metadata
@@ -22,7 +22,7 @@ export interface MetadataProps {
   };
   noIndex?: boolean;
   canonicalUrl?: string;
-  type?: 'website' | 'article' | 'profile';
+  type?: "website" | "article" | "profile";
   publishedAt?: string; // ISO date string
   modifiedAt?: string; // ISO date string
   authorName?: string;
@@ -31,7 +31,7 @@ export interface MetadataProps {
 
 /**
  * Creates extended metadata for a page, building upon the base metadata defined in layout.tsx
- * 
+ *
  * @param props - The metadata properties for the page
  * @returns Metadata object compatible with Next.js metadata API
  */
@@ -43,37 +43,33 @@ export function createMetadata(props: MetadataProps): Metadata {
     image,
     noIndex,
     canonicalUrl,
-    type = 'website',
+    type = "website",
     publishedAt,
     modifiedAt,
     authorName,
-    category
+    category,
   } = props;
 
   // Base site info - should match the defaults in layout.tsx
-  const siteName = 'CyberHand';
+  const siteName = "CyberHand";
   const baseTitle = title ? `${title} | CyberHand` : undefined;
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cyber-hand.com";
 
   // Image properties with defaults
-  const imageUrl = image?.url || '/images/og-image.jpg';
+  const imageUrl = image?.url || "/images/og-image.jpg";
   const imageWidth = image?.width || 1200;
   const imageHeight = image?.height || 630;
-  const imageAlt = image?.alt || 'CyberHand - Next-Gen Digital Agency';
-  const absoluteImageUrl = imageUrl.startsWith('http')
-    ? imageUrl
-    : `${baseUrl}${imageUrl}`;
+  const imageAlt = image?.alt || "CyberHand - Next-Gen Digital Agency";
+  const absoluteImageUrl = imageUrl.startsWith("http") ? imageUrl : `${baseUrl}${imageUrl}`;
 
   // Robots handling
-  const robots = noIndex
-    ? { index: false, follow: false }
-    : { index: true, follow: true };
+  const robots = noIndex ? { index: false, follow: false } : { index: true, follow: true };
 
   return {
     title: baseTitle,
     description,
-    keywords: keywords?.join(', '),
-    
+    keywords: keywords?.join(", "),
+
     // OpenGraph metadata
     openGraph: {
       title: baseTitle,
@@ -88,33 +84,35 @@ export function createMetadata(props: MetadataProps): Metadata {
           alt: imageAlt,
         },
       ],
-      locale: 'en_US',
+      locale: "en_US",
       type,
-      ...(type === 'article' && {
+      ...(type === "article" && {
         article: {
           publishedTime: publishedAt,
           modifiedTime: modifiedAt,
-          authors: [authorName || 'CyberHand Team'],
+          authors: [authorName || "CyberHand Team"],
           tags: keywords,
           section: category,
         },
       }),
     },
-    
+
     // Twitter metadata
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: baseTitle,
       description,
       images: [absoluteImageUrl],
-      creator: authorName || '@CyberHandAgency',
+      creator: authorName || "@CyberHandAgency",
     },
-    
+
     // Canonical URL
-    alternates: canonicalUrl ? {
-      canonical: canonicalUrl,
-    } : undefined,
-    
+    alternates: canonicalUrl
+      ? {
+          canonical: canonicalUrl,
+        }
+      : undefined,
+
     // Robots
     robots,
   };
@@ -136,7 +134,7 @@ interface CaseStudyData {
 
 /**
  * Creates metadata for a case study page
- * 
+ *
  * @param caseStudy - The case study object
  * @returns Metadata object compatible with Next.js metadata API
  */
@@ -144,17 +142,17 @@ export function createCaseStudyMetadata(caseStudy: CaseStudyData): Metadata {
   return createMetadata({
     title: caseStudy.title,
     description: caseStudy.challenge,
-    keywords: [caseStudy.industry, 'case study', 'project', ...caseStudy.services],
+    keywords: [caseStudy.industry, "case study", "project", ...caseStudy.services],
     image: {
-      url: caseStudy.imageUrl || '',
+      url: caseStudy.imageUrl || "",
       alt: `${caseStudy.title} - ${caseStudy.clientName} Case Study by CyberHand`,
     },
-    canonicalUrl: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com'}/case-studies/${caseStudy.slug || caseStudy.id}`,
-    type: 'article',
+    canonicalUrl: `${process.env.NEXT_PUBLIC_SITE_URL || "https://cyber-hand.com"}/case-studies/${caseStudy.slug || caseStudy.id}`,
+    type: "article",
     // Use current date for publishedAt and modifiedAt since our case studies don't have these fields
     publishedAt: new Date().toISOString(),
     modifiedAt: new Date().toISOString(),
-    authorName: 'CyberHand Team',
+    authorName: "CyberHand Team",
     category: caseStudy.industry,
   });
 }
@@ -173,7 +171,7 @@ interface ServiceData {
 
 /**
  * Creates metadata for a service page
- * 
+ *
  * @param service - The service object
  * @returns Metadata object compatible with Next.js metadata API
  */
@@ -181,12 +179,12 @@ export function createServiceMetadata(service: ServiceData): Metadata {
   return createMetadata({
     title: service.title,
     description: service.description,
-    keywords: [...(service.keywords || []), 'service', 'digital agency'],
+    keywords: [...(service.keywords || []), "service", "digital agency"],
     image: {
-      url: service.image || '',
+      url: service.image || "",
       alt: `${service.title} - Digital Services by CyberHand`,
     },
-    canonicalUrl: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com'}/services/${service.slug || service.id}`,
-    type: 'website', // Changed from 'product' which is not supported in OpenGraph spec
+    canonicalUrl: `${process.env.NEXT_PUBLIC_SITE_URL || "https://cyber-hand.com"}/services/${service.slug || service.id}`,
+    type: "website", // Changed from 'product' which is not supported in OpenGraph spec
   });
 }

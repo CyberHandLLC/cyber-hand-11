@@ -2,15 +2,15 @@
 
 /**
  * Application-level performance optimization wrapper
- * 
+ *
  * This component applies performance optimizations at the root level:
  * - Performance monitoring using Web Vitals
  * - Standardized CSS containment through utility classes
  * - Resource loading optimization
  */
 
-import React, { useEffect } from 'react';
-import { reportWebVitals } from '@/lib/web-vitals';
+import React, { useEffect } from "react";
+import { reportWebVitals } from "@/lib/web-vitals";
 // CSS containment is now handled through utility classes in globals.css
 
 interface PerformanceWrapperProps {
@@ -28,23 +28,23 @@ export function PerformanceWrapper({ children }: PerformanceWrapperProps) {
 
   // Detect idle time to load non-critical resources
   useEffect(() => {
-    if ('requestIdleCallback' in window) {
+    if ("requestIdleCallback" in window) {
       const loadNonCriticalResources = () => {
         // Note: CSS is now consolidated in globals.css
         // No need to load separate non-critical CSS files
-        
+
         // Preload below-fold images
         const belowFoldImages = document.querySelectorAll('img[data-below-fold="true"]');
-        belowFoldImages.forEach(img => {
+        belowFoldImages.forEach((img) => {
           if (img instanceof HTMLImageElement) {
-            img.loading = 'lazy';
+            img.loading = "lazy";
             if (img.dataset.src) {
               img.src = img.dataset.src;
             }
           }
         });
       };
-      
+
       // Use requestIdleCallback to load non-critical resources during browser idle time
       window.requestIdleCallback(loadNonCriticalResources, { timeout: 2000 });
     }
@@ -54,7 +54,7 @@ export function PerformanceWrapper({ children }: PerformanceWrapperProps) {
     <>
       {children}
       {/* CSS containment is now applied via utility classes directly in component JSX */}
-      
+
       {/* Add performance monitoring markers */}
       <script
         dangerouslySetInnerHTML={{

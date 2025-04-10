@@ -32,12 +32,12 @@ For optimal accessibility, ensure each page has a unique and descriptive title:
 
 ```tsx
 // app/page.tsx
-import { Metadata } from 'next';
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'Home - Cyber Hand',
-  description: 'Welcome to the Cyber Hand website'
-}
+  title: "Home - Cyber Hand",
+  description: "Welcome to the Cyber Hand website",
+};
 
 export default function HomePage() {
   return (
@@ -76,14 +76,10 @@ export function PageLayout({ children }) {
   return (
     <>
       <header>
-        <nav aria-label="Main navigation">
-          {/* Navigation content */}
-        </nav>
+        <nav aria-label="Main navigation">{/* Navigation content */}</nav>
       </header>
       <main>{children}</main>
-      <footer>
-        {/* Footer content */}
-      </footer>
+      <footer>{/* Footer content */}</footer>
     </>
   );
 }
@@ -123,13 +119,13 @@ Server Components render on the server and send HTML to the client, providing an
 export default async function ProductPage({ params }) {
   // Data fetching happens on the server
   const product = await getProduct(params.id);
-  
+
   return (
     <article>
       <h1>{product.name}</h1>
       <img src={product.image} alt={product.imageDescription} />
       <p>{product.description}</p>
-      
+
       {/* Client component only where interactivity is needed */}
       <AddToCartButton productId={product.id} />
     </article>
@@ -143,23 +139,23 @@ For Client Components, ensure proper accessibility attributes for interactive el
 
 ```tsx
 // components/ui/button.tsx - Client Component
-'use client';
+"use client";
 
-import { forwardRef } from 'react';
-import { cn } from '@/lib/utils';
+import { forwardRef } from "react";
+import { cn } from "@/lib/utils";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   // Props
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, children, disabled, type = 'button', ...props }, ref) => {
+  ({ className, children, disabled, type = "button", ...props }, ref) => {
     return (
       <button
         className={cn(
-          'inline-flex items-center justify-center rounded-md font-medium',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-          disabled && 'opacity-50 cursor-not-allowed',
+          "inline-flex items-center justify-center rounded-md font-medium",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+          disabled && "opacity-50 cursor-not-allowed",
           className
         )}
         disabled={disabled}
@@ -172,7 +168,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     );
   }
 );
-Button.displayName = 'Button';
+Button.displayName = "Button";
 
 export { Button };
 ```
@@ -183,14 +179,14 @@ Form accessibility is crucial. Use these patterns:
 
 ```tsx
 // Form component with proper accessibility attributes
-'use client';
+"use client";
 
-import { useFormState } from 'react-dom';
-import { submitForm } from '@/app/actions';
+import { useFormState } from "react-dom";
+import { submitForm } from "@/app/actions";
 
 export function ContactForm() {
   const [state, formAction] = useFormState(submitForm, { success: false });
-  
+
   return (
     <form action={formAction} noValidate>
       <div className="form-group">
@@ -212,9 +208,9 @@ export function ContactForm() {
           </p>
         )}
       </div>
-      
+
       {/* Other form fields... */}
-      
+
       <button type="submit" className="mt-4">
         Submit
       </button>
@@ -231,12 +227,7 @@ Our loading states include proper ARIA attributes:
 
 ```tsx
 // components/ui/skeleton.tsx
-export function ImageSkeleton({ 
-  width = "100%",
-  height = 200, 
-  className, 
-  ...props 
-}) {
+export function ImageSkeleton({ width = "100%", height = 200, className, ...props }) {
   return (
     <div
       className={cn("animate-pulse bg-gray-200 dark:bg-gray-700 rounded", className)}
@@ -254,36 +245,36 @@ Modal implementations must trap focus and handle keyboard interactions:
 
 ```tsx
 // components/ui/modal.tsx
-'use client';
+"use client";
 
-import { useRef, useEffect } from 'react';
-import { createPortal } from 'react-dom';
-import { Button } from './button';
+import { useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
+import { Button } from "./button";
 
 export function Modal({ title, isOpen, onClose, children }) {
   const dialogRef = useRef(null);
-  
+
   // Handle keyboard navigation and focus trapping
   useEffect(() => {
     if (!isOpen) return;
-    
+
     const dialogElement = dialogRef.current;
     if (!dialogElement) return;
-    
+
     // Focus the dialog when it opens
     dialogElement.focus();
-    
+
     // Handle Escape key
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
-  
+
   if (!isOpen) return null;
-  
+
   return createPortal(
     <div
       className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"

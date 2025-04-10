@@ -50,33 +50,33 @@ const nextConfig = {
     // Override default staleTime of 0 for Page segments
     staleTimes: {
       // Values in seconds
-      dynamic: 0,    // Default in Next.js 15 (changed from 30)
-      static: 300,   // 5 minutes
-      loading: 300,  // 5 minutes
+      dynamic: 0, // Default in Next.js 15 (changed from 30)
+      static: 300, // 5 minutes
+      loading: 300, // 5 minutes
     },
   },
-  
+
   // TypeScript configuration file support (Next.js 15 feature)
   // You can use next.config.ts instead of next.config.js
-  
+
   // Security headers
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: "/(.*)",
         headers: [
           // Content Security Policy for Next.js 15 with enhanced Server Actions security
           {
-            key: 'Content-Security-Policy',
+            key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // Required for Next.js
               // Other CSP directives...
-            ].join('; ')
+            ].join("; "),
           },
           // Other security headers...
-        ]
-      }
+        ],
+      },
     ];
   },
 };
@@ -167,11 +167,11 @@ For self-hosting, Next.js 15 includes improved support. Update your `next.config
 ```js
 const nextConfig = {
   // Configure output for self-hosting
-  output: 'standalone',
-  
+  output: "standalone",
+
   // For a specific base path
-  basePath: '/my-base-path', // If needed
-  
+  basePath: "/my-base-path", // If needed
+
   // For trailing slash support
   trailingSlash: true, // If needed
 };
@@ -212,14 +212,17 @@ Next.js 15 supports ESLint 9 with the flat config format. Create an `.eslintrc.j
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
     "react-hooks/exhaustive-deps": "warn",
-    
+
     // TypeScript rules
     "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/no-unused-vars": ["warn", { 
-      "argsIgnorePattern": "^_",
-      "varsIgnorePattern": "^_" 
-    }],
-    
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
+
     // General code quality
     "no-console": ["warn", { "allow": ["warn", "error"] }]
   }
@@ -253,7 +256,7 @@ In Next.js 15, GET Route Handlers are no longer cached by default. If you see un
 
 ```typescript
 // Force static rendering
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 
 // Or with revalidation
 export const revalidate = 60; // Seconds

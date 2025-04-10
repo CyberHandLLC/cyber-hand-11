@@ -43,7 +43,7 @@ export const animations = {
   },
   staggerChildren: {
     visible: { transition: { staggerChildren: 0.1 } },
-  }
+  },
 };
 
 // Common transition presets
@@ -59,7 +59,7 @@ export const transitions = {
 interface AnimatedElementProps {
   children: React.ReactNode;
   animation: keyof typeof animations;
-  transition?: typeof transitions[keyof typeof transitions] | Record<string, unknown>;
+  transition?: (typeof transitions)[keyof typeof transitions] | Record<string, unknown>;
   delay?: number;
   className?: string;
   once?: boolean;
@@ -79,19 +79,13 @@ export const AnimatedElement: React.FC<AnimatedElementProps> = ({
   custom: _custom = null,
 }) => {
   const selectedAnimation = animations[animation];
-  
+
   if (!selectedAnimation) {
     console.warn(`Animation '${animation}' not found`);
     return <div className={className}>{children}</div>;
   }
-  
-  return (
-    <div
-      className={className}
-    >
-      {children}
-    </div>
-  );
+
+  return <div className={className}>{children}</div>;
 };
 
 /**
@@ -102,11 +96,7 @@ export const StaggeredGroup: React.FC<{
   className?: string;
   staggerDelay?: number;
 }> = ({ children, className = "", staggerDelay: _staggerDelay = 0.1 }) => {
-  return (
-    <div className={className}>
-      {children}
-    </div>
-  );
+  return <div className={className}>{children}</div>;
 };
 
 /**
@@ -117,11 +107,5 @@ export const StaggeredItem: React.FC<{
   animation?: keyof typeof animations;
   className?: string;
 }> = ({ children, animation: _animation = "fadeInUp", className = "" }) => {
-  return (
-    <div
-      className={className}
-    >
-      {children}
-    </div>
-  );
+  return <div className={className}>{children}</div>;
 };

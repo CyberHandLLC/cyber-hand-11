@@ -2,7 +2,7 @@
 
 /**
  * ServicesGrid Component
- * 
+ *
  * Client-side component that handles interactive service cards in a responsive grid.
  * Provides interactive elements for service selection.
  * Implements mobile-first responsive design approach with optimized grid layout.

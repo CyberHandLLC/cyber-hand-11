@@ -123,13 +123,13 @@ async function Page({ params }: { params: { id: string } }) {
   // Start fetch requests eagerly - this initiates them in parallel
   const itemPromise = getItem(params.id);
   const relatedItemsPromise = getRelatedItems(params.id);
-  
+
   // Wait for both to complete
   const [item, relatedItems] = await Promise.all([
-    itemPromise, 
+    itemPromise,
     relatedItemsPromise
   ]);
-  
+
   return <ItemDisplay item={item} relatedItems={relatedItems} />;
 }
 ```
@@ -147,8 +147,8 @@ async function Page({ params }: { params: { id: string } }) {
 
 ```tsx
 // Page with Suspense boundaries for optimal streaming
-import { Suspense } from 'react';
-import { ItemSkeleton, SidebarSkeleton } from '@/components/ui/skeletons';
+import { Suspense } from "react";
+import { ItemSkeleton, SidebarSkeleton } from "@/components/ui/skeletons";
 
 export default function ItemPage({ params }: { params: { id: string } }) {
   return (
@@ -157,7 +157,7 @@ export default function ItemPage({ params }: { params: { id: string } }) {
       <Suspense fallback={<ItemSkeleton />}>
         <ItemDetail id={params.id} />
       </Suspense>
-      
+
       <Suspense fallback={<SidebarSkeleton />}>
         <Sidebar relatedTo={params.id} />
       </Suspense>
@@ -182,7 +182,6 @@ export default function Loading() {
   - Largest Contentful Paint (LCP): < 2.5s
   - Total Blocking Time (TBT): < 200ms
   - Cumulative Layout Shift (CLS): < 0.1
-  
 - **JavaScript bundle size**: < 300KB for initial load
 - **Initial page load**: < 3s on 3G connections
 
@@ -209,7 +208,7 @@ export default function Loading() {
   --color-background: #fff;
 }
 
-[data-theme='dark'] {
+[data-theme="dark"] {
   --color-primary: #3694ff;
   --color-text: #f0f0f0;
   --color-background: #111;
@@ -229,9 +228,9 @@ export default function Loading() {
 
 import { useState } from 'react';
 
-export function Button({ 
-  children, 
-  onClick, 
+export function Button({
+  children,
+  onClick,
   className,
   'aria-label': ariaLabel,
   ...props
@@ -254,7 +253,7 @@ export function Button({
 
 - **Ensure WCAG 2.1 AA compliance** throughout the application
 - **Use semantic HTML elements** whenever possible
-- **Implement proper ARIA attributes** when needed 
+- **Implement proper ARIA attributes** when needed
 - **Ensure keyboard navigability** for all interactive elements
 - **Test with screen readers** during development
 - **Use Next.js Image component** with proper alt text
@@ -264,13 +263,13 @@ export function Button({
 
 ```tsx
 // Example of accessible interactive component
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 export function Accordion({ title, children }) {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   return (
     <div className="accordion">
       <button
@@ -280,14 +279,10 @@ export function Accordion({ title, children }) {
         aria-controls="accordion-content"
       >
         {title}
-        <span className="icon">{isOpen ? '▲' : '▼'}</span>
+        <span className="icon">{isOpen ? "▲" : "▼"}</span>
       </button>
-      
-      <div 
-        id="accordion-content"
-        className="accordion-content"
-        hidden={!isOpen}
-      >
+
+      <div id="accordion-content" className="accordion-content" hidden={!isOpen}>
         {children}
       </div>
     </div>
@@ -302,26 +297,23 @@ export function Accordion({ title, children }) {
 - **Update documentation** when making significant changes
 - **Include examples** for reusable components
 
-```typescript
+````typescript
 /**
  * Fetches data with automatic caching and revalidation
- * 
+ *
  * @param url - The URL to fetch from
  * @param options - Additional fetch options
  * @returns The fetched data
- * 
+ *
  * @example
  * ```ts
  * const data = await fetchWithCache('/api/products');
  * ```
  */
-export async function fetchWithCache<T>(
-  url: string, 
-  options?: RequestInit
-): Promise<T> {
+export async function fetchWithCache<T>(url: string, options?: RequestInit): Promise<T> {
   // Implementation
 }
-```
+````
 
 ## Code Review Checklist
 
@@ -349,50 +341,50 @@ Server Actions are used for data mutations with enhanced security in Next.js 15:
 
 ```tsx
 // Example of a Server Action for form submission
-'use server';
+"use server";
 
-import { z } from 'zod';
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
+import { z } from "zod";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 // Data validation schema
 const ContactFormSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  message: z.string().min(10, 'Message must be at least 10 characters'),
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  message: z.string().min(10, "Message must be at least 10 characters"),
 });
 
 // Next.js 15 enables better type safety with server actions
 export async function submitContactForm(formData: FormData) {
   // Convert FormData to a plain object
   const rawData = {
-    name: formData.get('name'),
-    email: formData.get('email'),
-    message: formData.get('message'),
+    name: formData.get("name"),
+    email: formData.get("email"),
+    message: formData.get("message"),
   };
-  
+
   // Validate the data
   const result = ContactFormSchema.safeParse(rawData);
-  
+
   if (!result.success) {
     return { success: false, errors: result.error.flatten().fieldErrors };
   }
-  
+
   try {
     // Process the validated data
     const data = await saveContactSubmission(result.data);
-    
+
     // Revalidate the page to reflect changes
-    revalidatePath('/contact');
-    
+    revalidatePath("/contact");
+
     // Optional: Redirect after successful submission
     // redirect(`/contact/thank-you/${data.id}`);
-    
+
     return { success: true };
   } catch (error) {
-    return { 
-      success: false, 
-      errors: { form: ['Failed to submit the form. Please try again.'] } 
+    return {
+      success: false,
+      errors: { form: ["Failed to submit the form. Please try again."] },
     };
   }
 }
@@ -404,17 +396,17 @@ Next.js 15 introduces the official Form component with built-in integration for 
 
 ```tsx
 // In a Client Component
-'use client';
+"use client";
 
 // Import the Form component and useFormState hook
-import { useFormState } from 'react-dom';
-import { Form } from 'next/form';
-import { submitContactForm } from './actions';
+import { useFormState } from "react-dom";
+import { Form } from "next/form";
+import { submitContactForm } from "./actions";
 
 export function ContactForm() {
   // Initialize form state with the server action and initial state
   const [state, formAction] = useFormState(submitContactForm, { success: false });
-  
+
   return (
     <Form action={formAction}>
       <div>
@@ -422,21 +414,21 @@ export function ContactForm() {
         <input type="text" id="name" name="name" required />
         {state.errors?.name && <p className="error">{state.errors.name}</p>}
       </div>
-      
+
       <div>
         <label htmlFor="email">Email</label>
         <input type="email" id="email" name="email" required />
         {state.errors?.email && <p className="error">{state.errors.email}</p>}
       </div>
-      
+
       <div>
         <label htmlFor="message">Message</label>
         <textarea id="message" name="message" required />
         {state.errors?.message && <p className="error">{state.errors.message}</p>}
       </div>
-      
+
       <button type="submit">Submit</button>
-      
+
       {state.success && <p className="success">Thank you for your message!</p>}
     </Form>
   );
@@ -459,14 +451,14 @@ Next.js 15 significantly improves Server Action security with:
 
 ```tsx
 // app/actions.js
-'use server'
- 
+"use server";
+
 // This action IS used in our application, so Next.js
 // will create a secure ID to allow the client to call it
 export async function updateUserAction(formData) {
   // Implementation
 }
- 
+
 // This action is NOT used anywhere, so Next.js will
 // automatically remove it during build and not create a public endpoint
 export async function unusedAction(formData) {

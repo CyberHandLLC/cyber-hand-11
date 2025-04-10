@@ -1,6 +1,6 @@
-import { Suspense } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
-import Link from 'next/link';
+import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import Link from "next/link";
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
 import { caseStudies } from "@/data/case-studies";
 import { CaseStudyClientWrapper } from "@/components/case-studies/case-study-client-wrapper";
@@ -23,7 +23,13 @@ function CaseStudyNotFound() {
   );
 }
 
-import { HeadingSkeleton, TextSkeleton, ImageSkeleton, SectionSkeleton, CardGridSkeleton } from "@/components/ui/skeleton";
+import {
+  HeadingSkeleton,
+  TextSkeleton,
+  ImageSkeleton,
+  SectionSkeleton,
+  CardGridSkeleton,
+} from "@/components/ui/skeleton";
 
 /**
  * CaseStudyDetailSkeleton Component
@@ -38,11 +44,11 @@ function CaseStudyDetailSkeleton() {
         <HeadingSkeleton level={1} width="75%" className="max-w-xl" />
         <TextSkeleton width="50%" className="max-w-md" />
       </div>
-      
+
       {/* Main content */}
       <div className="py-8 space-y-8">
         <SectionSkeleton />
-        
+
         <div className="space-y-4">
           <HeadingSkeleton level={3} width="25%" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -51,7 +57,7 @@ function CaseStudyDetailSkeleton() {
           </div>
         </div>
       </div>
-      
+
       {/* Related section */}
       <div className="py-8">
         <HeadingSkeleton level={3} width="25%" className="mb-6" />
@@ -67,13 +73,13 @@ function CaseStudyDetailSkeleton() {
  */
 async function CaseStudyContent({ slug }: { slug: string }) {
   // Find the case study by slug - this happens during streaming
-  const caseStudy = caseStudies.find(cs => cs.id === slug || cs.slug === slug);
-  
+  const caseStudy = caseStudies.find((cs) => cs.id === slug || cs.slug === slug);
+
   // If the case study is not found, show a not found state
   if (!caseStudy) {
     return <CaseStudyNotFound />;
   }
-  
+
   // Return the client wrapper with the case study data
   return <CaseStudyClientWrapper caseStudy={caseStudy} />;
 }
@@ -105,12 +111,12 @@ function CaseStudyErrorFallback({ error }: { error: Error }) {
  */
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const caseStudy = caseStudies.find(cs => cs.id === slug || cs.slug === slug);
-  
+  const caseStudy = caseStudies.find((cs) => cs.id === slug || cs.slug === slug);
+
   if (!caseStudy) {
     return {};
   }
-  
+
   return createCaseStudyMetadata(caseStudy);
 }
 
@@ -122,12 +128,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
   // Await and destructure params
   const { slug } = await params;
-  
+
   // Find case study data for structured data
-  const caseStudy = caseStudies.find(cs => cs.id === slug || cs.slug === slug);
-  
+  const caseStudy = caseStudies.find((cs) => cs.id === slug || cs.slug === slug);
+
   return (
-    <ErrorBoundary fallback={<CaseStudyErrorFallback error={new Error("Failed to load case study")} />}>
+    <ErrorBoundary
+      fallback={<CaseStudyErrorFallback error={new Error("Failed to load case study")} />}
+    >
       <PageLayout>
         {/* Add structured data if we have a valid case study */}
         {caseStudy && (
@@ -136,23 +144,23 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
               title={caseStudy.title}
               description={caseStudy.challenge}
               url={`/case-studies/${slug}`}
-              imageUrl={caseStudy.imageUrl || '/images/case-studies/default.jpg'}
+              imageUrl={caseStudy.imageUrl || "/images/case-studies/default.jpg"}
               datePublished={new Date().toISOString()}
               dateModified={new Date().toISOString()}
               authorName="CyberHand Team"
               category={caseStudy.industry}
-              tags={[caseStudy.industry, 'case study', 'project', ...caseStudy.services]}
+              tags={[caseStudy.industry, "case study", "project", ...caseStudy.services]}
             />
-            <BreadcrumbSchema 
+            <BreadcrumbSchema
               items={[
-                { name: 'Home', url: '/' },
-                { name: 'Case Studies', url: '/case-studies' },
-                { name: caseStudy.title, url: `/case-studies/${slug}` }
+                { name: "Home", url: "/" },
+                { name: "Case Studies", url: "/case-studies" },
+                { name: caseStudy.title, url: `/case-studies/${slug}` },
               ]}
             />
           </>
         )}
-        
+
         <Suspense fallback={<CaseStudyDetailSkeleton />}>
           <CaseStudyContent slug={slug} />
         </Suspense>

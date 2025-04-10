@@ -1,18 +1,18 @@
 /**
  * Shared Component Type Definitions
- * 
+ *
  * This file contains shared type definitions used by multiple
  * components across the Cyber Hand website.
  */
 
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 
 /**
  * UI Component Types
  */
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'outline' | 'secondary' | 'ghost' | 'link' | 'destructive';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "primary" | "outline" | "secondary" | "ghost" | "link" | "destructive";
+  size?: "sm" | "md" | "lg";
   icon?: ReactNode;
   fullWidth?: boolean;
 }
@@ -66,7 +66,7 @@ export interface SectionContainerProps {
 
 export interface DecorativeElementsProps {
   theme?: string;
-  position?: 'top' | 'bottom' | 'both';
+  position?: "top" | "bottom" | "both";
 }
 
 /**
@@ -78,9 +78,9 @@ export interface OptimizedImageProps {
   width?: number;
   height?: number;
   className?: string;
-  objectFit?: 'cover' | 'contain' | 'fill';
+  objectFit?: "cover" | "contain" | "fill";
   priority?: boolean;
-  placeholder?: 'blur' | 'empty';
+  placeholder?: "blur" | "empty";
   quality?: number;
   blurDataURL?: string;
 }
@@ -100,7 +100,7 @@ export interface StaticImageProps {
 export interface AnimatedElementProps {
   children: ReactNode;
   className?: string;
-  animation?: 'fade' | 'slide-up' | 'slide-down' | 'slide-left' | 'slide-right' | 'scale';
+  animation?: "fade" | "slide-up" | "slide-down" | "slide-left" | "slide-right" | "scale";
   delay?: number;
   duration?: number;
   threshold?: number;

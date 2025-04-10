@@ -2,7 +2,7 @@
 
 /**
  * HomepageButtons - Client Component
- * 
+ *
  * This component contains the interactive buttons for the homepage.
  * It's isolated as a Client Component to keep client-side logic separate
  * from Server Components, following Next.js 15 best practices.
@@ -24,17 +24,17 @@ export function HomepageButtons() {
 
   return (
     <div className="inline-flex flex-wrap gap-3 sm:gap-4 justify-center mt-6 sm:mt-8 animate-fade-in-delayed">
-      <Button 
-        variant="primary" 
+      <Button
+        variant="primary"
         size="md"
         onClick={handleGetStarted}
         className="min-w-[120px] sm:min-w-[140px]"
       >
         Get Started
       </Button>
-      
-      <Button 
-        variant="outline" 
+
+      <Button
+        variant="outline"
         size="md"
         onClick={handleLearnMore}
         className="min-w-[120px] sm:min-w-[140px]"

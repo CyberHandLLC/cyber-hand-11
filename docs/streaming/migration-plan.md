@@ -9,11 +9,13 @@ This document outlines the steps that were taken to update our streaming impleme
 Our streaming implementation now consists of:
 
 1. **Built-in Next.js 15 Features**:
+
    - React Server Components with async/await pattern
    - Strategic Suspense boundaries for progressive loading
    - Loading.js files for route-level loading UI
 
 2. **Implementation in Components**:
+
    - Optimized Suspense boundaries in page components
    - Async Server Components for data fetching
    - Standardized skeleton UI component library for consistent loading states
@@ -30,11 +32,13 @@ Our streaming implementation now consists of:
 We have successfully implemented the following Next.js 15 recommended patterns:
 
 1. **Built-in Streaming Support**:
+
    - Leveraging the App Router's native streaming capabilities
    - Using `loading.js` for route-level streaming fallbacks
    - Implementing standardized skeleton components for consistent UI
 
 2. **Simplified Component Structure**:
+
    - Using async Server Components directly to handle data fetching
    - Relying on automatic streaming behavior of React Server Components
    - Implementing proper error boundaries for resilience
@@ -49,14 +53,17 @@ We have successfully implemented the following Next.js 15 recommended patterns:
 After completing our migration and implementing standardized components, here's the current status of streaming implementation across all pages:
 
 ### Pages Using Optimized Streaming with Standardized Components
+
 - `app/case-studies/[slug]/page.tsx` - Optimized with standardized skeleton components and error boundaries
 - `app/case-studies/page.tsx` - Using standardized skeleton components in loading.js
 
 ### Pages Using Basic Suspense or Streaming (Needs Component Standardization)
+
 - `app/page.tsx` (Homepage) - Uses Suspense boundaries but needs standardized skeletons
 - `app/contact/page.tsx` - Uses multiple Suspense boundaries but needs standardized skeletons
 
 ### Pages Not Currently Using Streaming (Opportunity to Add)
+
 - `app/get-started/page.tsx` - Has loading.js file but no Suspense boundaries yet
 - `app/resources/page.tsx` - Has loading.js file but no Suspense boundaries yet
 - `app/services/page.tsx` - Has loading.js file but no Suspense boundaries yet
@@ -72,6 +79,7 @@ The following changes are needed to align with Next.js 15 best practices:
 ### 1. Route-Level Changes
 
 1. **Create Loading Files**:
+
    - Add `loading.js` alongside page components for route-level streaming
    - Implement appropriate skeleton UI in these loading files
    - Example locations:
@@ -85,6 +93,7 @@ The following changes are needed to align with Next.js 15 best practices:
 ### 2. Component-Level Changes
 
 1. **Update Server Components**:
+
    - Convert data-fetching patterns to use async/await directly in components
    - Remove manual resource creation in favor of Next.js automatic suspense
 
@@ -96,6 +105,7 @@ The following changes are needed to align with Next.js 15 best practices:
 ### 3. Data Fetching Updates
 
 1. **Simplify Data Fetching**:
+
    - Continue using the `cache()` function for request deduplication
    - Remove manual resource patterns in favor of direct async/await
    - Retain parallel data fetching patterns where needed
@@ -107,7 +117,7 @@ The following changes are needed to align with Next.js 15 best practices:
 
 ## Implementation Steps Completed
 
-### Phase 1: Loading.js Implementation 
+### Phase 1: Loading.js Implementation
 
 1. Created loading.js files for all routes that needed them:
    - `app/case-studies/loading.tsx`
@@ -116,15 +126,17 @@ The following changes are needed to align with Next.js 15 best practices:
    - `app/resources/loading.tsx`
    - `app/services/loading.tsx`
 
-### Phase 2: Standardized Skeleton Components 
+### Phase 2: Standardized Skeleton Components
 
 1. Created a comprehensive skeleton component library in `components/ui/skeleton.tsx` with:
+
    - Base skeleton components for consistent appearance
    - Variants for different content types (text, headings, images, cards, sections)
    - Proper accessibility attributes for screen readers
    - Animation delay support for staggered animations
 
 2. Optimized case study detail page with:
+
    - Simplified component structure
    - Optimized Suspense boundary placement
    - Consistent loading states
@@ -162,14 +174,17 @@ The streaming migration has resulted in:
 ## Testing Plan
 
 1. **Visual Comparison**:
+
    - Compare side-by-side rendering of loading states
    - Check that skeleton dimensions match final content to prevent layout shifts
 
 2. **Performance Testing**:
+
    - Use Chrome DevTools Performance tab to compare metrics
    - Measure Time to First Byte (TTFB), First Contentful Paint (FCP), Largest Contentful Paint (LCP), and Cumulative Layout Shift (CLS)
 
 3. **Accessibility Testing**:
+
    - Verify loading states are properly announced by screen readers
    - Ensure error states provide meaningful information to assistive technologies
    - Test keyboard navigation during loading and error states

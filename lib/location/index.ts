@@ -1,12 +1,12 @@
 /**
  * Location Module Index
- * 
+ *
  * Central export point for all location-related utilities and types
  * to maintain clean imports throughout the application.
  */
 
 // Import and re-export essential types
-import type { LocationData } from './location-context';
+import type { LocationData } from "./location-context";
 export type { LocationData };
 
 // Re-export functionality from location utils
@@ -19,15 +19,15 @@ export {
   validateLocation as isValidLocationSlug,
   getLocationInfo,
   type LocationParams,
-  type LocationInfo
-} from './location-utils';
+  type LocationInfo,
+} from "./location-utils";
 
 // Export location service functions
 export {
   getLocationData,
-  getLocationFromHeaders, 
-  getLiteLocationFromHeaders
-} from './location-service';
+  getLocationFromHeaders,
+  getLiteLocationFromHeaders,
+} from "./location-service";
 
 // Define the context type
 export interface LocationContextType {

@@ -4,15 +4,15 @@
 
 ## Feature Overview
 
-| Field | Description |
-|-------|-------------|
-| **Name** | [Feature name] |
-| **Route Path** | [URL path for the feature, e.g., /features/example] |
-| **Priority** | [High/Medium/Low] |
-| **Dependencies** | [List of dependencies or related features] |
-| **Required Components** | [Components needed for this feature] |
-| **Author** | [Your name] |
-| **Target Completion** | [Target date] |
+| Field                   | Description                                         |
+| ----------------------- | --------------------------------------------------- |
+| **Name**                | [Feature name]                                      |
+| **Route Path**          | [URL path for the feature, e.g., /features/example] |
+| **Priority**            | [High/Medium/Low]                                   |
+| **Dependencies**        | [List of dependencies or related features]          |
+| **Required Components** | [Components needed for this feature]                |
+| **Author**              | [Your name]                                         |
+| **Target Completion**   | [Target date]                                       |
 
 ## Feature Requirements
 
@@ -53,7 +53,8 @@ ui/
     ├── skeleton.tsx        # Skeleton loading components
     └── error-fallback.tsx  # Error fallback components
 ```
-```
+
+````
 
 ## Implementation Steps
 
@@ -96,13 +97,13 @@ export default function FeaturePage() {
   return (
     <main className="container mx-auto py-12">
       <h1 className="text-3xl font-bold mb-8">Feature Name</h1>
-      
+
       {/* Static content renders immediately */}
       <section className="mb-10">
         <h2 className="text-2xl font-semibold mb-4">About This Feature</h2>
         <p>Static descriptive content about this feature...</p>
       </section>
-      
+
       {/* Dynamic content streams in with proper error handling */}
       <section>
         <h2 className="text-2xl font-semibold mb-4">Dynamic Content</h2>
@@ -115,13 +116,13 @@ export default function FeaturePage() {
     </main>
   );
 }
-```
+````
 
 ## Loading State Example
 
 ```tsx
 // app/[feature-name]/loading.tsx
-import { SkeletonHeader, SkeletonText, SkeletonCard } from '@/components/ui/skeleton';
+import { SkeletonHeader, SkeletonText, SkeletonCard } from "@/components/ui/skeleton";
 
 export default function FeatureLoading() {
   return (
@@ -146,17 +147,17 @@ export default function FeatureLoading() {
 
 ```tsx
 // app/[feature-name]/actions.ts
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-import { z } from 'zod';
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { z } from "zod";
 
 // Data validation schema
 const FormSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  message: z.string().min(10, 'Message must be at least 10 characters'),
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  message: z.string().min(10, "Message must be at least 10 characters"),
 });
 
 /**
@@ -167,42 +168,42 @@ const FormSchema = z.object({
 export async function submitForm(formData: FormData) {
   // Convert FormData to a plain object
   const rawData = {
-    name: formData.get('name'),
-    email: formData.get('email'),
-    message: formData.get('message'),
+    name: formData.get("name"),
+    email: formData.get("email"),
+    message: formData.get("message"),
   };
-  
+
   // Validate the data
   const result = FormSchema.safeParse(rawData);
-  
+
   if (!result.success) {
     return { success: false, errors: result.error.flatten().fieldErrors };
   }
-  
+
   try {
     // Security check (example)
     // Always implement proper authorization for Server Actions
     // if (!isAuthorized()) {
     //   return { success: false, errors: { form: ['Unauthorized access'] } };
     // }
-    
+
     // Process the validated data
     const savedData = await saveFormSubmission(result.data);
-    
+
     // Revalidate the page to reflect changes
-    revalidatePath('/feature-name');
-    
+    revalidatePath("/feature-name");
+
     // Optional: Redirect after submission
     // redirect(`/feature-name/thank-you/${savedData.id}`);
-    
+
     return { success: true, data: savedData };
   } catch (error) {
     // Log error server-side but don't expose details to client
-    console.error('Form submission error:', error);
-    
-    return { 
-      success: false, 
-      errors: { form: ['Failed to submit. Please try again.'] } 
+    console.error("Form submission error:", error);
+
+    return {
+      success: false,
+      errors: { form: ["Failed to submit. Please try again."] },
     };
   }
 }
@@ -211,7 +212,7 @@ export async function submitForm(formData: FormData) {
 async function saveFormSubmission(data: z.infer<typeof FormSchema>) {
   // Implementation details for saving data
   // Return saved data
-  return { id: 'generated-id', ...data };
+  return { id: "generated-id", ...data };
 }
 ```
 
@@ -219,22 +220,19 @@ async function saveFormSubmission(data: z.infer<typeof FormSchema>) {
 
 ```tsx
 // app/[feature-name]/components/feature.tsx
-import { getFeatureData } from '@/lib/feature-name/api';
-import { FeatureItem } from './feature-item';
-import type { FeatureData } from '@/lib/feature-name/types';
+import { getFeatureData } from "@/lib/feature-name/api";
+import { FeatureItem } from "./feature-item";
+import type { FeatureData } from "@/lib/feature-name/types";
 
 export async function Feature() {
   // Data fetching in Server Component
   const data = await getFeatureData();
-  
+
   return (
     <div className="feature-container">
       <div className="feature-content">
         {data.map((item: FeatureData) => (
-          <FeatureItem 
-            key={item.id}
-            item={item}
-          />
+          <FeatureItem key={item.id} item={item} />
         ))}
       </div>
     </div>
@@ -246,21 +244,19 @@ export async function Feature() {
 
 ```tsx
 // app/[feature-name]/components/interactive-element.tsx
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { submitForm } from '../actions';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { submitForm } from "../actions";
 
 export function InteractiveElement() {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   return (
     <div className="interactive-element">
-      <Button onClick={() => setIsOpen(!isOpen)}>
-        {isOpen ? 'Hide Details' : 'Show Details'}
-      </Button>
-      
+      <Button onClick={() => setIsOpen(!isOpen)}>{isOpen ? "Hide Details" : "Show Details"}</Button>
+
       {isOpen && (
         <div className="mt-4 p-4 border rounded">
           <p>Additional details or interactive content...</p>
@@ -275,8 +271,8 @@ export function InteractiveElement() {
 
 ```tsx
 // lib/[feature-name]/api.ts
-import { cache } from 'react';
-import type { FeatureData } from './types';
+import { cache } from "react";
+import type { FeatureData } from "./types";
 
 /**
  * Use React's cache for request deduplication
@@ -285,7 +281,7 @@ import type { FeatureData } from './types';
  */
 export const getFeatureData = cache(async (): Promise<FeatureData[]> => {
   // Fetch from API or database
-  const response = await fetch('https://api.example.com/feature-data', {
+  const response = await fetch("https://api.example.com/feature-data", {
     // Next.js 15 fetch options for caching
     next: {
       // Explicit opt-in to caching with revalidation period
@@ -294,11 +290,11 @@ export const getFeatureData = cache(async (): Promise<FeatureData[]> => {
       // tags: ['feature-data'], // Optional: for targeted revalidation
     },
   });
-  
+
   if (!response.ok) {
     throw new Error(`Failed to fetch feature data: ${response.statusText}`);
   }
-  
+
   return response.json();
 });
 
@@ -306,20 +302,17 @@ export const getFeatureData = cache(async (): Promise<FeatureData[]> => {
  * Fetch parallel data for a specific page
  * Using Promise.all for concurrent fetching
  */
-export async function getFeaturePageData(): Promise<{ 
-  mainData: FeatureData[],
-  relatedData: FeatureData[],
+export async function getFeaturePageData(): Promise<{
+  mainData: FeatureData[];
+  relatedData: FeatureData[];
 }> {
   // Start fetches in parallel
   const mainDataPromise = getFeatureData();
   const relatedDataPromise = getRelatedFeatureData();
-  
+
   // Wait for both to complete
-  const [mainData, relatedData] = await Promise.all([
-    mainDataPromise,
-    relatedDataPromise,
-  ]);
-  
+  const [mainData, relatedData] = await Promise.all([mainDataPromise, relatedDataPromise]);
+
   return { mainData, relatedData };
 }
 
@@ -332,27 +325,27 @@ export async function getFeatureItemById(id: string): Promise<FeatureData | null
   const response = await fetch(`https://api.example.com/feature-data/${id}`, {
     next: { revalidate: 60 },
   });
-  
+
   if (!response.ok) {
     if (response.status === 404) {
       return null; // For handling with notFound() in the route
     }
     throw new Error(`Failed to fetch feature item: ${response.statusText}`);
   }
-  
+
   return response.json();
 }
 
 // Helper function for the example above
 async function getRelatedFeatureData(): Promise<FeatureData[]> {
-  const response = await fetch('https://api.example.com/related-features', {
+  const response = await fetch("https://api.example.com/related-features", {
     next: { revalidate: 60 },
   });
-  
+
   if (!response.ok) {
     return []; // Return empty array on error rather than failing
   }
-  
+
   return response.json();
 }
 ```
@@ -371,7 +364,7 @@ export interface FeatureData {
   metadata: FeatureMetadata;
 }
 
-export type FeatureCategory = 'type1' | 'type2' | 'type3';
+export type FeatureCategory = "type1" | "type2" | "type3";
 
 export interface FeatureMetadata {
   sortOrder: number;

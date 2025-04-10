@@ -2,7 +2,7 @@
 
 /**
  * ServicesMobile Component
- * 
+ *
  * Client-side component that handles mobile carousel view of services.
  * Provides touch-friendly navigation and interaction.
  */
@@ -24,10 +24,5 @@ export function ServicesMobile({ services }: ServicesMobileProps) {
     router.push(`/contact?service=${serviceId}`);
   };
 
-  return (
-    <ServiceCarousel 
-      services={services} 
-      onSelectService={handleSelectService} 
-    />
-  );
+  return <ServiceCarousel services={services} onSelectService={handleSelectService} />;
 }

@@ -82,6 +82,7 @@ The foundational layer provides cross-cutting concerns:
 Data flows through the application as follows:
 
 1. **Server-side Data Fetching**:
+
    - Server Components fetch data during the rendering process
    - Data is fetched in parallel where possible to minimize waterfalls
    - Results are cached using React's cache() function
@@ -89,6 +90,7 @@ Data flows through the application as follows:
    - Explicit opt-in for caching in Route Handlers with `dynamic = 'force-static'`
 
 2. **Client-side State Management**:
+
    - React Context provides global state to components
    - useState/useReducer/useFormState manage local component state
    - Server/Client boundary is carefully managed to prevent serialization issues

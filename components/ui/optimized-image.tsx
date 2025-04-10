@@ -2,14 +2,14 @@
 
 /**
  * OptimizedImage Component
- * 
+ *
  * A standardized image component built on Next.js Image with best practices for:
  * - Responsive sizing
  * - WebP/AVIF format delivery
  * - Lazy loading
  * - Blur placeholders
  * - Art direction
- * 
+ *
  * This is a client component because it handles dynamic loading state
  * and progressive enhancement.
  */
@@ -51,7 +51,7 @@ export interface OptimizedImageProps {
 
 /**
  * OptimizedImage component with performance best practices
- * 
+ *
  * @param props - Component properties (see OptimizedImageProps)
  * @returns React component
  */
@@ -81,13 +81,7 @@ export function OptimizedImage({
   };
 
   return (
-    <div 
-      className={cn(
-        "relative overflow-hidden", 
-        fill ? "w-full h-full" : "",
-        className
-      )}
-    >
+    <div className={cn("relative overflow-hidden", fill ? "w-full h-full" : "", className)}>
       <Image
         src={src}
         alt={alt}
@@ -110,7 +104,7 @@ export function OptimizedImage({
 
       {/* Show placeholder until image loads */}
       {!isLoaded && !priority && (
-        <div 
+        <div
           className="absolute inset-0 bg-gray-200 dark:bg-gray-800 animate-pulse"
           aria-hidden="true"
         />

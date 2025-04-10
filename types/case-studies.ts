@@ -1,6 +1,6 @@
 /**
  * Case Studies Type Definitions
- * 
+ *
  * This file contains all type definitions related to case studies
  * across the Cyber Hand website.
  */

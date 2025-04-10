@@ -1,6 +1,6 @@
 /**
  * Homepage - Server Component Entry Point
- * 
+ *
  * This page implements Next.js 15 streaming best practices:
  * - Main page is a Server Component for improved rendering
  * - Interactive elements isolated to Client Components
@@ -11,17 +11,17 @@
  * - SEO optimized with metadata and structured data
  */
 
-import { Suspense } from 'react';
+import { Suspense } from "react";
 import { CyberLogo } from "@/components/custom/cyber-logo";
-import { HomepageButtons } from "./components/homepage-buttons";
-import { CircuitEffectsWrapper } from "./components/circuit-effects-wrapper";
+import { HomepageButtonsClient } from "./components/homepage-buttons-client";
+import { CircuitEffectsWrapperClient } from "./components/circuit-effects-wrapper-client";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ContentErrorBoundary } from "@/app/components/error-boundary";
+import { ContentErrorBoundaryClient } from "@/app/components/error-boundary-client";
 import { createMetadata } from "@/lib/seo/metadata";
 import { WebPageSchema } from "@/lib/seo/structured-data";
 import { trackPageView } from "@/lib/analytics/geolocation-tracker";
 // Import LocationConsent directly - it's properly wrapped as a client component in its definition
-import { LocationConsent } from '@/components/location';
+import { LocationConsent } from "@/components/location";
 
 /**
  * Static Hero Content Component - Server Component
@@ -35,9 +35,7 @@ function HomeHero() {
 
       {/* Headline */}
       <h1 className="text-4xl md:text-5xl lg:text-6xl mb-8 animate-fade-in">
-        <span className="cyber-gradient-text">
-          Next-Gen Digital Agency
-        </span>
+        <span className="cyber-gradient-text">Next-Gen Digital Agency</span>
       </h1>
     </div>
   );
@@ -61,8 +59,8 @@ function CircuitEffectsSkeleton() {
             top: `${20 + i * 25}%`,
             left: `${10 + i * 15}%`,
             opacity: 0.3,
-            transform: 'rotate(45deg)',
-            animationDelay: `${i * 0.15}s`
+            transform: "rotate(45deg)",
+            animationDelay: `${i * 0.15}s`,
           }}
         />
       ))}
@@ -78,7 +76,7 @@ function ButtonsSkeleton() {
   return (
     <div className="inline-flex flex-wrap gap-3 sm:gap-4 justify-center mt-6 sm:mt-8">
       <Skeleton className="h-10 w-32 bg-cyan-500/30 rounded" />
-      <Skeleton 
+      <Skeleton
         className="h-10 w-32 bg-gray-700/30 border border-gray-700/50 rounded"
         animationDelay="0.15s"
       />
@@ -91,10 +89,11 @@ function ButtonsSkeleton() {
  */
 export const metadata = createMetadata({
   // No title specified = uses the default from layout.tsx
-  description: "CyberHand is a next-generation digital agency specializing in cutting-edge web development, design, and digital marketing services.",
-  keywords: ['digital agency', 'web development', 'UI/UX design', 'digital marketing', 'CyberHand'],
+  description:
+    "CyberHand is a next-generation digital agency specializing in cutting-edge web development, design, and digital marketing services.",
+  keywords: ["digital agency", "web development", "UI/UX design", "digital marketing", "CyberHand"],
   // Homepage gets canonical without trailing slash
-  canonicalUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com',
+  canonicalUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://cyber-hand.com",
 });
 
 /**
@@ -105,7 +104,7 @@ export const metadata = createMetadata({
 export default function Home() {
   // Track page view with server-side geolocation data
   // Geolocation is captured by middleware and passed via request headers
-  trackPageView('/', 'homepage_view');
+  trackPageView("/", "homepage_view");
   return (
     <main className="relative min-h-screen flex items-center justify-center overflow-hidden cyber-circuit-bg">
       {/* Structured data for the homepage */}
@@ -127,24 +126,24 @@ export default function Home() {
         <HomeHero />
 
         {/* Interactive buttons in a Client Component with error boundary */}
-        <ContentErrorBoundary>
+        <ContentErrorBoundaryClient>
           <Suspense fallback={<ButtonsSkeleton />}>
-            <HomepageButtons />
+            <HomepageButtonsClient />
           </Suspense>
-        </ContentErrorBoundary>
+        </ContentErrorBoundaryClient>
 
         {/* Circuit effects with appropriate Suspense boundary and error handling */}
-        <ContentErrorBoundary>
+        <ContentErrorBoundaryClient>
           <Suspense fallback={<CircuitEffectsSkeleton />}>
-            <CircuitEffectsWrapper />
+            <CircuitEffectsWrapperClient />
           </Suspense>
-        </ContentErrorBoundary>
+        </ContentErrorBoundaryClient>
       </div>
-      
+
       {/* Location consent notification - already wrapped in Suspense in its implementation */}
-      <ContentErrorBoundary>
+      <ContentErrorBoundaryClient>
         <LocationConsent />
-      </ContentErrorBoundary>
+      </ContentErrorBoundaryClient>
     </main>
   );
 }

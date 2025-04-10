@@ -8,7 +8,7 @@ import { getLocationData } from "@/lib/location/location-service";
 
 /**
  * Root Layout Component - Server Component
- * 
+ *
  * Next.js 15 layout best practices:
  * - Server Component by default for improved performance
  * - Comprehensive metadata setup with separate viewport config
@@ -20,8 +20,8 @@ import { getLocationData } from "@/lib/location/location-service";
 // Structured metadata for better SEO
 export const metadata: Metadata = {
   // Base URL for resolving relative URLs for social media images
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://cyber-hand.com'),
-  
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.example.com"), // Use a placeholder domain that's clearly not production
+
   title: "CyberHand | Next-Gen Digital Agency",
   description: "Transforming digital experiences with cutting-edge solutions",
   keywords: "digital agency, web development, SEO, digital marketing, UI/UX design",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "CyberHand | Next-Gen Digital Agency",
     description: "Transforming digital experiences with cutting-edge solutions",
-    url: "https://cyberhand.com",
+    url: "/", // Use relative URL that depends on metadataBase
     siteName: "CyberHand",
     images: [
       {
@@ -72,17 +72,13 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${fontVariables.orbitron} ${fontVariables.inter}`}>
       <head>
         {/* JSON-LD Structured Data */}
         <BaseStructuredData />
-        
+
         {/* DNS prefetch for common external domains */}
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
       </head>
