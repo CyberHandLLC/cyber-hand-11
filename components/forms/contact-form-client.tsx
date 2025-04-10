@@ -90,15 +90,23 @@ export function ContactFormClient({ initialService, availableServices }: Contact
   // Display success message when form is submitted successfully
   if (response?.success) {
     return (
-      <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 text-center">
-        <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 dark:bg-green-900/50 mb-4">
-          <CheckCircleIcon className="text-green-600 dark:text-green-400" size="lg" />
+      <div className="bg-cyan-50/80 dark:bg-slate-900/90 border border-cyan-300/30 dark:border-cyan-700/40 rounded-lg p-6 text-center shadow-lg animate-fade-in relative overflow-hidden">
+        {/* Decorative success accent lines */}
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-transparent"></div>
+        <div className="absolute bottom-0 right-0 w-full h-1 bg-gradient-to-l from-cyan-500 to-transparent"></div>
+        
+        <div className="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-cyan-100/90 dark:bg-cyan-900/30 mb-4 shadow-glow p-3 animate-pulse-glow">
+          <CheckCircleIcon className="text-cyan-600 dark:text-cyan-400" size="lg" />
         </div>
-        <h3 className="text-lg font-medium text-green-800 dark:text-green-300 mb-2">
+        <h3 className="text-xl font-medium text-slate-800 dark:text-cyan-300 mb-2">
           Message Sent!
         </h3>
-        <p className="text-green-700 dark:text-green-400">{response.message}</p>
-        <Button variant="outline" className="mt-4" onClick={() => setResponse(null)}>
+        <p className="text-slate-700 dark:text-slate-300">{response.message}</p>
+        <Button 
+          variant="outline" 
+          className="mt-6 border-cyan-500/50 hover:bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 transition-all duration-300" 
+          onClick={() => setResponse(null)}
+        >
           Send Another Message
         </Button>
       </div>
@@ -108,17 +116,20 @@ export function ContactFormClient({ initialService, availableServices }: Contact
   // Input field classes that change based on validation errors
   const getInputClass = (fieldName: string) => {
     const baseClass =
-      "w-full rounded-md border bg-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500/50";
+      "w-full rounded-md bg-transparent px-3 py-2 border focus:outline-none focus:ring-2 focus:ring-cyan-400/70 transition-all duration-200";
     return fieldErrors[fieldName]
-      ? `${baseClass} border-red-500 dark:border-red-700`
-      : `${baseClass} border-gray-300 dark:border-gray-700`;
+      ? `${baseClass} border-red-500 dark:border-red-700 shadow-sm shadow-red-500/20 dark:shadow-red-700/10`
+      : `${baseClass} border-cyan-500/30 dark:border-cyan-700/40 shadow-sm hover:shadow-cyan-400/20 focus:shadow-cyan-400/30`;
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 relative">
+      {/* Subtle grid background for depth */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none -z-10"></div>
+
       {/* Show general error message if present */}
       {response && !response.success && response.message && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-700 dark:text-red-400">
+        <div className="bg-red-50/80 dark:bg-red-900/20 border border-red-300/50 dark:border-red-700/50 rounded-lg p-4 text-red-700 dark:text-red-400 shadow-sm animate-fade-in">
           {response.message}
         </div>
       )}
@@ -141,7 +152,7 @@ export function ContactFormClient({ initialService, availableServices }: Contact
             disabled={isPending}
           />
           {fieldErrors.name && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.name[0]}</p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400 animate-fade-in">{fieldErrors.name[0]}</p>
           )}
         </div>
 
@@ -162,7 +173,7 @@ export function ContactFormClient({ initialService, availableServices }: Contact
             disabled={isPending}
           />
           {fieldErrors.email && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.email[0]}</p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400 animate-fade-in">{fieldErrors.email[0]}</p>
           )}
         </div>
       </div>
@@ -225,15 +236,33 @@ export function ContactFormClient({ initialService, availableServices }: Contact
           disabled={isPending}
         ></textarea>
         {fieldErrors.message && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.message[0]}</p>
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400 animate-fade-in">{fieldErrors.message[0]}</p>
         )}
       </div>
 
       {/* Submit Button */}
-      <div>
-        <Button type="submit" variant="primary" className="w-full md:w-auto" disabled={isPending}>
-          {isPending ? "Sending..." : "Send Message"}
+      <div className="pt-2">
+        <Button 
+          type="submit" 
+          variant="primary" 
+          className="w-full md:w-auto bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-white border-0 shadow-md hover:shadow-lg hover:shadow-cyan-500/20 transition-all duration-300" 
+          disabled={isPending}
+        >
+          {isPending ? (
+            <span className="flex items-center">
+              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Sending...
+            </span>
+          ) : (
+            "Send Message"
+          )}
         </Button>
+        <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+          We'll never share your information with third parties.
+        </p>
       </div>
     </form>
   );

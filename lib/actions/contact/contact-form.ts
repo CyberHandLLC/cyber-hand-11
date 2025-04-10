@@ -15,9 +15,9 @@ import * as postmark from "postmark";
 // Create a type-safe way to access environment variables
 const env = {
   postmarkServerToken: process.env.POSTMARK_SERVER_TOKEN,
-  fromEmail: process.env.POSTMARK_FROM_EMAIL || "noreply@cyberhand.com",
-  contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@cyberhand.com",
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://cyberhand.com"
+  fromEmail: process.env.POSTMARK_FROM_EMAIL || "ap@cyber-hand.com",
+  contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "support@cyber-hand.com",
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://cyber-hand.com"
 };
 
 // Define validation schema for form data
@@ -60,7 +60,7 @@ export async function submitContactForm(formData: FormData): Promise<FormRespons
 
     // Form data is valid, process the submission
     const data = validatedData.data;
-    
+
     // Check if Postmark token is configured
     if (!env.postmarkServerToken) {
       console.error("Postmark server token is not configured");
@@ -69,11 +69,11 @@ export async function submitContactForm(formData: FormData): Promise<FormRespons
         message: "Email configuration error. Please contact the administrator.",
       };
     }
-    
+
     try {
       // Initialize the Postmark client
       const client = new postmark.ServerClient(env.postmarkServerToken);
-      
+
       // Prepare email content
       const emailContent = {
         From: env.fromEmail,
@@ -103,14 +103,14 @@ export async function submitContactForm(formData: FormData): Promise<FormRespons
         `,
         MessageStream: "outbound"
       };
-      
+
       // Send the email
       const response = await client.sendEmail(emailContent);
-      
+
       if (response.ErrorCode !== 0) {
         throw new Error(`Postmark error: ${response.Message}`);
       }
-      
+
       // Return success response
       return {
         success: true,
