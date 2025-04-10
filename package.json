@@ -14,7 +14,7 @@
     "format": "prettier --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\"",
     "format:check": "prettier --check \"./**/*.{js,jsx,ts,tsx,css,md,json}\"",
     "check-arch": "node check-architecture.js",
-    "prepare": "husky",
+    "prepare": "node -e \"try{require('.husky/check-if-ci.js')}catch(e){console.log('Skipping husky in CI environment')}\" || husky",
     "mcp:build": "docker-compose build",
     "mcp:start": "docker-compose up -d",
     "mcp:stop": "docker-compose down",
