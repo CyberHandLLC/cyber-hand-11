@@ -7,13 +7,18 @@
  * Server Actions allow forms to be submitted directly to the server
  * without client-side JavaScript, providing a more efficient and
  * progressive enhancement approach.
- * 
- * Email functionality has been added to send real emails using Nodemailer
- * and React Email components, following Next.js 15.2.4 best practices.
  */
 
 import { z } from "zod";
-import { sendContactFormEmail } from "@/lib/email/email-service";
+import * as postmark from "postmark";
+
+// Create a type-safe way to access environment variables
+const env = {
+  postmarkServerToken: process.env.POSTMARK_SERVER_TOKEN,
+  fromEmail: process.env.POSTMARK_FROM_EMAIL || "noreply@cyberhand.com",
+  contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@cyberhand.com",
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://cyberhand.com"
+};
 
 // Define validation schema for form data
 const FormSchema = z.object({
@@ -36,8 +41,8 @@ export type FormResponse = {
 /**
  * Submit contact form data
  *
- * This Server Action handles form submission, validation, processing, and email sending.
- * It can be called directly from a form using the action attribute or from client components.
+ * This Server Action handles form submission, validation, and processing.
+ * It can be called directly from a form using the action attribute.
  */
 export async function submitContactForm(formData: FormData): Promise<FormResponse> {
   try {
@@ -53,29 +58,74 @@ export async function submitContactForm(formData: FormData): Promise<FormRespons
       };
     }
 
+    // Form data is valid, process the submission
     const data = validatedData.data;
-
-    // Send email notification using our email service
-    const emailResult = await sendContactFormEmail(data);
     
-    if (!emailResult.success) {
-      console.error("Failed to send contact form email:", emailResult.error);
-      
-      // Return a user-friendly error message while logging the actual error
+    // Check if Postmark token is configured
+    if (!env.postmarkServerToken) {
+      console.error("Postmark server token is not configured");
       return {
         success: false,
-        message: "We couldn't send your message at this time. Please try again later or contact us directly.",
+        message: "Email configuration error. Please contact the administrator.",
       };
     }
-
-    // Return success response
-    return {
-      success: true,
-      message: "Thank you for your message! We will get back to you soon.",
-    };
+    
+    try {
+      // Initialize the Postmark client
+      const client = new postmark.ServerClient(env.postmarkServerToken);
+      
+      // Prepare email content
+      const emailContent = {
+        From: env.fromEmail,
+        To: env.contactEmail,
+        Subject: `New Contact Form Submission from ${data.name}`,
+        TextBody: `
+          Name: ${data.name}
+          Email: ${data.email}
+          ${data.company ? `Company: ${data.company}\n` : ""}
+          ${data.service ? `Service: ${data.service}\n` : ""}
+          
+          Message:
+          ${data.message}
+          
+          Sent from the contact form at ${env.siteUrl}
+        `,
+        HtmlBody: `
+          <h2>New Contact Form Submission</h2>
+          <p><strong>Name:</strong> ${data.name}</p>
+          <p><strong>Email:</strong> ${data.email}</p>
+          ${data.company ? `<p><strong>Company:</strong> ${data.company}</p>` : ""}
+          ${data.service ? `<p><strong>Service:</strong> ${data.service}</p>` : ""}
+          <p><strong>Message:</strong></p>
+          <p>${data.message.replace(/\n/g, "<br>")}</p>
+          <hr>
+          <p><em>Sent from the contact form at ${env.siteUrl}</em></p>
+        `,
+        MessageStream: "outbound"
+      };
+      
+      // Send the email
+      const response = await client.sendEmail(emailContent);
+      
+      if (response.ErrorCode !== 0) {
+        throw new Error(`Postmark error: ${response.Message}`);
+      }
+      
+      // Return success response
+      return {
+        success: true,
+        message: "Thank you for your message! We will get back to you soon.",
+      };
+    } catch (emailError) {
+      console.error("Failed to send email:", emailError);
+      return {
+        success: false,
+        message: "Unable to send your message at this time. Please try again later.",
+      };
+    }
   } catch (error) {
-    // Log the error for monitoring and debugging
-    console.error("Unexpected error in contact form submission:", error);
+    // Log the error for server-side debugging
+    console.error("Contact form error:", error);
 
     // Return a user-friendly error response
     return {
