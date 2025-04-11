@@ -77,7 +77,7 @@ function TestComponentSkeleton() {
 }
 
 // Client Component for interactivity (leaf node)
-'use client'
+'use client';
 
 import { useState } from 'react'
 
