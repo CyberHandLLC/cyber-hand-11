@@ -7,17 +7,24 @@
  * Server Actions allow forms to be submitted directly to the server
  * without client-side JavaScript, providing a more efficient and
  * progressive enhancement approach.
+ *
+ * Following Next.js 15.2.4 best practices:
+ * - Uses Zod for schema validation
+ * - Type-safe environment variables
+ * - Proper error handling with structured responses
+ * - Uses a single email provider (Postmark) for consistency
  */
 
 import { z } from "zod";
-import * as postmark from "postmark";
+import { ServerClient } from "postmark";
+import { cache } from "react";
 
 // Create a type-safe way to access environment variables
 const env = {
   postmarkServerToken: process.env.POSTMARK_SERVER_TOKEN,
   fromEmail: process.env.POSTMARK_FROM_EMAIL || "ap@cyber-hand.com",
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "support@cyber-hand.com",
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://cyber-hand.com"
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://cyber-hand.com",
 };
 
 // Define validation schema for form data
@@ -32,11 +39,12 @@ const FormSchema = z.object({
 // Types for form data and response
 export type FormData = z.infer<typeof FormSchema>;
 
-export type FormResponse = {
+export interface FormResponse {
   success: boolean;
   errors?: Record<string, string[]>;
   message?: string;
-};
+  code?: string; // For more specific error handling on the client
+}
 
 /**
  * Submit contact form data
@@ -71,8 +79,8 @@ export async function submitContactForm(formData: FormData): Promise<FormRespons
     }
 
     try {
-      // Initialize the Postmark client
-      const client = new postmark.ServerClient(env.postmarkServerToken);
+      // Get cached Postmark client
+      const client = getPostmarkClient(env.postmarkServerToken);
 
       // Prepare email content
       const emailContent = {
@@ -101,7 +109,7 @@ export async function submitContactForm(formData: FormData): Promise<FormRespons
           <hr>
           <p><em>Sent from the contact form at ${env.siteUrl}</em></p>
         `,
-        MessageStream: "outbound"
+        MessageStream: "outbound",
       };
 
       // Send the email
@@ -139,9 +147,11 @@ export async function submitContactForm(formData: FormData): Promise<FormRespons
  * Get available services (for form dropdown)
  *
  * This Server Action fetches the list of services for the contact form.
+ * Cached using React's cache() to optimize performance across requests.
  */
-export async function getAvailableServices(): Promise<string[]> {
+export const getAvailableServices = cache(async (): Promise<string[]> => {
   // In a real application, this would fetch from a database or API
+  // Using React's cache() for request deduplication
   return [
     "Web Development",
     "Digital Marketing",
@@ -150,4 +160,14 @@ export async function getAvailableServices(): Promise<string[]> {
     "Mobile App Development",
     "Technical Consulting",
   ];
-}
+});
+
+/**
+ * Create a cached Postmark client to prevent recreating it on each request
+ */
+const getPostmarkClient = cache((serverToken: string): ServerClient => {
+  if (!serverToken) {
+    throw new Error("Postmark server token is required");
+  }
+  return new ServerClient(serverToken);
+});

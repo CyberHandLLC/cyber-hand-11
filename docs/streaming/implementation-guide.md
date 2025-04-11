@@ -232,6 +232,7 @@ Our data fetching approach for streaming uses Next.js 15's Server Component patt
 
 export default function CaseStudiesLoading() {
 return (
+
 <div className="py-24 px-4 md:px-6">
 {/_ Static header placeholder _/}
 <div className="text-center max-w-3xl mx-auto mb-16">

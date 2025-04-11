@@ -11,6 +11,7 @@ Our project enforces code quality using three specialized MCP validators:
 3. **Style Validator**: Checks that code follows our styling standards
 
 All validators can be used through:
+
 - Command-line scripts
 - CI/CD pipelines
 - Pre-commit hooks
@@ -23,16 +24,19 @@ All validators can be used through:
 ### Rules Enforced
 
 - **Component Organization**:
+
   - Server Components for data fetching
   - Client Components only at leaf nodes
   - Proper Suspense boundaries following Next.js 15 streaming patterns
   - UI components separate from data fetching logic
 
 - **File Size Limits**:
+
   - Files must not exceed 500 lines
   - Functions should be modular and focused
 
 - **Component Naming Conventions**:
+
   - Client components follow `-client.tsx` suffix pattern
   - Page components follow proper routing structure
   - Component names must match their functionality
@@ -67,11 +71,13 @@ POST http://localhost:3901/v1
 ### Rules Enforced
 
 - **Package Versioning**:
+
   - React 19 compatibility
   - Next.js 15.2.4 compatibility
   - All TypeScript dependencies aligned
 
 - **Import Rules**:
+
   - Server components cannot import client components
   - Client components can only import specific server utilities
   - No direct imports from restricted paths
@@ -110,11 +116,13 @@ POST http://localhost:8002/v1
 ### Rules Enforced
 
 - **TypeScript Standards**:
+
   - TypeScript interfaces instead of 'any'
   - Underscore prefix for unused variables
   - Explicit typing
 
 - **Code Formatting**:
+
   - ESLint + Prettier integration
   - Consistent spacing and indentation
   - Maximum line length

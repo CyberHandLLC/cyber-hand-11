@@ -15,7 +15,7 @@ import { Suspense } from "react";
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
 import { ResourcesContent } from "./components/resources-content";
 import { HeadingSkeleton, TextSkeleton, Skeleton } from "@/components/ui/skeleton";
-import { ContentErrorBoundary } from "@/app/components/error-boundary";
+import { ContentErrorBoundaryClient } from "@/components/ui/client/error-boundary-client";
 
 /**
  * ResourcesContentSkeleton Component
@@ -76,11 +76,11 @@ export default function ResourcesPage() {
       {/* Hero section with coming soon messaging */}
       <section className="py-24 md:py-32 pb-32">
         <SectionContainer>
-          <ContentErrorBoundary>
+          <ContentErrorBoundaryClient>
             <Suspense fallback={<ResourcesContentSkeleton />}>
               <ResourcesContent />
             </Suspense>
-          </ContentErrorBoundary>
+          </ContentErrorBoundaryClient>
         </SectionContainer>
       </section>
     </PageLayout>

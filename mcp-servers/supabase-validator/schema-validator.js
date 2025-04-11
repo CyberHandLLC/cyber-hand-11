@@ -1,6 +1,6 @@
 /**
  * Supabase Schema Validator
- * 
+ *
  * This module will validate the consistency between TypeScript types
  * and Supabase database schema. This is a placeholder implementation that
  * will be expanded when the Supabase backend is fully implemented.
@@ -12,9 +12,9 @@ async function validateSchemaConsistency(projectPath, options = {}) {
     success: true,
     errors: [],
     warnings: [],
-    summary: "Schema validation not yet implemented - pending Supabase integration"
+    summary: "Schema validation not yet implemented - pending Supabase integration",
   };
-  
+
   return defaultResults;
 }
 
@@ -25,7 +25,7 @@ async function checkTableRLS(tableName, options = {}) {
     hasRLS: null,
     policies: [],
     isSecure: null,
-    message: "RLS check not yet implemented - pending Supabase integration"
+    message: "RLS check not yet implemented - pending Supabase integration",
   };
 }
 
@@ -36,7 +36,7 @@ async function validateSecurityPatterns(projectPath, options = {}) {
     serviceKeyExposed: false,
     missingRLS: [],
     warnings: [],
-    summary: "Security validation not yet implemented - pending Supabase integration"
+    summary: "Security validation not yet implemented - pending Supabase integration",
   };
 }
 
@@ -47,7 +47,7 @@ async function analyzePerformance(projectPath, options = {}) {
     missingIndexes: [],
     n1Queries: [],
     recommendations: [],
-    summary: "Performance analysis not yet implemented - pending Supabase integration"
+    summary: "Performance analysis not yet implemented - pending Supabase integration",
   };
 }
 
@@ -55,5 +55,5 @@ module.exports = {
   validateSchemaConsistency,
   checkTableRLS,
   validateSecurityPatterns,
-  analyzePerformance
+  analyzePerformance,
 };

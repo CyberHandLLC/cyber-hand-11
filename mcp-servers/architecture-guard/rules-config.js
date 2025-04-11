@@ -1,6 +1,6 @@
 /**
  * Architecture Guard Rule Configuration
- * 
+ *
  * This file defines the architecture validation rules for the CyberHand project
  * based on Next.js 15.2.4/React 19 best practices and project requirements.
  */
@@ -11,20 +11,15 @@ module.exports = {
     // Client components should have -client suffix or be in /ui/ directory
     clientComponentNaming: {
       enabled: true,
-      patterns: [
-        { suffix: '-client', directories: ['app'] },
-        { directories: ['components/ui'] }
-      ],
-      severity: 'warning'
+      patterns: [{ suffix: "-client", directories: ["app"] }, { directories: ["components/ui"] }],
+      severity: "warning",
     },
     // Server components shouldn't have client-specific patterns
     serverComponentRestrictions: {
       enabled: true,
-      patterns: [
-        { noPrefix: 'use', noSuffix: '-client' }
-      ],
-      severity: 'error'
-    }
+      patterns: [{ noPrefix: "use", noSuffix: "-client" }],
+      severity: "error",
+    },
   },
 
   // Component organization rules
@@ -33,14 +28,14 @@ module.exports = {
     maxLinesPerFile: {
       enabled: true,
       limit: 500,
-      severity: 'warning'
+      severity: "warning",
     },
     // Components must be properly exported
     exportRules: {
       enabled: true,
       requireNamedOrDefaultExport: true,
-      severity: 'warning'
-    }
+      severity: "warning",
+    },
   },
 
   // React/Next.js best practices
@@ -50,20 +45,20 @@ module.exports = {
       enabled: true,
       requireDependencyArray: true,
       requireCleanupForEmptyDeps: true,
-      severity: 'warning'
+      severity: "warning",
     },
     // Suspense boundaries should be wrapped with error boundaries
     suspenseBoundaries: {
       enabled: true,
       requireErrorBoundary: true,
-      severity: 'warning'
+      severity: "warning",
     },
     // No using document/window in server components
     browserAPIs: {
       enabled: true,
       restrictInServerComponents: true,
-      severity: 'error'
-    }
+      severity: "error",
+    },
   },
 
   // Import/dependency rules
@@ -72,14 +67,18 @@ module.exports = {
     restrictedImports: {
       enabled: true,
       patterns: [
-        { source: '*/components/(?!.*-client).*', target: '*/components/*-client*', severity: 'error' }
-      ]
+        {
+          source: "*/components/(?!.*-client).*",
+          target: "*/components/*-client*",
+          severity: "error",
+        },
+      ],
     },
     // Restrict using Next.js Server-only in client components
     serverOnlyImports: {
       enabled: true,
-      severity: 'error'
-    }
+      severity: "error",
+    },
   },
 
   // Security practices
@@ -88,15 +87,18 @@ module.exports = {
     hardcodedSecrets: {
       enabled: true,
       patterns: [
-        { pattern: '(api[_-]?key|secret|password|token).*[\'"][a-zA-Z0-9_\\-]{20,}[\'"]', severity: 'error' }
-      ]
+        {
+          pattern: "(api[_-]?key|secret|password|token).*['\"][a-zA-Z0-9_\\-]{20,}['\"]",
+          severity: "error",
+        },
+      ],
     },
     // Use environment variables properly
     environmentVariables: {
       enabled: true,
       enforceNaming: true,
-      severity: 'warning'
-    }
+      severity: "warning",
+    },
   },
 
   // Style and formatting rules (as architecture/structural concerns)
@@ -104,20 +106,20 @@ module.exports = {
     // Consistent use of semicolons
     semicolons: {
       enabled: true,
-      severity: 'warning'
+      severity: "warning",
     },
     // Limit line length
     lineLength: {
       enabled: true,
       maxLength: 100,
-      severity: 'warning'
+      severity: "warning",
     },
     // Require type annotations for functions
     typeAnnotations: {
       enabled: true,
       requireForFunctions: true,
-      severity: 'warning'
-    }
+      severity: "warning",
+    },
   },
 
   // Next.js 15 specific rules
@@ -126,17 +128,17 @@ module.exports = {
     streamingPatterns: {
       enabled: true,
       requireSuspenseBoundaries: true,
-      severity: 'warning'
+      severity: "warning",
     },
     // Use React's cache() for deduplication
     cacheDeduplication: {
       enabled: true,
-      severity: 'warning'
+      severity: "warning",
     },
     // Separate UI components from data fetching
     separateDataFetching: {
       enabled: true,
-      severity: 'warning'
-    }
-  }
+      severity: "warning",
+    },
+  },
 };

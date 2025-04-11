@@ -1,25 +1,25 @@
 #!/usr/bin/env node
 /**
  * Install Git pre-commit hooks
- * 
+ *
  * This script sets up Husky and adds MCP validation hooks
  */
-const { execSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+const { execSync } = require("child_process");
+const fs = require("fs");
+const path = require("path");
 
-console.log('Setting up pre-commit hooks for MCP validation...');
+console.log("Setting up pre-commit hooks for MCP validation...");
 
 // Install required packages if not present
 try {
-  console.log('Installing husky and lint-staged...');
-  execSync('npm install --save-dev husky lint-staged');
-  console.log('Adding husky prepare script...');
+  console.log("Installing husky and lint-staged...");
+  execSync("npm install --save-dev husky lint-staged");
+  console.log("Adding husky prepare script...");
   execSync('npm pkg set scripts.prepare="husky install"');
-  console.log('Running prepare to set up husky...');
-  execSync('npm run prepare');
+  console.log("Running prepare to set up husky...");
+  execSync("npm run prepare");
 } catch (error) {
-  console.error('Failed to install husky:', error.message);
+  console.error("Failed to install husky:", error.message);
   process.exit(1);
 }
 
@@ -44,14 +44,14 @@ const lintstagedConfig = `module.exports = {
 };
 `;
 
-fs.writeFileSync(path.join(process.cwd(), '.lintstagedrc.js'), lintstagedConfig);
-console.log('Created .lintstagedrc.js');
+fs.writeFileSync(path.join(process.cwd(), ".lintstagedrc.js"), lintstagedConfig);
+console.log("Created .lintstagedrc.js");
 
 // Create the pre-commit hook
 try {
-  console.log('Creating pre-commit hook...');
+  console.log("Creating pre-commit hook...");
   execSync('npx husky add .husky/pre-commit "npx lint-staged"');
-  
+
   // Create Docker check script
   const dockerCheckScript = `#!/usr/bin/env node
 /**
@@ -143,43 +143,45 @@ async function main() {
 main();
 `;
 
-  fs.writeFileSync(path.join(process.cwd(), 'scripts', 'check-docker.js'), dockerCheckScript);
-  console.log('Created Docker check script');
-  
+  fs.writeFileSync(path.join(process.cwd(), "scripts", "check-docker.js"), dockerCheckScript);
+  console.log("Created Docker check script");
+
   // Add the Docker check to the pre-commit hook
-  const preCommitFile = path.join(process.cwd(), '.husky', 'pre-commit');
-  let preCommitContent = fs.readFileSync(preCommitFile, 'utf8');
-  preCommitContent = preCommitContent.replace('npx lint-staged', 'node scripts/check-docker.js && npx lint-staged');
+  const preCommitFile = path.join(process.cwd(), ".husky", "pre-commit");
+  let preCommitContent = fs.readFileSync(preCommitFile, "utf8");
+  preCommitContent = preCommitContent.replace(
+    "npx lint-staged",
+    "node scripts/check-docker.js && npx lint-staged"
+  );
   fs.writeFileSync(preCommitFile, preCommitContent);
-  console.log('Updated pre-commit hook to check Docker status');
-  
+  console.log("Updated pre-commit hook to check Docker status");
+
   // Add dependencies to the validate.js script
-  const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
+  const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), "package.json"), "utf8"));
   const devDependencies = packageJson.devDependencies || {};
-  
-  if (!devDependencies['node-fetch']) {
-    console.log('Adding node-fetch dependency...');
-    execSync('npm install --save-dev node-fetch');
+
+  if (!devDependencies["node-fetch"]) {
+    console.log("Adding node-fetch dependency...");
+    execSync("npm install --save-dev node-fetch");
   }
-  
-  if (!devDependencies['commander']) {
-    console.log('Adding commander dependency...');
-    execSync('npm install --save-dev commander');
+
+  if (!devDependencies["commander"]) {
+    console.log("Adding commander dependency...");
+    execSync("npm install --save-dev commander");
   }
-  
-  console.log('✅ Pre-commit hooks set up successfully!');
-  console.log(' ');
-  console.log('How to use:');
-  console.log('1. Ensure Docker is running before you commit');
-  console.log('2. Commit your changes normally - validation will run automatically');
-  console.log('3. If you want to bypass validation: git commit --no-verify');
-  console.log(' ');
-  console.log('To test your setup:');
-  console.log('1. Make a minor change to a file');
+
+  console.log("✅ Pre-commit hooks set up successfully!");
+  console.log(" ");
+  console.log("How to use:");
+  console.log("1. Ensure Docker is running before you commit");
+  console.log("2. Commit your changes normally - validation will run automatically");
+  console.log("3. If you want to bypass validation: git commit --no-verify");
+  console.log(" ");
+  console.log("To test your setup:");
+  console.log("1. Make a minor change to a file");
   console.log('2. Try to commit it: git add . && git commit -m "test hooks"');
-  console.log('3. You should see the validation run before the commit completes');
-  
+  console.log("3. You should see the validation run before the commit completes");
 } catch (error) {
-  console.error('Failed to set up pre-commit hooks:', error.message);
+  console.error("Failed to set up pre-commit hooks:", error.message);
   process.exit(1);
 }

@@ -1,65 +1,65 @@
 /**
  * Standalone MCP Servers Startup Script
- * 
+ *
  * This script starts all three simplified MCP servers for testing purposes.
  */
 
-const { spawn } = require('child_process');
-const path = require('path');
+const { spawn } = require("child_process");
+const path = require("path");
 
 // Configuration for MCP servers
 const servers = [
   {
-    name: 'Architecture Guard',
-    cwd: path.join(__dirname, 'architecture-guard'),
-    command: 'node',
-    args: ['standalone-server.js'],
-    env: { PORT: '8001', NODE_ENV: 'development' }
+    name: "Architecture Guard",
+    cwd: path.join(__dirname, "architecture-guard"),
+    command: "node",
+    args: ["standalone-server.js"],
+    env: { PORT: "8001", NODE_ENV: "development" },
   },
   {
-    name: 'Dependency Guard',
-    cwd: path.join(__dirname, 'dependency-validator'),
-    command: 'node',
-    args: ['standalone-server.js'],
-    env: { PORT: '8002', NODE_ENV: 'development' }
+    name: "Dependency Guard",
+    cwd: path.join(__dirname, "dependency-validator"),
+    command: "node",
+    args: ["standalone-server.js"],
+    env: { PORT: "8002", NODE_ENV: "development" },
   },
   {
-    name: 'Style Validator',
-    cwd: path.join(__dirname, 'style-validator'),
-    command: 'node',
-    args: ['standalone-server.js'],
-    env: { PORT: '8003', NODE_ENV: 'development' }
-  }
+    name: "Style Validator",
+    cwd: path.join(__dirname, "style-validator"),
+    command: "node",
+    args: ["standalone-server.js"],
+    env: { PORT: "8003", NODE_ENV: "development" },
+  },
 ];
 
 // Start each server and handle output
-servers.forEach(server => {
+servers.forEach((server) => {
   console.log(`Starting ${server.name} on port ${server.env.PORT}...`);
-  
+
   const env = { ...process.env, ...server.env };
-  const proc = spawn(server.command, server.args, { 
-    cwd: server.cwd, 
+  const proc = spawn(server.command, server.args, {
+    cwd: server.cwd,
     env,
-    stdio: 'pipe'
+    stdio: "pipe",
   });
-  
-  proc.stdout.on('data', (data) => {
+
+  proc.stdout.on("data", (data) => {
     console.log(`[${server.name}] ${data.toString().trim()}`);
   });
-  
-  proc.stderr.on('data', (data) => {
+
+  proc.stderr.on("data", (data) => {
     console.error(`[${server.name}] ERROR: ${data.toString().trim()}`);
   });
-  
-  proc.on('close', (code) => {
+
+  proc.on("close", (code) => {
     console.log(`[${server.name}] process exited with code ${code}`);
   });
-  
+
   // Handle graceful shutdown
-  process.on('SIGINT', () => {
+  process.on("SIGINT", () => {
     console.log(`Stopping ${server.name}...`);
-    proc.kill('SIGINT');
+    proc.kill("SIGINT");
   });
 });
 
-console.log('All MCP servers started. Press Ctrl+C to stop all servers.');
+console.log("All MCP servers started. Press Ctrl+C to stop all servers.");

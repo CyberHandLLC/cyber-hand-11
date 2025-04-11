@@ -339,69 +339,69 @@ Track style dependencies, especially for:
 
 ### Package Dependencies
 
-| Package                          | Version   | Purpose                                       | Used By                                         |
-|----------------------------------|-----------|-----------------------------------------------|------------------------------------------------|
-| `@supabase/auth-helpers-nextjs`  | ^0.8.1    | Authentication helpers for Next.js             | Auth flows, Session management                  |
-| `@supabase/supabase-js`          | ^2.39.0   | Core Supabase client                          | Database operations, Real-time subscriptions    |
-| `@stripe/stripe-js`              | ^2.2.0    | Client-side Stripe integration                | Payment form, Checkout components               |
-| `stripe`                         | ^14.5.0   | Server-side Stripe API handling               | Webhook handlers, Subscription management       |
-| `zod`                            | ^3.22.4   | Schema validation                             | Form validation, API request/response validation|
-| `react-hook-form`                | ^7.48.2   | Form state management                         | All client-side forms                          |
-| `@tanstack/react-query`          | ^4.36.1   | Data fetching and caching                     | Client components requiring data fetching       |
-| `recharts`                       | ^2.10.3   | Data visualization components                 | Analytics dashboards, Reporting components      |
-| `@heroicons/react`               | ^2.0.18   | Icon components                               | UI elements throughout the application         |
+| Package                         | Version | Purpose                            | Used By                                          |
+| ------------------------------- | ------- | ---------------------------------- | ------------------------------------------------ |
+| `@supabase/auth-helpers-nextjs` | ^0.8.1  | Authentication helpers for Next.js | Auth flows, Session management                   |
+| `@supabase/supabase-js`         | ^2.39.0 | Core Supabase client               | Database operations, Real-time subscriptions     |
+| `@stripe/stripe-js`             | ^2.2.0  | Client-side Stripe integration     | Payment form, Checkout components                |
+| `stripe`                        | ^14.5.0 | Server-side Stripe API handling    | Webhook handlers, Subscription management        |
+| `zod`                           | ^3.22.4 | Schema validation                  | Form validation, API request/response validation |
+| `react-hook-form`               | ^7.48.2 | Form state management              | All client-side forms                            |
+| `@tanstack/react-query`         | ^4.36.1 | Data fetching and caching          | Client components requiring data fetching        |
+| `recharts`                      | ^2.10.3 | Data visualization components      | Analytics dashboards, Reporting components       |
+| `@heroicons/react`              | ^2.0.18 | Icon components                    | UI elements throughout the application           |
 
 ### Component Dependencies
 
 #### Authentication Components
 
-| Component                   | Location                                     | Dependents                                    | Type             |
-|-----------------------------|----------------------------------------------|-----------------------------------------------|------------------|
-| `AuthProvider`              | `components/auth/auth-provider.tsx`          | `app/layout.tsx`                              | Client Component |
-| `LoginForm`                 | `components/auth/login-form.tsx`             | `app/(auth)/login/page.tsx`                   | Client Component |
-| `RegisterForm`              | `components/auth/register-form.tsx`          | `app/(auth)/register/page.tsx`                | Client Component |
-| `AuthGuard`                 | `components/auth/auth-guard.tsx`             | Protected page layouts                         | Client Component |
+| Component      | Location                            | Dependents                     | Type             |
+| -------------- | ----------------------------------- | ------------------------------ | ---------------- |
+| `AuthProvider` | `components/auth/auth-provider.tsx` | `app/layout.tsx`               | Client Component |
+| `LoginForm`    | `components/auth/login-form.tsx`    | `app/(auth)/login/page.tsx`    | Client Component |
+| `RegisterForm` | `components/auth/register-form.tsx` | `app/(auth)/register/page.tsx` | Client Component |
+| `AuthGuard`    | `components/auth/auth-guard.tsx`    | Protected page layouts         | Client Component |
 
 #### Dashboard Components
 
-| Component                   | Location                                     | Dependents                                    | Type             |
-|-----------------------------|----------------------------------------------|-----------------------------------------------|------------------|
-| `DashboardLayout`           | `app/(dashboard)/layout.tsx`                 | All dashboard pages                           | Server Component |
-| `ClientDashboard`           | `components/dashboard/client-dashboard.tsx`  | `app/(dashboard)/page.tsx`                    | Server Component |
-| `AdminDashboard`            | `components/dashboard/admin-dashboard.tsx`   | `app/(admin)/page.tsx`                        | Server Component |
-| `ServiceRequestTable`       | `components/dashboard/service-request.tsx`   | Dashboard pages                               | Client Component |
-| `ServiceStatusCard`         | `components/dashboard/service-status-card.tsx` | Dashboard pages                             | Server Component |
+| Component             | Location                                       | Dependents                 | Type             |
+| --------------------- | ---------------------------------------------- | -------------------------- | ---------------- |
+| `DashboardLayout`     | `app/(dashboard)/layout.tsx`                   | All dashboard pages        | Server Component |
+| `ClientDashboard`     | `components/dashboard/client-dashboard.tsx`    | `app/(dashboard)/page.tsx` | Server Component |
+| `AdminDashboard`      | `components/dashboard/admin-dashboard.tsx`     | `app/(admin)/page.tsx`     | Server Component |
+| `ServiceRequestTable` | `components/dashboard/service-request.tsx`     | Dashboard pages            | Client Component |
+| `ServiceStatusCard`   | `components/dashboard/service-status-card.tsx` | Dashboard pages            | Server Component |
 
 #### Payment Components
 
-| Component                   | Location                                     | Dependents                                    | Type             |
-|-----------------------------|----------------------------------------------|-----------------------------------------------|------------------|
-| `CheckoutButton`            | `components/payment/checkout-button.tsx`     | Service pages                                 | Client Component |
-| `SubscriptionManager`       | `components/payment/subscription-manager.tsx`| Account pages                                 | Client Component |
-| `PaymentHistoryTable`       | `components/payment/payment-history.tsx`     | Account pages                                 | Server Component |
-| `InvoiceViewer`             | `components/payment/invoice-viewer.tsx`      | Account pages                                 | Server Component |
+| Component             | Location                                      | Dependents    | Type             |
+| --------------------- | --------------------------------------------- | ------------- | ---------------- |
+| `CheckoutButton`      | `components/payment/checkout-button.tsx`      | Service pages | Client Component |
+| `SubscriptionManager` | `components/payment/subscription-manager.tsx` | Account pages | Client Component |
+| `PaymentHistoryTable` | `components/payment/payment-history.tsx`      | Account pages | Server Component |
+| `InvoiceViewer`       | `components/payment/invoice-viewer.tsx`       | Account pages | Server Component |
 
 ### Database Schema Dependencies
 
-| Table                   | Purpose                                             | Relations                            | Security                      |
-|-------------------------|-----------------------------------------------------|--------------------------------------|-------------------------------|
-| `auth.users`            | Built-in Supabase auth table for user accounts      | Parent table for all user relations  | Managed by Supabase Auth     |
-| `client_records`        | Extended client information and billing details     | Foreign key to `auth.users.id`       | RLS policies by user role    |
-| `projects`              | Client service projects and deliverables            | Foreign key to `client_records.id`   | RLS policies by user role    |
-| `service_packages`      | Available service tiers and offerings               | Referenced by `projects`             | Public read, admin write     |
-| `invoices`              | Generated client invoices and payment records       | Foreign key to `client_records.id`   | RLS policies by user role    |
-| `subscriptions`         | Recurring subscription details                      | Foreign key to `client_records.id`   | RLS policies by user role    |
-| `website_analytics`     | Performance metrics for client websites             | Foreign key to `projects.id`         | RLS policies by user role    |
+| Table               | Purpose                                         | Relations                           | Security                  |
+| ------------------- | ----------------------------------------------- | ----------------------------------- | ------------------------- |
+| `auth.users`        | Built-in Supabase auth table for user accounts  | Parent table for all user relations | Managed by Supabase Auth  |
+| `client_records`    | Extended client information and billing details | Foreign key to `auth.users.id`      | RLS policies by user role |
+| `projects`          | Client service projects and deliverables        | Foreign key to `client_records.id`  | RLS policies by user role |
+| `service_packages`  | Available service tiers and offerings           | Referenced by `projects`            | Public read, admin write  |
+| `invoices`          | Generated client invoices and payment records   | Foreign key to `client_records.id`  | RLS policies by user role |
+| `subscriptions`     | Recurring subscription details                  | Foreign key to `client_records.id`  | RLS policies by user role |
+| `website_analytics` | Performance metrics for client websites         | Foreign key to `projects.id`        | RLS policies by user role |
 
 ### API Route Dependencies
 
-| Route Handler                | Location                                  | Purpose                                    | Dependencies                           |
-|------------------------------|-------------------------------------------|--------------------------------------------|-----------------------------------------|
-| `auth/callback`              | `app/api/auth/callback/route.ts`          | Supabase Auth callback handling            | Supabase Auth                         |
-| `webhooks/stripe`            | `app/api/webhooks/stripe/route.ts`        | Stripe webhook handling                    | Stripe, Supabase                       |
-| `services/request`           | `app/api/services/request/route.ts`       | Service request submission                 | Zod, Supabase                          |
-| `payment/create-checkout`    | `app/api/payment/create-checkout/route.ts`| Create Stripe checkout sessions           | Stripe, Supabase                       |
-| `analytics/website`          | `app/api/analytics/website/route.ts`      | Website performance metrics               | Supabase                               |
+| Route Handler             | Location                                   | Purpose                         | Dependencies     |
+| ------------------------- | ------------------------------------------ | ------------------------------- | ---------------- |
+| `auth/callback`           | `app/api/auth/callback/route.ts`           | Supabase Auth callback handling | Supabase Auth    |
+| `webhooks/stripe`         | `app/api/webhooks/stripe/route.ts`         | Stripe webhook handling         | Stripe, Supabase |
+| `services/request`        | `app/api/services/request/route.ts`        | Service request submission      | Zod, Supabase    |
+| `payment/create-checkout` | `app/api/payment/create-checkout/route.ts` | Create Stripe checkout sessions | Stripe, Supabase |
+| `analytics/website`       | `app/api/analytics/website/route.ts`       | Website performance metrics     | Supabase         |
 
 ## Next Steps
 

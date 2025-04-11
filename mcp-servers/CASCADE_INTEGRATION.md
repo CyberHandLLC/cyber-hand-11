@@ -63,22 +63,26 @@ Example prompt: "Check if my component follows the project's style guidelines."
 ### Before Coding
 
 Ask Cascade to explain architectural patterns:
+
 - "What are the architectural guidelines for creating a new Next.js 15 component in this project?"
 - "How should I structure a streaming-compatible page with proper Suspense boundaries?"
 
 ### During Development
 
 Request architecture validation:
+
 - "Can you check if this component follows our architecture rules?"
 - "Is there a better way to organize this code based on our project guidelines?"
 
 Validate dependencies:
+
 - "Are these imports valid according to our architecture?"
 - "Is it okay to import this component here or should I create an abstraction?"
 
 ### Before Committing
 
 Run comprehensive validation:
+
 - "Validate all my changes against our architecture, dependency, and style rules."
 - "Are there any issues I should fix before committing this code?"
 

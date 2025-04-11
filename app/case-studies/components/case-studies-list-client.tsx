@@ -33,6 +33,8 @@ export function CaseStudiesListClient({ caseStudies, _industries }: CaseStudiesL
     } else {
       setFilteredStudies(caseStudies);
     }
+
+    // No cleanup needed for this effect as it doesn't create any subscriptions or timers
   }, [caseStudies, activeFilter]);
 
   // Listen for filter changes from URL or filter components
@@ -44,7 +46,28 @@ export function CaseStudiesListClient({ caseStudies, _industries }: CaseStudiesL
     if (industryParam && _industries.includes(industryParam)) {
       setActiveFilter(industryParam);
     }
-  }, [_industries]);
+
+    // Set up URL change listener for React 19 compliance
+    const handleUrlChange = () => {
+      const newParams = new URLSearchParams(window.location.search);
+      const newIndustryParam = newParams.get("industry");
+
+      if (newIndustryParam && _industries.includes(newIndustryParam)) {
+        setActiveFilter(newIndustryParam);
+      } else if (!newIndustryParam && activeFilter) {
+        setActiveFilter(null);
+      }
+    };
+
+    // Add event listener for popstate (browser navigation)
+    window.addEventListener("popstate", handleUrlChange);
+
+    // Cleanup function to remove event listener when component unmounts
+    // This prevents memory leaks in React 19 concurrency mode
+    return () => {
+      window.removeEventListener("popstate", handleUrlChange);
+    };
+  }, [_industries, activeFilter]);
 
   return (
     <div className="mt-8">

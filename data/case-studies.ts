@@ -1,4 +1,4 @@
-import { CaseStudyProps } from "@/components/custom/case-study-card";
+import { CaseStudyProps } from "@/types/case-studies";
 
 export const caseStudies: CaseStudyProps[] = [
   {
@@ -13,6 +13,7 @@ export const caseStudies: CaseStudyProps[] = [
       "Google Business Profile Setup & Optimization",
       "Local SEO",
     ],
+    categories: ["HVAC", "Local SEO", "Web Development", "Branding"],
     challenge:
       "The client had no existing website, no established brand, and no digital footprint. They needed to stand out in a competitive local HVAC market.",
     approach: [

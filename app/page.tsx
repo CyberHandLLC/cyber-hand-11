@@ -13,10 +13,10 @@
 
 import { Suspense } from "react";
 import { CyberLogo } from "@/components/custom/cyber-logo";
-import { HomepageButtonsClient } from "./components/homepage-buttons-client";
+import { HomepageButtonsClient } from "@/components/ui/client/homepage-buttons-client";
 import { CircuitEffectsWrapperClient } from "./components/circuit-effects-wrapper-client";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ContentErrorBoundaryClient } from "@/app/components/error-boundary-client";
+import { ContentErrorBoundaryClient } from "@/components/ui/client/error-boundary-client";
 import { createMetadata } from "@/lib/seo/metadata";
 import { WebPageSchema } from "@/lib/seo/structured-data";
 import { trackPageView } from "@/lib/analytics/geolocation-tracker";

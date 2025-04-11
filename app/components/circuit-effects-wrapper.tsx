@@ -1,7 +1,9 @@
 "use client";
 
 /**
- * CircuitEffectsWrapper - Client Component
+ * Circuit Effects Wrapper Client
+ *
+ * This client component
  *
  * This component wraps the dynamic import of CircuitEffects to handle
  * client-side loading with useEffect for better performance.
@@ -22,7 +24,7 @@ const CircuitEffects = dynamic(
   }
 );
 
-export function CircuitEffectsWrapper() {
+export function CircuitEffectsWrapperClient() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Only show circuit effects after component mounts

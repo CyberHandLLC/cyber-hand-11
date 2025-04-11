@@ -73,16 +73,16 @@
 
 ## Client Management System
 
-| Feature                   | Status        | Description                                      | Tech Stack                     | Documentation                        |
-|---------------------------|---------------|--------------------------------------------------|--------------------------------|--------------------------------------|
-| User Authentication       | 🔄 Planned    | Role-based auth (CLIENT/STAFF/ADMIN) with Supabase| Supabase Auth, Next.js         | [Auth Flow](../architecture/data-flow.md) |
-| Client Dashboard          | 🔄 Planned    | Role-specific dashboards with client data access | React, Suspense, Supabase RLS  | [Security Architecture](../architecture/system-overview.md#client-management-system-architecture) |
-| Service Request System    | 🔄 Planned    | Workflow for requesting web services with status tracking | React Hook Form, Zod, Supabase | [Data Flow](../architecture/data-flow.md#service-request-flow) |
-| Payment Integration       | 🔄 Planned    | Stripe integration with client record creation   | Stripe API, Webhooks, Supabase | [Payment Flow](../architecture/data-flow.md#payment-processing-flow) |
-| Admin Management Portal   | 🔄 Planned    | Role-based admin interface with RLS policies     | React, Supabase RLS, TypeScript| [RLS Policies](../architecture/data-flow.md#row-level-security-policies) |
-| Website Analytics         | 🔄 Planned    | Performance metrics and reporting for clients    | Recharts, React, Supabase      | -                                    |
-| Service Status Monitoring | 🔄 Planned    | Real-time status updates for client services     | React, WebSockets, Supabase    | -                                    |
-| Invoicing System          | 🔄 Planned    | Automated invoice generation and management      | PDFKit, Stripe, Supabase       | -                                    |
+| Feature                   | Status     | Description                                               | Tech Stack                      | Documentation                                                                                     |
+| ------------------------- | ---------- | --------------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------- |
+| User Authentication       | 🔄 Planned | Role-based auth (CLIENT/STAFF/ADMIN) with Supabase        | Supabase Auth, Next.js          | [Auth Flow](../architecture/data-flow.md)                                                         |
+| Client Dashboard          | 🔄 Planned | Role-specific dashboards with client data access          | React, Suspense, Supabase RLS   | [Security Architecture](../architecture/system-overview.md#client-management-system-architecture) |
+| Service Request System    | 🔄 Planned | Workflow for requesting web services with status tracking | React Hook Form, Zod, Supabase  | [Data Flow](../architecture/data-flow.md#service-request-flow)                                    |
+| Payment Integration       | 🔄 Planned | Stripe integration with client record creation            | Stripe API, Webhooks, Supabase  | [Payment Flow](../architecture/data-flow.md#payment-processing-flow)                              |
+| Admin Management Portal   | 🔄 Planned | Role-based admin interface with RLS policies              | React, Supabase RLS, TypeScript | [RLS Policies](../architecture/data-flow.md#row-level-security-policies)                          |
+| Website Analytics         | 🔄 Planned | Performance metrics and reporting for clients             | Recharts, React, Supabase       | -                                                                                                 |
+| Service Status Monitoring | 🔄 Planned | Real-time status updates for client services              | React, WebSockets, Supabase     | -                                                                                                 |
+| Invoicing System          | 🔄 Planned | Automated invoice generation and management               | PDFKit, Stripe, Supabase        | -                                                                                                 |
 
 ## Development Roadmap
 

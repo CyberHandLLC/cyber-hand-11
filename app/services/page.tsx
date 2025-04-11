@@ -19,7 +19,7 @@ import {
   CardGridSkeleton,
   Skeleton,
 } from "@/components/ui/skeleton";
-import { ContentErrorBoundary } from "@/app/components/error-boundary";
+import { ContentErrorBoundaryClient } from "@/components/ui/client/error-boundary-client";
 
 /**
  * Services Grid Loading Skeleton
@@ -81,28 +81,28 @@ export default function Services() {
       <SectionContainer>
         {/* Desktop Service Grid with ErrorBoundary and Suspense */}
         <div className="hidden md:block">
-          <ContentErrorBoundary>
+          <ContentErrorBoundaryClient>
             <Suspense fallback={<ServicesGridSkeleton />}>
               <ServicesGrid services={services} />
             </Suspense>
-          </ContentErrorBoundary>
+          </ContentErrorBoundaryClient>
         </div>
 
         {/* Mobile Service Carousel with ErrorBoundary and Suspense */}
         <div className="md:hidden">
-          <ContentErrorBoundary>
+          <ContentErrorBoundaryClient>
             <Suspense fallback={<ServicesMobileSkeleton />}>
               <ServicesMobile services={services} />
             </Suspense>
-          </ContentErrorBoundary>
+          </ContentErrorBoundaryClient>
         </div>
 
         {/* CTA Section with ErrorBoundary and Suspense */}
-        <ContentErrorBoundary>
+        <ContentErrorBoundaryClient>
           <Suspense fallback={<CTASkeleton />}>
             <ServicesCTA />
           </Suspense>
-        </ContentErrorBoundary>
+        </ContentErrorBoundaryClient>
       </SectionContainer>
     </PageLayout>
   );

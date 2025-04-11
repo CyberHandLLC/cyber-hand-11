@@ -8,12 +8,17 @@
 
 import { Suspense } from "react";
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
-import { Skeleton, CardGridSkeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
+import { CardGridSkeleton, FilterSkeleton } from "@/components/ui/skeleton/case-studies-skeletons";
 import { caseStudies } from "@/data/case-studies";
 import { createMetadata } from "@/lib/seo/metadata";
 import { BreadcrumbSchema, WebPageSchema } from "@/lib/seo/structured-data";
-import { CaseStudiesFilterClient } from "./components/case-studies-filter-client";
+import { CaseStudiesWrapperClient } from "@/components/ui/client/case-studies-wrapper-client";
 import { CaseStudyCardServer } from "@/components/case-studies/case-study-card-server";
+import {
+  SectionErrorBoundaryClient,
+  ContentErrorBoundaryClient,
+} from "@/components/ui/client/error-boundary-client";
 
 /**
  * Generate metadata for the case studies index page
@@ -72,37 +77,23 @@ export default function CaseStudiesPage() {
         </p>
       </SectionContainer>
 
-      {/* Filter component properly centered - only visible if multiple industries exist */}
-      {industries.length > 1 && (
-        <SectionContainer className="mb-10">
-          <Suspense
-            fallback={
-              <div className="h-12 flex justify-center">
-                <Skeleton className="w-64 h-10" />
-              </div>
-            }
-          >
-            <div className="flex justify-center">
-              <CaseStudiesFilterClient industries={industries} />
-            </div>
+      {/* Case Studies Wrapper with filtering and list display */}
+      <SectionContainer className="mb-10">
+        <ContentErrorBoundaryClient>
+          <Suspense fallback={<FilterSkeleton />}>
+            <CaseStudiesWrapperClient caseStudies={caseStudies} categories={industries} />
           </Suspense>
-        </SectionContainer>
-      )}
+        </ContentErrorBoundaryClient>
+      </SectionContainer>
 
-      {/* Main case studies grid - structured like services page */}
+      {/* Bottom spacing and additional information */}
       <SectionContainer className="pb-20">
-        <Suspense fallback={<CardGridSkeleton count={6} columns={3} />}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            {caseStudies.map((caseStudy, index) => (
-              <div
-                key={caseStudy.id}
-                className="transform transition-transform hover:-translate-y-2 duration-300"
-              >
-                <CaseStudyCardServer caseStudy={caseStudy} index={index} />
-              </div>
-            ))}
-          </div>
-        </Suspense>
+        <div className="text-center text-gray-400 text-sm">
+          <p>Explore our complete portfolio of case studies above</p>
+          <p className="mt-2">
+            Each case study showcases our approach to solving unique client challenges
+          </p>
+        </div>
       </SectionContainer>
     </PageLayout>
   );

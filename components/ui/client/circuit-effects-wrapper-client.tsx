@@ -1,29 +1,37 @@
 "use client";
 
 /**
- * CircuitEffectsWrapper - Client Component
+ * CircuitEffectsWrapperClient Component
  *
- * This component wraps the dynamic import of CircuitEffects to handle
+ * This client component wraps the dynamic import of CircuitEffects to handle
  * client-side loading with useEffect for better performance.
  * It's isolated as a Client Component to keep dynamic imports and
  * client-side logic separate from Server Components.
+ *
+ * Following Next.js 15.2.4 and React 19 best practices:
+ * - Properly implements cleanup functions in useEffect hooks
+ * - Uses error boundaries for Suspense boundaries
+ * - Uses dynamic imports for code splitting
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactElement } from "react";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
+import { ContentErrorBoundaryClient } from "@/components/ui/client/error-boundary-client";
 
 // Lazy-loaded circuit components for better performance
 const CircuitEffects = dynamic(
   () => import("@/components/custom/circuit-effects").then((mod) => mod.CircuitEffects),
   {
     ssr: false,
-    loading: () => <div className="absolute inset-0 z-5 opacity-30 pointer-events-none" />,
+    loading: (): ReactElement => (
+      <div className="absolute inset-0 z-5 opacity-30 pointer-events-none" />
+    ),
   }
 );
 
-export function CircuitEffectsWrapperClient() {
-  const [isLoaded, setIsLoaded] = useState(false);
+export function CircuitEffectsWrapperClient(): ReactElement {
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   // Only show circuit effects after component mounts
   // This improves initial page load performance
@@ -40,11 +48,8 @@ export function CircuitEffectsWrapperClient() {
   }, []);
 
   if (!isLoaded) {
-    return null;
+    return <></>; // Return empty fragment instead of null to satisfy ReactElement type
   }
-
-  // Import error boundary from error-boundary-client.tsx
-  const { ContentErrorBoundaryClient } = require("@/app/components/error-boundary-client");
 
   return (
     <ContentErrorBoundaryClient>

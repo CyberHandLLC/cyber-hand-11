@@ -7,6 +7,8 @@
   "useTabs": false,
   "arrowParens": "always",
   "bracketSpacing": true,
-  "jsxBracketSameLine": false,
-  "endOfLine": "auto"
+  "bracketSameLine": false,
+  "endOfLine": "auto",
+  "embeddedLanguageFormatting": "auto",
+  "quoteProps": "as-needed"
 }

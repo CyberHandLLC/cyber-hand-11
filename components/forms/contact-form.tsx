@@ -26,7 +26,7 @@ export async function ContactForm({ initialService }: ContactFormProps) {
       {/* Decorative elements for cyberpunk aesthetic */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500/40 to-transparent"></div>
       <div className="absolute bottom-0 right-0 w-full h-1 bg-gradient-to-l from-cyan-500/40 to-transparent"></div>
-      
+
       <h2 className="text-2xl font-bold mb-6 text-center cyber-gradient-text">Get In Touch</h2>
 
       {/* Pass the server-fetched data to the client component */}

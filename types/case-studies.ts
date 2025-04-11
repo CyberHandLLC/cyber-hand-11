@@ -21,6 +21,7 @@ export interface CaseStudyProps {
   industry: string;
   location: string;
   services: string[];
+  categories: string[]; // Categories for filtering case studies
   challenge: string;
   approach: string[];
   results: string[];

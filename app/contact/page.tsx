@@ -16,7 +16,10 @@ import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
 import { ContactForm } from "@/components/forms/contact-form";
 import { AnimatedContactInfoClient } from "./components/animated-contact-info-client";
 import { HeadingSkeleton, TextSkeleton, Skeleton } from "@/components/ui/skeleton";
-import { FormErrorBoundaryClient, ContentErrorBoundaryClient } from "@/app/components/error-boundary-client";
+import {
+  FormErrorBoundaryClient,
+  ContentErrorBoundaryClient,
+} from "@/app/components/error-boundary-client";
 
 /**
  * Define page metadata for SEO

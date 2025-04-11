@@ -19,7 +19,7 @@ interface ErrorFallbackProps {
 /**
  * Standard Error Fallback Component
  */
-export function StandardErrorFallbackClient({ error, resetErrorBoundary }: ErrorFallbackProps) {
+export function StandardErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
   return (
     <div className="py-4 px-6 rounded-lg bg-red-900/20 border border-red-800/40 text-center my-4">
       <h3 className="text-lg font-semibold mb-2 text-red-200">Something went wrong</h3>
@@ -42,7 +42,7 @@ export function StandardErrorFallbackClient({ error, resetErrorBoundary }: Error
 export function ContentErrorBoundaryClient({ children }: { children: ReactNode }) {
   return (
     <ReactErrorBoundary
-      FallbackComponent={StandardErrorFallbackClient}
+      FallbackComponent={StandardErrorFallback}
       onReset={() => {
         // Optional: Any reset logic here
       }}
@@ -83,8 +83,6 @@ export function FormErrorBoundaryClient({ children }: { children: ReactNode }) {
  */
 export function SectionErrorBoundaryClient({ children }: { children: ReactNode }) {
   return (
-    <ReactErrorBoundary FallbackComponent={StandardErrorFallbackClient}>
-      {children}
-    </ReactErrorBoundary>
+    <ReactErrorBoundary FallbackComponent={StandardErrorFallback}>{children}</ReactErrorBoundary>
   );
 }

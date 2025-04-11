@@ -1,13 +1,15 @@
 "use client";
 
 /**
- * Client Component Wrapper
+ * Client Component Wrapper for Case Studies
+ *
  * Handles the interactive filtering logic for case studies
  *
  * Performance optimized with:
  * - Route-based code splitting using dynamic imports
  * - CSS containment for better rendering performance
  * - Performance monitoring for Core Web Vitals
+ * - Proper cleanup of event listeners to prevent memory leaks in React 19
  */
 
 import { useState, useEffect } from "react";
@@ -44,7 +46,7 @@ export function CaseStudiesClientWrapper({
     return () => {
       document.removeEventListener("case-study-filter-change", handleFilterChange as EventListener);
     };
-  }, []);
+  }, []); // Empty dependency array is appropriate here as we only want to attach the listener once
 
   // Update filtered studies when filter changes
   useEffect(() => {

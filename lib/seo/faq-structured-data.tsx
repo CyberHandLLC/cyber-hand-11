@@ -1,6 +1,6 @@
 /**
  * FAQ Structured Data Component
- * 
+ *
  * Implements JSON-LD structured data for FAQs following schema.org standards
  * This improves SEO by enabling rich results in search engines
  * https://schema.org/FAQPage
@@ -15,7 +15,7 @@ interface FAQPageProps {
 
 /**
  * Creates JSON-LD structured data for FAQ page
- * 
+ *
  * @param faqs - Array of FAQ items
  * @param url - URL of the FAQ page
  */
@@ -30,17 +30,17 @@ export function FAQPageSchema({ faqs, url }: FAQPageProps) {
 
   // Create schema.org FAQPage structured data
   const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    'mainEntity': faqs.map(faq => ({
-      '@type': 'Question',
-      'name': faq.question,
-      'acceptedAnswer': {
-        '@type': 'Answer',
-        'text': faq.answer
-      }
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
     })),
-    'url': fullUrl
+    url: fullUrl,
   };
 
   return (
@@ -54,7 +54,7 @@ export function FAQPageSchema({ faqs, url }: FAQPageProps) {
 /**
  * Creates JSON-LD structured data for a single FAQ item
  * Used for pages that include a single FAQ section
- * 
+ *
  * @param faq - Single FAQ item
  * @param url - URL of the page containing the FAQ
  */
@@ -67,17 +67,17 @@ export function SingleFAQSchema({ faq, url }: { faq: FAQItem; url: string }) {
   const fullUrl = url.startsWith("http") ? url : `${baseUrl}${url}`;
 
   const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    'mainEntity': {
-      '@type': 'Question',
-      'name': faq.question,
-      'acceptedAnswer': {
-        '@type': 'Answer',
-        'text': faq.answer
-      }
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: {
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
     },
-    'url': fullUrl
+    url: fullUrl,
   };
 
   return (

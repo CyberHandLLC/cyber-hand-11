@@ -53,13 +53,13 @@ import { type Product } from "@/types";
 export const getProducts = cache(async (): Promise<Product[]> => {
   const res = await fetch("https://api.example.com/products", {
     // Next.js 15.2.4 requires explicit opt-in for caching
-    next: { 
+    next: {
       revalidate: 60, // Cache for 60 seconds
-      tags: ['products'] // Tag for targeted revalidation
-    }
+      tags: ["products"], // Tag for targeted revalidation
+    },
   });
-  
-  if (!res.ok) throw new Error('Failed to fetch products');
+
+  if (!res.ok) throw new Error("Failed to fetch products");
   return res.json();
 });
 ```
@@ -70,16 +70,16 @@ Next.js 15.2.4 changed to an opt-in caching model for `fetch()`. Caching is no l
 
 ```tsx
 // Cached for 60 seconds with time-based revalidation
-fetch(url, { next: { revalidate: 60 } })
+fetch(url, { next: { revalidate: 60 } });
 
 // Cached indefinitely until manually revalidated via tags
-fetch(url, { next: { tags: ['collection'] } })
+fetch(url, { next: { tags: ["collection"] } });
 
 // Cached between page refreshes only (force-cache)
-fetch(url, { cache: 'force-cache' })
+fetch(url, { cache: "force-cache" });
 
 // Never cached (no-store)
-fetch(url, { cache: 'no-store' })
+fetch(url, { cache: "no-store" });
 ```
 
 To revalidate tagged data, use the revalidateTag function:
@@ -92,7 +92,7 @@ export async function updateProduct() {
   'use server';
   // Update data
   await db.product.update(...);
-  
+
   // Revalidate all fetches with this tag
   revalidateTag('products');
 }
@@ -106,19 +106,9 @@ To prevent waterfalls, we fetch data in parallel using Promise.all:
 // app/dashboard/page.tsx
 export default async function DashboardPage() {
   // Fetch data in parallel
-  const [user, products, orders] = await Promise.all([
-    getUser(),
-    getProducts(),
-    getOrders()
-  ]);
+  const [user, products, orders] = await Promise.all([getUser(), getProducts(), getOrders()]);
 
-  return (
-    <Dashboard 
-      user={user}
-      products={products}
-      orders={orders}
-    />
-  );
+  return <Dashboard user={user} products={products} orders={orders} />;
 }
 ```
 
@@ -197,32 +187,34 @@ export async function createProduct(formData: FormData) {
 
   try {
     const data = productSchema.parse(rawData);
-    
+
     // Get authenticated user from session
     const supabase = createServerActionClient({ cookies });
-    const { data: { session } } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     if (!session) {
       throw new Error("Unauthorized");
     }
-    
+
     // Insert product into database
     const { error } = await supabase.from("products").insert({
       ...data,
       user_id: session.user.id,
     });
-    
+
     if (error) throw new Error(error.message);
-    
+
     // Revalidate relevant paths to update UI
     revalidatePath("/products");
-    
+
     // Redirect to products page
     redirect("/products");
   } catch (error) {
     // Handle validation errors
-    return { 
-      error: error instanceof Error ? error.message : "Failed to create product"
+    return {
+      error: error instanceof Error ? error.message : "Failed to create product",
     };
   }
 }
@@ -239,20 +231,20 @@ We implement multiple revalidation strategies based on the data type:
 ```tsx
 // Implementing tag-based revalidation
 export async function publishArticle(formData: FormData) {
-  'use server';
-  
+  "use server";
+
   const article = await db.article.create({
     data: {
-      title: formData.get('title'),
-      content: formData.get('content'),
-    }
+      title: formData.get("title"),
+      content: formData.get("content"),
+    },
   });
-  
+
   // Revalidate multiple tags at once
-  revalidateTag('articles');
+  revalidateTag("articles");
   revalidateTag(`article-${article.id}`);
-  revalidateTag('sitemap');
-  
+  revalidateTag("sitemap");
+
   return true; // Placeholder
 }
 ```
@@ -266,20 +258,17 @@ Next.js 15.2.4 introduces improved Route Handlers with better Promise handling a
 export async function GET(request: Request) {
   // URL and SearchParams handling
   const { searchParams } = new URL(request.url);
-  const id = searchParams.get('id');
+  const id = searchParams.get("id");
 
   // Type-safe responses
   try {
     const product = await db.product.findUnique({ where: { id } });
     if (!product) {
-      return Response.json({ error: 'Not found' }, { status: 404 });
+      return Response.json({ error: "Not found" }, { status: 404 });
     }
     return Response.json(product);
   } catch (error) {
-    return Response.json(
-      { error: 'Internal error' }, 
-      { status: 500 }
-    );
+    return Response.json({ error: "Internal error" }, { status: 500 });
   }
 }
 
@@ -289,20 +278,20 @@ export async function POST(request: Request) {
     // Structured data parsing with zod
     const body = await request.json();
     const data = productSchema.parse(body);
-    
+
     const product = await db.product.create({ data });
-    
+
     // Headers and status in one response
-    return Response.json(product, { 
+    return Response.json(product, {
       status: 201,
       headers: {
-        'Location': `/api/products/${product.id}`
-      }
+        Location: `/api/products/${product.id}`,
+      },
     });
   } catch (error) {
     // Error handling
     return Response.json(
-      { error: error instanceof Error ? error.message : 'Unknown error' }, 
+      { error: error instanceof Error ? error.message : "Unknown error" },
       { status: 400 }
     );
   }
@@ -327,24 +316,25 @@ interface VercelGeoRequest extends Request {
     region?: string;
     latitude?: string;
     longitude?: string;
-  }
+  };
 }
 
 // Edge API route with geolocation access
 export async function GET(request: Request) {
   const geoRequest = request as VercelGeoRequest;
   const geo = geoRequest.geo || null;
-  
+
   // Use geolocation data
   return Response.json({
-    location: geo?.city ? `${geo.city}, ${geo.region}` : 'Unknown',
-    detected: Boolean(geo)
+    location: geo?.city ? `${geo.city}, ${geo.region}` : "Unknown",
+    detected: Boolean(geo),
   });
 }
 ```
 
 Key implementation requirements:
-1. Middleware must be marked with `export const runtime = "experimental-edge"` 
+
+1. Middleware must be marked with `export const runtime = "experimental-edge"`
 2. All geolocation-dependent routes must use Edge runtime
 3. Development mocking must be implemented for local testing
 4. Proper type extensions must be used for the Vercel request object
@@ -357,11 +347,9 @@ Our authentication flow using Supabase follows these steps:
 // Cached data fetching with proper auth checks
 const getClientData = cache(async () => {
   const supabase = createServerComponentClient({ cookies });
-  
+
   // Session check handled by middleware and RLS
-  const { data, error } = await supabase
-    .from('clients')
-    .select(`
+  const { data, error } = await supabase.from("clients").select(`
       id,
       name,
       email,
@@ -369,7 +357,7 @@ const getClientData = cache(async () => {
       service_requests(id, status, service_type),
       subscriptions(id, status, current_period_end)
     `);
-  
+
   if (error) throw new Error(error.message);
   return data;
 });
@@ -382,32 +370,30 @@ Service requests follow this data flow pattern:
 ```typescript
 // Server action for submitting service request
 export async function submitServiceRequest(formData: FormData) {
-  'use server';
-  
+  "use server";
+
   const session = await getServerSession();
-  if (!session) throw new Error('Unauthorized');
-  
+  if (!session) throw new Error("Unauthorized");
+
   // Validate input with Zod
   const data = serviceRequestSchema.parse({
-    serviceType: formData.get('serviceType'),
-    details: formData.get('details'),
-    clientId: session.user.id
+    serviceType: formData.get("serviceType"),
+    details: formData.get("details"),
+    clientId: session.user.id,
   });
-  
+
   // Store in Supabase with proper RLS
-  const { error } = await supabase
-    .from('service_requests')
-    .insert(data);
-  
+  const { error } = await supabase.from("service_requests").insert(data);
+
   if (error) throw new Error(error.message);
-  
+
   // Revalidate affected paths
-  revalidatePath('/dashboard/services');
-  
+  revalidatePath("/dashboard/services");
+
   // Trigger notifications
   await sendNotification({
-    type: 'service_request',
-    userId: session.user.id
+    type: "service_request",
+    userId: session.user.id,
   });
 }
 ```
@@ -430,11 +416,9 @@ Admin dashboard implements specialized data access patterns:
 // Cached data fetching for admin dashboard with proper RLS
 const getClientData = cache(async () => {
   const supabase = createServerComponentClient({ cookies });
-  
+
   // Session check handled by middleware and RLS
-  const { data, error } = await supabase
-    .from('clients')
-    .select(`
+  const { data, error } = await supabase.from("clients").select(`
       id,
       name,
       email,
@@ -442,7 +426,7 @@ const getClientData = cache(async () => {
       service_requests(id, status, service_type),
       subscriptions(id, status, current_period_end)
     `);
-  
+
   if (error) throw new Error(error.message);
   return data;
 });

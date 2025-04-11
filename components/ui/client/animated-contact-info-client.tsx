@@ -1,19 +1,27 @@
 "use client";
 
 /**
- * AnimatedContactInfo Client Component
+ * AnimatedContactInfoClient Component
  *
  * This component handles the animated display of contact information
  * and reasons to contact. It's a Client Component because it uses
  * animations and interactive elements.
+ *
+ * Following Cyber Hand Project Rules:
+ * - Proper client component naming with -client suffix
+ * - TypeScript return type annotations
+ * - Placed in the /ui/client directory for better organization
  */
 
-import React from "react";
+import React, { ReactElement } from "react";
 import { useTheme } from "@/lib/theme-context";
 import { getThemeStyle } from "@/lib/theme-utils";
 import { AnimatedElement } from "@/lib/animation-utils";
 import { Icons } from "@/components/ui/icons";
 
+/**
+ * Contact information item structure
+ */
 interface ContactInfoItem {
   icon: keyof typeof Icons;
   label: string;
@@ -21,12 +29,24 @@ interface ContactInfoItem {
   href: string;
 }
 
-interface AnimatedContactInfoProps {
+/**
+ * Component props interface
+ */
+interface AnimatedContactInfoClientProps {
   reasons: string[];
   contactInfo: ContactInfoItem[];
 }
 
-export function AnimatedContactInfoClient({ reasons, contactInfo }: AnimatedContactInfoProps) {
+/**
+ * Animated contact info component with reasons to contact and contact information
+ *
+ * @param {AnimatedContactInfoClientProps} props - Component properties
+ * @returns {JSX.Element} Rendered component
+ */
+export function AnimatedContactInfoClient({
+  reasons,
+  contactInfo,
+}: AnimatedContactInfoClientProps): ReactElement {
   const { theme } = useTheme();
 
   return (

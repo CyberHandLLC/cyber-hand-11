@@ -14,7 +14,7 @@ import { Suspense } from "react";
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
 import { AuthFormClient } from "./components/auth-form-client";
 import { HeadingSkeleton, TextSkeleton, Skeleton } from "@/components/ui/skeleton";
-import { ContentErrorBoundaryClient } from "@/app/components/error-boundary-client";
+import { ContentErrorBoundaryClient } from "@/components/ui/client/error-boundary-client";
 
 /**
  * Auth Form Skeleton Component
