@@ -21,10 +21,11 @@ const { execSync } = require('child_process');
 const { z } = require("zod");
 
 // Import validators
-const freshness = require('./validators/freshness');
-const consistency = require('./validators/consistency');
-const bestPractices = require('./validators/best-practices');
-const coverage = require('./validators/coverage');
+const { validateDocCoverage } = require('./validators/coverage');
+const { validateDocConsistency } = require('./validators/consistency');
+const { validateDocFreshness } = require('./validators/freshness');
+const { validateBestPractices } = require('./validators/best-practices');
+const { validateEslintCompliance } = require('./validators/eslint-compliance');
 
 // Debug logging
 const DEBUG = process.env.MCP_DEBUG === "true";
@@ -66,7 +67,7 @@ async function validateFreshness(projectPath, options = {}) {
   debugLog(`Validating documentation freshness for: ${projectPath} with options:`, JSON.stringify(options));
   
   const docsDir = options.docsDir || findDocsDirectory(projectPath);
-  const results = await freshness.analyzeFreshness(projectPath, docsDir, options);
+  const results = await validateDocFreshness(projectPath, docsDir, options);
   
   return {
     type: 'freshness',
@@ -83,7 +84,7 @@ async function validateConsistency(projectPath, options = {}) {
   debugLog(`Validating documentation consistency for: ${projectPath} with options:`, JSON.stringify(options));
   
   const docsDir = options.docsDir || findDocsDirectory(projectPath);
-  const results = await consistency.analyzeConsistency(docsDir, options);
+  const results = await validateDocConsistency(docsDir, options);
   
   return {
     type: 'consistency',
@@ -100,7 +101,7 @@ async function validateBestPractices(projectPath, options = {}) {
   debugLog(`Validating documentation best practices for: ${projectPath} with options:`, JSON.stringify(options));
   
   const docsDir = options.docsDir || findDocsDirectory(projectPath);
-  const results = await bestPractices.analyzeBestPractices(docsDir, options);
+  const results = await validateBestPractices(docsDir, options);
   
   return {
     type: 'best-practices',
@@ -117,13 +118,30 @@ async function validateCoverage(projectPath, options = {}) {
   debugLog(`Validating documentation coverage for: ${projectPath} with options:`, JSON.stringify(options));
   
   const docsDir = options.docsDir || findDocsDirectory(projectPath);
-  const results = await coverage.generateCoverageReport(projectPath, docsDir, options);
+  const results = await validateDocCoverage(projectPath, docsDir, options);
   
   return {
     type: 'coverage',
     results,
     summary: `Documentation coverage: ${results.summary?.coveragePercentage || 0}% (${results.summary?.documented || 0}/${results.summary?.total || 0} categories documented)`,
     pass: (results.summary?.coveragePercentage || 0) >= (options.minCoveragePercentage || 70)
+  };
+}
+
+/**
+ * Validate ESLint compliance
+ */
+async function validateEslint(projectPath, options = {}) {
+  debugLog(`Validating ESLint compliance for: ${projectPath} with options:`, JSON.stringify(options));
+  
+  const docsDir = options.docsDir || findDocsDirectory(projectPath);
+  const results = await validateEslintCompliance(docsDir, options);
+  
+  return {
+    type: 'eslint-compliance',
+    results,
+    summary: `ESLint compliance: ${results.passed ? 'Pass' : 'Fail'}`,
+    pass: results.passed
   };
 }
 
@@ -139,7 +157,7 @@ async function validateDocumentation(projectPath, options = {}) {
     options.docsDir = docsDir;
     
     // Determine which validators to run
-    const validators = options.validators || ['freshness', 'consistency', 'best-practices', 'coverage'];
+    const validators = options.validators || ['coverage', 'consistency', 'freshness', 'best-practices', 'eslint-compliance'];
     
     const results = {
       projectPath,
@@ -154,10 +172,10 @@ async function validateDocumentation(projectPath, options = {}) {
     };
     
     // Run selected validators
-    if (validators.includes('freshness')) {
-      results.validators.freshness = await validateFreshness(projectPath, options);
-      results.summary.passed += results.validators.freshness.pass ? 1 : 0;
-      results.summary.failed += results.validators.freshness.pass ? 0 : 1;
+    if (validators.includes('coverage')) {
+      results.validators.coverage = await validateCoverage(projectPath, options);
+      results.summary.passed += results.validators.coverage.pass ? 1 : 0;
+      results.summary.failed += results.validators.coverage.pass ? 0 : 1;
     }
     
     if (validators.includes('consistency')) {
@@ -166,16 +184,22 @@ async function validateDocumentation(projectPath, options = {}) {
       results.summary.failed += results.validators.consistency.pass ? 0 : 1;
     }
     
+    if (validators.includes('freshness')) {
+      results.validators.freshness = await validateFreshness(projectPath, options);
+      results.summary.passed += results.validators.freshness.pass ? 1 : 0;
+      results.summary.failed += results.validators.freshness.pass ? 0 : 1;
+    }
+    
     if (validators.includes('best-practices')) {
       results.validators.bestPractices = await validateBestPractices(projectPath, options);
       results.summary.passed += results.validators.bestPractices.pass ? 1 : 0;
       results.summary.failed += results.validators.bestPractices.pass ? 0 : 1;
     }
     
-    if (validators.includes('coverage')) {
-      results.validators.coverage = await validateCoverage(projectPath, options);
-      results.summary.passed += results.validators.coverage.pass ? 1 : 0;
-      results.summary.failed += results.validators.coverage.pass ? 0 : 1;
+    if (validators.includes('eslint-compliance')) {
+      results.validators.eslintCompliance = await validateEslint(projectPath, options);
+      results.summary.passed += results.validators.eslintCompliance.pass ? 1 : 0;
+      results.summary.failed += results.validators.eslintCompliance.pass ? 0 : 1;
     }
     
     // Generate overall pass/fail status
@@ -230,7 +254,7 @@ async function main() {
         path: z.string().describe("Path to the project root directory"),
         options: z.object({
           verbose: z.boolean().optional().describe("Include detailed validation information"),
-          validators: z.array(z.enum(["freshness", "consistency", "best-practices", "coverage"])).optional()
+          validators: z.array(z.enum(["coverage", "consistency", "freshness", "best-practices", "eslint-compliance"])).optional()
             .describe("Specific validators to run"),
           minCoveragePercentage: z.number().optional().describe("Minimum acceptable documentation coverage percentage"),
           skipExternalLinks: z.boolean().optional().describe("Skip validation of external links"),
@@ -349,12 +373,22 @@ main().catch((error) => {
   process.exit(1);
 });
 
-// Export for testing
+// Export all validators
 module.exports = {
   validateDocumentation,
   validateFreshness,
   validateConsistency,
   validateBestPractices,
   validateCoverage,
+  validateEslint,
   documentationExists
+};
+
+// Defined validators mapped to their implementation functions
+const VALIDATORS = {
+  'coverage': validateDocCoverage,
+  'consistency': validateDocConsistency,
+  'freshness': validateDocFreshness,
+  'best-practices': validateBestPractices,
+  'eslint-compliance': validateEslintCompliance
 };

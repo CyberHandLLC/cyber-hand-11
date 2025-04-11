@@ -239,7 +239,13 @@
                     "type": "array",
                     "items": {
                       "type": "string",
-                      "enum": ["freshness", "consistency", "best-practices", "coverage"]
+                      "enum": [
+                        "freshness",
+                        "consistency",
+                        "best-practices",
+                        "coverage",
+                        "eslint-compliance"
+                      ]
                     },
                     "description": "Specific validators to run"
                   },

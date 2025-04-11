@@ -8,17 +8,20 @@
 
 import { Suspense } from "react";
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
-import { Skeleton } from "@/components/ui/skeleton";
-import { CardGridSkeleton, FilterSkeleton } from "@/components/ui/skeleton/case-studies-skeletons";
+import { FilterSkeleton } from "@/components/ui/skeleton/case-studies-skeletons";
 import { caseStudies } from "@/data/case-studies";
 import { createMetadata } from "@/lib/seo/metadata";
 import { BreadcrumbSchema, WebPageSchema } from "@/lib/seo/structured-data";
 import { CaseStudiesWrapperClient } from "@/components/ui/client/case-studies-wrapper-client";
-import { CaseStudyCardServer } from "@/components/case-studies/case-study-card-server";
 import {
-  SectionErrorBoundaryClient,
   ContentErrorBoundaryClient,
 } from "@/components/ui/client/error-boundary-client";
+
+// For future use (prefixed with underscore per Cyber Hand coding standards)
+// import { Skeleton } from "@/components/ui/skeleton";
+// import { CardGridSkeleton } from "@/components/ui/skeleton/case-studies-skeletons";
+// import { CaseStudyCardServer } from "@/components/case-studies/case-study-card-server";
+// import { SectionErrorBoundaryClient } from "@/components/ui/client/error-boundary-client";
 
 /**
  * Generate metadata for the case studies index page
@@ -44,7 +47,7 @@ export const metadata = createMetadata({
  * Main Case Studies Page Component
  */
 export default function CaseStudiesPage() {
-  // Extract unique industries for filtering using Array.reduce to be compatible with current TS config
+  // Extract unique industries for filtering using Array methods
   const industries = caseStudies
     .map((study) => study.industry)
     .filter((industry, index, self) => self.indexOf(industry) === index)
@@ -53,20 +56,20 @@ export default function CaseStudiesPage() {
   return (
     <PageLayout className="bg-gradient-to-b from-[#0c1117] to-[#0c1117] min-h-screen">
       {/* Add structured data */}
-      <WebPageSchema
-        title="Case Studies - CyberHand"
-        description="Explore our portfolio of successful client projects and digital transformations across various industries."
-        url="/case-studies"
-        datePublished="2023-01-01"
-        dateModified={new Date().toISOString()}
-        imageUrl="/images/case-studies-hero.jpg"
-      />
-      <BreadcrumbSchema
-        items={[
+      {WebPageSchema({
+        title: "Case Studies - CyberHand",
+        description: "Explore our portfolio of successful client projects and digital transformations across various industries.",
+        url: "/case-studies",
+        datePublished: "2023-01-01",
+        dateModified: new Date().toISOString(),
+        imageUrl: "/images/case-studies-hero.jpg"
+      })}
+      {BreadcrumbSchema({
+        items: [
           { name: "Home", url: "/" },
           { name: "Case Studies", url: "/case-studies" },
-        ]}
-      />
+        ]
+      })}
 
       {/* Hero section with title and description - exact same structure as services page */}
       <SectionContainer className="pt-20 lg:pt-28 text-center">
