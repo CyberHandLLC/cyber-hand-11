@@ -1,0 +1,15 @@
+{
+  "id": "arch_validation_request",
+  "type": "request",
+  "name": "architecture_check",
+  "parameters": {
+    "path": "./",
+    "options": {
+      "verbose": true,
+      "includeServerComponents": true,
+      "includeClientComponents": true,
+      "checkDependencies": true,
+      "validateTypes": true
+    }
+  }
+}

@@ -11,16 +11,8 @@ RUN npm install
 # Copy server files
 COPY . .
 
-# Expose the port the server listens on
-EXPOSE 8002
-
 # Set environment variables
 ENV NODE_ENV=production
-ENV PORT=8002
 
-# Health check to verify server is running
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:8002/health || exit 1
-
-# Start the server
+# Start the server in STDIN/STDOUT mode
 CMD ["node", "standalone-server.js"]

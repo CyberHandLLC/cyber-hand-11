@@ -1,0 +1,12 @@
+﻿{
+    "id": "test-orchestrate",
+    "type": "request",
+    "name": "orchestrate_validation",
+    "params": {
+        "path": "./app/components/test-component.tsx",
+        "options": {
+            "verbose": true,
+            "includeDocumentation": true
+        }
+    }
+}

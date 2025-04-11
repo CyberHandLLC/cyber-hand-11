@@ -5,17 +5,39 @@
       "tools": [
         {
           "name": "architecture_check",
-          "description": "Validates code architecture according to project standards, checking for component organization, naming conventions, and proper use of React patterns in Next.js 15.2.4.",
+          "description": "Validates architectural patterns for Next.js 15.2.4/React 19, focusing on Server/Client component separation, proper component boundaries, and adherence to Cyber Hand project standards.",
           "parameters": {
             "type": "object",
             "properties": {
               "path": {
                 "type": "string",
-                "description": "The path to check. Defaults to the project root."
+                "description": "Path to the project root directory to validate. Defaults to the project root."
               },
               "options": {
                 "type": "object",
-                "description": "Additional options for the validation."
+                "properties": {
+                  "verbose": {
+                    "type": "boolean",
+                    "description": "Include detailed validation information"
+                  },
+                  "includeServerComponents": {
+                    "type": "boolean",
+                    "description": "Include server component validation"
+                  },
+                  "includeClientComponents": {
+                    "type": "boolean",
+                    "description": "Include client component validation"
+                  },
+                  "checkDependencies": {
+                    "type": "boolean",
+                    "description": "Check dependency compliance"
+                  },
+                  "validateTypes": {
+                    "type": "boolean",
+                    "description": "Validate TypeScript types"
+                  }
+                },
+                "description": "Validation options for architecture validation"
               }
             },
             "required": []
@@ -28,17 +50,35 @@
       "tools": [
         {
           "name": "dependency_check",
-          "description": "Validates project dependencies against policy, ensuring consistent versioning and preventing problematic imports.",
+          "description": "Validates dependencies for Next.js 15.2.4/React 19 projects, ensuring security, proper versioning, and detecting unused dependencies according to Cyber Hand standards.",
           "parameters": {
             "type": "object",
             "properties": {
               "path": {
                 "type": "string",
-                "description": "The path to check. Defaults to the project root."
+                "description": "Path to the project root directory to validate. Defaults to the project root."
               },
               "options": {
                 "type": "object",
-                "description": "Additional options for the validation."
+                "properties": {
+                  "verbose": {
+                    "type": "boolean",
+                    "description": "Include detailed validation information"
+                  },
+                  "checkForUpdates": {
+                    "type": "boolean",
+                    "description": "Check for newer package versions"
+                  },
+                  "auditSecurity": {
+                    "type": "boolean",
+                    "description": "Perform security audit on dependencies"
+                  },
+                  "checkUnused": {
+                    "type": "boolean",
+                    "description": "Check for unused dependencies"
+                  }
+                },
+                "description": "Validation options for dependency validation"
               }
             },
             "required": []
@@ -46,21 +86,27 @@
         },
         {
           "name": "check_import_allowed",
-          "description": "Checks if an import from one module to another is allowed according to the project's architecture rules.",
+          "description": "Checks if an import from one module to another is allowed according to Cyber Hand architectural rules, focusing on Server/Client component separation.",
           "parameters": {
             "type": "object",
             "properties": {
               "source": {
                 "type": "string",
-                "description": "The source module or file path."
+                "description": "Source module or file path"
               },
               "target": {
                 "type": "string",
-                "description": "The target module or file path being imported."
+                "description": "Target module or file path being imported"
               },
               "options": {
                 "type": "object",
-                "description": "Additional options for the check."
+                "properties": {
+                  "verbose": {
+                    "type": "boolean",
+                    "description": "Include detailed explanation of the validation result"
+                  }
+                },
+                "description": "Validation options for import checking"
               }
             },
             "required": ["source", "target"]
@@ -73,17 +119,51 @@
       "tools": [
         {
           "name": "style_check",
-          "description": "Validates code style according to project ESLint and Prettier rules.",
+          "description": "Validates code style according to Next.js 15.2.4/React 19 best practices and Cyber Hand standards. Detects 'any' type usage, validates naming conventions (PascalCase/camelCase), checks for unused variables without underscore prefix, and ensures files comply with the 500-line limit.",
           "parameters": {
             "type": "object",
             "properties": {
               "path": {
                 "type": "string",
-                "description": "The path to check. Defaults to the project root."
+                "description": "Path to the project root directory or specific file to validate. Defaults to the project root."
               },
               "options": {
                 "type": "object",
-                "description": "Additional options for the validation."
+                "properties": {
+                  "verbose": {
+                    "type": "boolean",
+                    "description": "Include detailed validation information with specific line references"
+                  },
+                  "fixable": {
+                    "type": "boolean",
+                    "description": "Only show fixable style issues"
+                  },
+                  "strict": {
+                    "type": "boolean",
+                    "description": "Apply strict style validation rules"
+                  },
+                  "includeFormatting": {
+                    "type": "boolean",
+                    "description": "Include formatting validation (spacing, indentation, line length)"
+                  },
+                  "includeTypeChecking": {
+                    "type": "boolean",
+                    "description": "Include TypeScript type validation to prevent 'any' usage according to Cyber Hand standards"
+                  },
+                  "checkNaming": {
+                    "type": "boolean",
+                    "description": "Validate naming conventions (PascalCase for components/interfaces, camelCase for variables/functions)"
+                  },
+                  "checkUnusedVars": {
+                    "type": "boolean",
+                    "description": "Check for unused variables that aren't prefixed with underscore (_) as required by Cyber Hand standards"
+                  },
+                  "fileSize": {
+                    "type": "boolean",
+                    "description": "Validate file size against the 500 line limit in Cyber Hand standards"
+                  }
+                },
+                "description": "Style validation options to customize the validation process"
               }
             },
             "required": []
@@ -91,20 +171,113 @@
         },
         {
           "name": "check_file_style",
-          "description": "Checks a specific file for style issues according to project standards.",
+          "description": "Checks a specific file for style issues according to Next.js 15.2.4/React 19 and Cyber Hand project standards. Detects 'any' types, validates naming conventions, checks unused variables, and provides detailed recommendations.",
           "parameters": {
             "type": "object",
             "properties": {
               "filePath": {
                 "type": "string",
-                "description": "The path to the file to check."
+                "description": "Path to the specific file to validate"
               },
               "options": {
                 "type": "object",
-                "description": "Additional options for the validation."
+                "properties": {
+                  "verbose": {
+                    "type": "boolean",
+                    "description": "Include detailed validation information with specific line references"
+                  },
+                  "fixable": {
+                    "type": "boolean",
+                    "description": "Only show fixable style issues"
+                  },
+                  "includeTypeChecking": {
+                    "type": "boolean",
+                    "description": "Include TypeScript type validation to prevent 'any' usage according to Cyber Hand standards"
+                  },
+                  "checkNaming": {
+                    "type": "boolean",
+                    "description": "Validate naming conventions (PascalCase for components/interfaces, camelCase for variables/functions)"
+                  },
+                  "checkUnusedVars": {
+                    "type": "boolean",
+                    "description": "Check for unused variables that aren't prefixed with underscore (_) as required by Cyber Hand standards"
+                  },
+                  "fileSize": {
+                    "type": "boolean",
+                    "description": "Validate file size against the 500 line limit in Cyber Hand standards"
+                  }
+                },
+                "description": "Style validation options for the specific file"
               }
             },
             "required": ["filePath"]
+          }
+        }
+      ]
+    },
+    "docs-validator": {
+      "serverCommand": "docker exec -i cyber-handcom-docs-validator-1 node standalone-server.js",
+      "tools": [
+        {
+          "name": "documentation_validate",
+          "description": "Validates documentation for Next.js 15.2.4/React 19 projects, checking freshness, consistency, best practices adherence, and coverage to ensure documentation remains accurate and comprehensive.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "Path to the project root directory to validate documentation."
+              },
+              "options": {
+                "type": "object",
+                "properties": {
+                  "verbose": {
+                    "type": "boolean",
+                    "description": "Include detailed validation information"
+                  },
+                  "validators": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": ["freshness", "consistency", "best-practices", "coverage"]
+                    },
+                    "description": "Specific validators to run"
+                  },
+                  "minCoveragePercentage": {
+                    "type": "number",
+                    "description": "Minimum acceptable documentation coverage percentage"
+                  },
+                  "skipExternalLinks": {
+                    "type": "boolean",
+                    "description": "Skip validation of external links"
+                  },
+                  "requireLanguage": {
+                    "type": "boolean",
+                    "description": "Require code blocks to specify language"
+                  },
+                  "includeEmpty": {
+                    "type": "boolean",
+                    "description": "Include empty categories in coverage analysis"
+                  }
+                },
+                "description": "Documentation validation options"
+              }
+            },
+            "required": ["path"]
+          }
+        },
+        {
+          "name": "documentation_check",
+          "description": "Checks if documentation exists for a project or component, providing a quick assessment of documentation status.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "Path to the project root directory or specific component to check for documentation"
+              }
+            },
+            "required": ["path"]
           }
         }
       ]

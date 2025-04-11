@@ -7,6 +7,10 @@
     "start": "node standalone-server.js",
     "start:ci": "node standalone-server.js --ci"
   },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.9.0",
+    "zod": "^3.24.2"
+  },
   "devDependencies": {
     "@types/node": "^18.17.0"
   },

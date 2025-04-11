@@ -4,11 +4,12 @@ This document describes the Model Context Protocol (MCP) validators available fo
 
 ## Overview
 
-Our project enforces code quality using three specialized MCP validators:
+Our project enforces code quality using four specialized MCP validators:
 
 1. **Architecture Guard**: Ensures components follow Next.js 15.2.4 architecture patterns
 2. **Dependency Validator**: Enforces proper dependency usage and prevents problematic imports
 3. **Style Validator**: Checks that code follows our styling standards
+4. **Documentation Validator**: Ensures documentation is up-to-date, consistent, and comprehensive
 
 All validators can be used through:
 
@@ -46,6 +47,25 @@ All validators can be used through:
   - Implementation of React 19 features where appropriate
   - Correct caching behavior with React's `cache()` for data fetching
 
+- **Next.js 15.2.4 Specific Validations**:
+
+  - **Server/Client Component Boundaries**:
+    - Detection of browser APIs or hooks in Server Components
+    - Verification of proper `use client` directive placement
+    - Validation of component import patterns between Server and Client components
+  
+  - **Suspense Boundary Implementation**:
+    - Validation of Suspense boundaries for streaming data
+    - Detection of missing Error boundaries around Suspense
+    - Prevention of nested Suspense boundaries causing waterfalls
+    - Verification of meaningful fallback UI for better UX
+  
+  - **Data Fetching Patterns**:
+    - Enforcement of React's `cache()` for data fetching deduplication
+    - Verification of parallel data fetching with Promise.all()
+    - Validation of proper Next.js 15.2.4 fetch options for caching
+    - Separation of data fetching logic from component rendering
+
 ### Usage
 
 ```bash
@@ -59,10 +79,26 @@ POST http://localhost:3901/v1
   "tool_call_id": "my-tool-123",
   "arguments": {
     "path": "./app",
-    "options": { "verbose": true }
+    "options": { 
+      "verbose": true,
+      "checkSuspenseBoundaries": true,
+      "checkDataFetching": true,
+      "includeServerComponents": true,
+      "includeClientComponents": true 
+    }
   }
 }
 ```
+
+### Available Options
+
+- `verbose`: Include detailed validation information (default: false)
+- `checkSuspenseBoundaries`: Validate proper Suspense boundary usage (default: false)
+- `checkDataFetching`: Validate data fetching patterns including cache() (default: false)
+- `includeServerComponents`: Include server component validation (default: true)
+- `includeClientComponents`: Include client component validation (default: true)
+- `checkDependencies`: Check dependency compliance (default: false)
+- `validateTypes`: Validate TypeScript types (default: false)
 
 ## Dependency Validator
 
@@ -176,6 +212,74 @@ docker-compose -f docker-compose.custom.yml up -d
 docker-compose -f docker-compose.custom.yml down
 ```
 
+## Documentation Validator
+
+**Port**: 7003
+
+### Rules Enforced
+
+- **Freshness Checking**:
+
+  - Compares documentation timestamps against code changes
+  - Tracks when documentation was last updated
+  - Flags documentation that's out of sync with code
+  - Monitors documentation age relative to feature changes
+
+- **Consistency Validation**:
+
+  - Ensures consistent terminology throughout documentation
+  - Validates internal references and links between documents
+  - Checks that code examples match actual implementation patterns
+  - Identifies broken links and references
+
+- **Best Practices Adherence**:
+
+  - Verifies documentation follows Cyber Hand architectural principles
+  - Ensures technical accuracy against Next.js 15.2.4 standards
+  - Checks accessibility guidelines in UI component documentation
+  - Validates examples follow project coding standards
+
+- **Coverage Analysis**:
+  - Tracks which components/features have documentation
+  - Identifies undocumented or poorly documented areas
+  - Generates documentation coverage reports
+  - Recommends areas needing documentation improvement
+
+### Usage
+
+```bash
+# CLI
+node scripts/validate.js documentation ./
+
+# Check specific document
+node scripts/validate.js check-doc ./docs/architecture.md
+
+# API
+POST http://localhost:7003/v1
+{
+  "name": "documentation_validate",
+  "tool_call_id": "my-tool-123",
+  "arguments": {
+    "path": "./",
+    "options": { 
+      "verbose": true,
+      "validators": ["freshness", "consistency", "best-practices", "coverage"],
+      "minCoveragePercentage": 70
+    }
+  }
+}
+```
+
+### Available Options
+
+- `verbose`: Include detailed validation information (default: false)
+- `validators`: Array of validators to run (default: all validators)
+  - Options: `"freshness"`, `"consistency"`, `"best-practices"`, `"coverage"`
+- `minCoveragePercentage`: Minimum acceptable documentation coverage percentage (default: 70)
+- `skipExternalLinks`: Skip validation of external links in documentation (default: false)
+- `requireLanguage`: Require code blocks to specify language (default: true)
+- `includeEmpty`: Include empty categories in coverage analysis (default: false)
+
 ## Integration with Cascade
 
 These MCP servers can be used directly by Cascade AI. Configure Windsurf by:
@@ -185,4 +289,5 @@ These MCP servers can be used directly by Cascade AI. Configure Windsurf by:
    - Architecture Guard: `http://localhost:3901/v1`
    - Dependency Guard: `http://localhost:8002/v1`
    - Style Validator: `http://localhost:8003/v1`
-3. When chatting with Cascade, you can request validation: "Can you check if my components follow our architecture rules?"
+   - Documentation Validator: `http://localhost:7003/v1`
+3. When chatting with Cascade, you can request validation: "Can you check if my components follow our architecture rules?" or "Can you validate the documentation for our project?"

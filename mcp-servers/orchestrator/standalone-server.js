@@ -26,13 +26,18 @@ const VALIDATION_PRIORITY = {
   style: 3,        // Style should be checked last
 };
 
-// Docker image names for direct execution
+// Docker image names for direct execution - use environment variables if available
 const VALIDATOR_IMAGES = {
-  architecture: "cyber-hand/architecture-guard:latest",
-  dependency: "cyber-hand/dependency-validator:latest",
-  documentation: "cyber-hand/docs-validator:latest",
-  style: "cyber-hand/style-validator:latest",
+  architecture: process.env.ARCHITECTURE_GUARD_IMAGE || "cyber-hand/architecture-guard:latest",
+  dependency: process.env.DEPENDENCY_VALIDATOR_IMAGE || "cyber-hand/dependency-validator:latest",
+  documentation: process.env.DOCS_VALIDATOR_IMAGE || "cyber-hand/docs-validator:latest",
+  style: process.env.STYLE_VALIDATOR_IMAGE || "cyber-hand/style-validator:latest",
 };
+
+// Log validator configuration on startup
+for (const [validator, image] of Object.entries(VALIDATOR_IMAGES)) {
+  debugLog(`Configured ${validator} validator using image: ${image}`);
+}
 
 // Cache for validation results to prevent redundant validations
 const validationCache = new Map();
@@ -73,7 +78,11 @@ async function executeValidator(validator, toolName, params) {
     };
     
     const dockerImage = VALIDATOR_IMAGES[validator];
-    const dockerCommand = `echo '${JSON.stringify(request)}' | docker run -i --rm ${dockerImage}`;
+    // Use absolute path mounting for consistent behavior across environments
+  const projectRoot = process.env.PROJECT_ROOT || '/app/project';
+  const currentPath = params.path || '.';
+  
+  const dockerCommand = `echo '${JSON.stringify(request)}' | docker run -i --rm -v "${projectRoot}:${projectRoot}" -e PROJECT_ROOT=${projectRoot} ${dockerImage}`;
     
     exec(dockerCommand, (error, stdout, stderr) => {
       if (error) {

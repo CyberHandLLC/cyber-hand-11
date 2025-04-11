@@ -1,0 +1,53 @@
+﻿Starting MCP Orchestrator with enhanced logging...
+Environment: MCP_DEBUG=true
+NODE_DEBUG=mcp,stream,net
+NODE_ENV=production
+NODE_VERSION=18.20.8
+docker : 2025-04-11T09:07:33.630Z [MCP-ORCHESTRATOR] Configured architecture validator using image: cyber-hand/architecture-guard:latest
+At C:\Users\CyberHand\Documents\Web Development\cyber-hand.com\test-orchestrator-enhanced.ps1:70 char:49
++     $result = Get-Content -Raw "request.json" | docker run -i --rm `
++                                                 ~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (2025-04-11T09:0...re-guard:latest:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+2025-04-11T09:07:33.631Z [MCP-ORCHESTRATOR] Configured dependency validator using image: cyber-hand/dependency-validator:latest
+2025-04-11T09:07:33.631Z [MCP-ORCHESTRATOR] Configured documentation validator using image: cyber-hand/docs-validator:latest
+2025-04-11T09:07:33.631Z [MCP-ORCHESTRATOR] Configured style validator using image: cyber-hand/style-validator:latest
+2025-04-11T09:07:33.631Z [MCP-ORCHESTRATOR] Initializing MCP Orchestration Server
+STREAM [33m1[39m: resume
+STREAM [33m1[39m: resume [33mfalse[39m
+STREAM [33m1[39m: read [33m0[39m
+STREAM [33m1[39m: need readable [33mfalse[39m
+STREAM [33m1[39m: length less than watermark [33mtrue[39m
+STREAM [33m1[39m: do read
+NET [33m1[39m: _read - n [33m16384[39m isConnecting? [33mfalse[39m hasHandle? [33mtrue[39m
+NET [33m1[39m: Socket._handle.readStart
+STREAM [33m1[39m: flow [33mtrue[39m
+STREAM [33m1[39m: read [90mundefined[39m
+STREAM [33m1[39m: need readable [33mtrue[39m
+STREAM [33m1[39m: length less than watermark [33mtrue[39m
+STREAM [33m1[39m: reading, ended or constructing [33mfalse[39m
+2025-04-11T09:07:33.634Z [MCP-ORCHESTRATOR] Server connected to transport, ready to receive messages
+2025-04-11T09:07:33.634Z [MCP-ORCHESTRATOR] MCP Orchestration Server initialization complete
+STREAM [33m1[39m: readableAddChunk <Buffer 7b 0a 20 20 20 20 22 69 64 22 3a 20 22 74 65 73 74 2d 6f 72 63 68 65 73 74 72 61 74 65 22 2c 0a 20 20 20 20 22 
+74 79 70 65 22 3a 20 22 72 65 71 75 65 ... 376 more bytes>
+STREAM [33m1[39m: maybeReadMore read 0
+STREAM [33m1[39m: read [33m0[39m
+STREAM [33m1[39m: need readable [33mtrue[39m
+STREAM [33m1[39m: length less than watermark [33mtrue[39m
+STREAM [33m1[39m: do read
+NET [33m1[39m: _read - n [33m16384[39m isConnecting? [33mfalse[39m hasHandle? [33mtrue[39m
+STREAM [33m1[39m: readableAddChunk [1mnull[22m
+STREAM [33m1[39m: onEofChunk
+STREAM [33m1[39m: emitReadable_ [33mfalse[39m [33m0[39m [33mtrue[39m
+STREAM [33m1[39m: flow [33mtrue[39m
+STREAM [33m1[39m: read [90mundefined[39m
+STREAM [33m1[39m: endReadable [33mfalse[39m
+STREAM [33m1[39m: read [33m0[39m
+STREAM [33m1[39m: endReadable [33mfalse[39m
+STREAM [33m1[39m: endReadableNT [33mfalse[39m [33m0[39m
+NET [33m1[39m: destroy
+NET [33m1[39m: close
+NET [33m1[39m: close handle
+STREAM [33m1[39m: endReadableNT [33mtrue[39m [33m0[39m
+NET [33m1[39m: emit close

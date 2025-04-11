@@ -1,0 +1,352 @@
+{
+  "success": true,
+  "errors": [
+    ": 'any' type detected in variable 'userData' at line 9",
+    ": 'any' type detected in parameter 'user' at line 12",
+    ": 'any' type detected in return type of 'fetchData' at line 18",
+    ": 'any' type detected in variable 'items' at line 23",
+    ": 'any' type detected in property 'options' at line 29",
+    ": Parameter 'price' has an implicit 'any' type at line 33",
+    ": Parameter 'quantity' has an implicit 'any' type at line 33",
+    ": 'any' type detected in code at line 38",
+    ": 'any' type detected in property 'data' at line 53",
+    ": 'any' type detected in code at line 57",
+    ": 'any' type detected in variable 'error' at line 63"
+  ],
+  "warnings": [
+    ": Unused variable 'userData' should be prefixed with underscore at line 9",
+    ": Unused variable 'processUser' should be prefixed with underscore at line 12",
+    ": Unused variable 'fetchData' should be prefixed with underscore at line 18",
+    ": Unused variable 'items' should be prefixed with underscore at line 23",
+    ": Unused variable 'calculateTotal' should be prefixed with underscore at line 33",
+    ": Unused variable 'tryOperation' should be prefixed with underscore at line 60",
+    ": Unused variable 'processUserSafely' should be prefixed with underscore at line 77",
+    ": Unused variable 'fetchDataSafely' should be prefixed with underscore at line 86",
+    ": Unused variable 'typedItems' should be prefixed with underscore at line 91",
+    ": Unused variable 'calculateTotalTyped' should be prefixed with underscore at line 106",
+    ": Unused variable 'tryOperationSafely' should be prefixed with underscore at line 133"
+  ],
+  "fixable": [
+    ": Prefix unused variable 'userData' with underscore at line 9",
+    ": Prefix unused variable 'processUser' with underscore at line 12",
+    ": Prefix unused variable 'fetchData' with underscore at line 18",
+    ": Prefix unused variable 'items' with underscore at line 23",
+    ": Prefix unused variable 'calculateTotal' with underscore at line 33",
+    ": Prefix unused variable 'tryOperation' with underscore at line 60",
+    ": Prefix unused variable 'processUserSafely' with underscore at line 77",
+    ": Prefix unused variable 'fetchDataSafely' with underscore at line 86",
+    ": Prefix unused variable 'typedItems' with underscore at line 91",
+    ": Prefix unused variable 'calculateTotalTyped' with underscore at line 106",
+    ": Prefix unused variable 'tryOperationSafely' with underscore at line 133"
+  ],
+  "anyTypeIssues": [
+    {
+      "file": "C:\\Users\\CyberHand\\Documents\\Web Development\\cyber-hand.com\\mcp-servers\\style-validator\\test\\any-type-examples.ts",
+      "issues": [
+        {
+          "line": 9,
+          "character": 17,
+          "type": "anyType",
+          "severity": "error",
+          "message": "'any' type detected in variable 'userData'",
+          "context": "const userData: any = { name: \"John\", age: 30 };",
+          "recommendation": "Create a specific interface or type for 'userData' instead of using 'any'"
+        },
+        {
+          "line": 12,
+          "character": 28,
+          "type": "anyType",
+          "severity": "error",
+          "message": "'any' type detected in parameter 'user'",
+          "context": "function processUser(user: any) {",
+          "recommendation": "Define a proper type for parameter 'user'"
+        },
+        {
+          "line": 18,
+          "character": 23,
+          "type": "anyType",
+          "severity": "error",
+          "message": "'any' type detected in return type of 'fetchData'",
+          "context": "function fetchData(): any {",
+          "recommendation": "Specify a return type for 'fetchData'"
+        },
+        {
+          "line": 23,
+          "character": 14,
+          "type": "anyType",
+          "severity": "error",
+          "message": "'any' type detected in variable 'items'",
+          "context": "const items: any[] = [1, \"two\", { three: true }];",
+          "recommendation": "Create a specific interface or type for 'items' instead of using 'any'"
+        },
+        {
+          "line": 29,
+          "character": 12,
+          "type": "anyType",
+          "severity": "error",
+          "message": "'any' type detected in property 'options'",
+          "context": "options: any; // Should be a specific interface",
+          "recommendation": "Define a specific type for 'options'"
+        },
+        {
+          "line": 33,
+          "character": 25,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'price' has an implicit 'any' type",
+          "context": "function calculateTotal(price, quantity) {",
+          "recommendation": "Add an explicit type annotation for 'price'"
+        },
+        {
+          "line": 33,
+          "character": 32,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'quantity' has an implicit 'any' type",
+          "context": "function calculateTotal(price, quantity) {",
+          "recommendation": "Add an explicit type annotation for 'quantity'"
+        },
+        {
+          "line": 38,
+          "character": 21,
+          "type": "anyType",
+          "severity": "error",
+          "message": "'any' type detected in code",
+          "context": "class DataStore<T = any> {",
+          "recommendation": "Replace with a specific interface or type"
+        },
+        {
+          "line": 53,
+          "character": 9,
+          "type": "anyType",
+          "severity": "error",
+          "message": "'any' type detected in property 'data'",
+          "context": "data: any; // Should be a specific type",
+          "recommendation": "Define a specific type for 'data'"
+        },
+        {
+          "line": 57,
+          "character": 33,
+          "type": "anyType",
+          "severity": "error",
+          "message": "'any' type detected in code",
+          "context": "type Result = string | number | any;",
+          "recommendation": "Replace with a specific interface or type"
+        },
+        {
+          "line": 63,
+          "character": 19,
+          "type": "anyType",
+          "severity": "error",
+          "message": "'any' type detected in variable 'error'",
+          "context": "} catch (error: any) {",
+          "recommendation": "Create a specific interface or type for 'error' instead of using 'any'"
+        }
+      ],
+      "recommendations": [
+        {
+          "line": 9,
+          "character": 17,
+          "message": "'any' type detected in variable 'userData'",
+          "recommendation": "Create a specific interface or type for 'userData' instead of using 'any'\nConsider using typeof: `type const userData any = typeof { name: \"John\", age: 30 }`",
+          "severity": "error"
+        },
+        {
+          "line": 12,
+          "character": 28,
+          "message": "'any' type detected in parameter 'user'",
+          "recommendation": "Define a proper type for parameter 'user'",
+          "severity": "error"
+        },
+        {
+          "line": 18,
+          "character": 23,
+          "message": "'any' type detected in return type of 'fetchData'",
+          "recommendation": "Specify a return type for 'fetchData'",
+          "severity": "error"
+        },
+        {
+          "line": 23,
+          "character": 14,
+          "message": "'any' type detected in variable 'items'",
+          "recommendation": "Create a specific interface or type for 'items' instead of using 'any'\nConsider using typeof: `type const items any[] = typeof [1, \"two\", { three: true }]`",
+          "severity": "error"
+        },
+        {
+          "line": 29,
+          "character": 12,
+          "message": "'any' type detected in property 'options'",
+          "recommendation": "Define a specific type for 'options'",
+          "severity": "error"
+        },
+        {
+          "line": 33,
+          "character": 25,
+          "message": "Parameter 'price' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'price'\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 33,
+          "character": 32,
+          "message": "Parameter 'quantity' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'quantity'\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 38,
+          "character": 21,
+          "message": "'any' type detected in code",
+          "recommendation": "Replace with a specific interface or type\nConsider using typeof: `type class DataStore<T = typeof any> {`",
+          "severity": "error"
+        },
+        {
+          "line": 53,
+          "character": 9,
+          "message": "'any' type detected in property 'data'",
+          "recommendation": "Define a specific type for 'data'",
+          "severity": "error"
+        },
+        {
+          "line": 57,
+          "character": 33,
+          "message": "'any' type detected in code",
+          "recommendation": "Replace with a specific interface or type\nConsider using typeof: `type type Result = typeof string | number | any`",
+          "severity": "error"
+        },
+        {
+          "line": 63,
+          "character": 19,
+          "message": "'any' type detected in variable 'error'",
+          "recommendation": "Create a specific interface or type for 'error' instead of using 'any'",
+          "severity": "error"
+        }
+      ]
+    }
+  ],
+  "sizeLimitIssues": [],
+  "namingConventionIssues": [],
+  "unusedVarIssues": [
+    {
+      "file": "C:\\Users\\CyberHand\\Documents\\Web Development\\cyber-hand.com\\mcp-servers\\style-validator\\test\\any-type-examples.ts",
+      "issues": [
+        {
+          "line": 9,
+          "character": 7,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'userData' should be prefixed with underscore",
+          "context": "const userData: any = { name: \"John\", age: 30 };",
+          "recommendation": "Rename to '_userData'"
+        },
+        {
+          "line": 12,
+          "character": 10,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'processUser' should be prefixed with underscore",
+          "context": "function processUser(user: any) {",
+          "recommendation": "Rename to '_processUser'"
+        },
+        {
+          "line": 18,
+          "character": 10,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'fetchData' should be prefixed with underscore",
+          "context": "function fetchData(): any {",
+          "recommendation": "Rename to '_fetchData'"
+        },
+        {
+          "line": 23,
+          "character": 7,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'items' should be prefixed with underscore",
+          "context": "const items: any[] = [1, \"two\", { three: true }];",
+          "recommendation": "Rename to '_items'"
+        },
+        {
+          "line": 33,
+          "character": 10,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'calculateTotal' should be prefixed with underscore",
+          "context": "function calculateTotal(price, quantity) {",
+          "recommendation": "Rename to '_calculateTotal'"
+        },
+        {
+          "line": 60,
+          "character": 10,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'tryOperation' should be prefixed with underscore",
+          "context": "function tryOperation() {",
+          "recommendation": "Rename to '_tryOperation'"
+        },
+        {
+          "line": 77,
+          "character": 10,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'processUserSafely' should be prefixed with underscore",
+          "context": "function processUserSafely(user: unknown): UserData {",
+          "recommendation": "Rename to '_processUserSafely'"
+        },
+        {
+          "line": 86,
+          "character": 10,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'fetchDataSafely' should be prefixed with underscore",
+          "context": "function fetchDataSafely(): { status: string; data: unknown[] } {",
+          "recommendation": "Rename to '_fetchDataSafely'"
+        },
+        {
+          "line": 91,
+          "character": 7,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'typedItems' should be prefixed with underscore",
+          "context": "const typedItems: (number | string | { three: boolean })[] = [1, \"two\", { three: true }];",
+          "recommendation": "Rename to '_typedItems'"
+        },
+        {
+          "line": 106,
+          "character": 10,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'calculateTotalTyped' should be prefixed with underscore",
+          "context": "function calculateTotalTyped(price: number, quantity: number): number {",
+          "recommendation": "Rename to '_calculateTotalTyped'"
+        },
+        {
+          "line": 133,
+          "character": 10,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'tryOperationSafely' should be prefixed with underscore",
+          "context": "function tryOperationSafely() {",
+          "recommendation": "Rename to '_tryOperationSafely'"
+        }
+      ]
+    }
+  ],
+  "fileCount": 1,
+  "fileDetails": [
+    {
+      "path": "C:\\Users\\CyberHand\\Documents\\Web Development\\cyber-hand.com\\mcp-servers\\style-validator\\test\\any-type-examples.ts",
+      "name": "any-type-examples.ts",
+      "directory": "C:\\Users\\CyberHand\\Documents\\Web Development\\cyber-hand.com\\mcp-servers\\style-validator\\test",
+      "extension": ".ts",
+      "size": 3232,
+      "modified": "2025-04-11T06:43:55.793Z",
+      "isTypeScript": true,
+      "isJavaScript": false,
+      "isReact": false,
+      "isServerComponent": false,
+      "isClientComponent": false
+    }
+  ],
+  "summary": "Style validation for any-type-examples.ts:\n- Found 11 style errors and 11 warnings\n- TypeScript safety: 11 'any' type usages detected\n- Recommendation: Replace with specific interfaces per Cyber Hand standards\n- Module size: Within the 500 line limit - Compliant!\n- Naming conventions: Follows Cyber Hand naming standards - Compliant!\n- Unused variables: 11 instances without underscore prefix\n- Recommendation: Prefix unused variables with underscore (_)"
+}

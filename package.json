@@ -19,9 +19,9 @@
     "mcp:start": "docker-compose up -d",
     "mcp:stop": "docker-compose down",
     "mcp:validate": "npm run mcp:validate:arch && npm run mcp:validate:dep && npm run mcp:validate:style",
-    "mcp:validate:arch": "curl -X POST -H \"Content-Type: application/json\" -d '{\"path\":\"./\"}' http://localhost:8001/validate",
-    "mcp:validate:dep": "curl -X POST -H \"Content-Type: application/json\" -d '{\"path\":\"./\"}' http://localhost:8002/validate",
-    "mcp:validate:style": "curl -X POST -H \"Content-Type: application/json\" -d '{\"path\":\"./\"}' http://localhost:8003/validate"
+    "mcp:validate:arch": "docker exec -i cyber-handcom-architecture-guard-1 node standalone-server.js < ./mcp-servers/requests/validate-arch.json",
+    "mcp:validate:dep": "docker exec -i cyber-handcom-dependency-guard-1 node standalone-server.js < ./mcp-servers/requests/validate-dep.json",
+    "mcp:validate:style": "docker exec -i cyber-handcom-style-validator-1 node standalone-server.js < ./mcp-servers/requests/validate-style.json"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.9.0",
@@ -31,7 +31,9 @@
     "@sendgrid/mail": "^8.1.5",
     "@supabase/auth-helpers-nextjs": "^0.9.0",
     "@supabase/supabase-js": "^2.39.0",
+    "@types/express": "^5.0.1",
     "@types/nodemailer": "^6.4.17",
+    "@types/semver": "^7.7.0",
     "@vercel/edge": "^1.2.1",
     "body-parser": "^2.2.0",
     "class-variance-authority": "^0.7.0",
@@ -54,7 +56,8 @@
     "schema-dts": "^1.1.5",
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.8.2",
+    "ts-node": "^10.9.2",
+    "uuid": "^11.1.0",
     "web-vitals": "^4.2.4",
     "zod": "^3.24.2"
   },
@@ -73,7 +76,7 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^29.5.14",
-    "@types/node": "^20",
+    "@types/node": "^20.17.30",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@typescript-eslint/eslint-plugin": "^8.29.0",
@@ -94,6 +97,6 @@
     "tailwindcss": "^3",
     "ts-jest": "^29.3.1",
     "tsx": "^4.19.3",
-    "typescript": "^5"
+    "typescript": "^5.8.3"
   }
 }

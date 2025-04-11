@@ -1,0 +1,701 @@
+{
+  "success": true,
+  "errors": [
+    "any-type-examples.ts: 'any' type detected in variable 'userData' at line 9",
+    "any-type-examples.ts: 'any' type detected in parameter 'user' at line 12",
+    "any-type-examples.ts: 'any' type detected in return type of 'fetchData' at line 18",
+    "any-type-examples.ts: 'any' type detected in variable 'items' at line 23",
+    "any-type-examples.ts: 'any' type detected in property 'options' at line 29",
+    "any-type-examples.ts: Parameter 'price' has an implicit 'any' type at line 33",
+    "any-type-examples.ts: Parameter 'quantity' has an implicit 'any' type at line 33",
+    "any-type-examples.ts: 'any' type detected in code at line 38",
+    "any-type-examples.ts: 'any' type detected in property 'data' at line 53",
+    "any-type-examples.ts: 'any' type detected in code at line 57",
+    "any-type-examples.ts: 'any' type detected in variable 'error' at line 63",
+    "test-validator.js: Parameter 'text' has an implicit 'any' type at line 19",
+    "test-validator.js: Parameter 'text' has an implicit 'any' type at line 20",
+    "test-validator.js: Parameter 'text' has an implicit 'any' type at line 21",
+    "test-validator.js: Parameter 'text' has an implicit 'any' type at line 22",
+    "test-validator.js: Parameter 'text' has an implicit 'any' type at line 23",
+    "test-validator.js: Parameter 'filename' has an implicit 'any' type at line 37",
+    "test-validator.js: Parameter 'results' has an implicit 'any' type at line 37",
+    "test-validator.js: Parameter 'issues' has an implicit 'any' type at line 48",
+    "test-validator.js: Parameter 'type' has an implicit 'any' type at line 48",
+    "test-validator.js: Parameter 'issue' has an implicit 'any' type at line 54",
+    "test-validator.js: Parameter 'i' has an implicit 'any' type at line 54",
+    "test-validator.js: Parameter 'message' has an implicit 'any' type at line 60",
+    "test-validator.js: Parameter 'error' has an implicit 'any' type at line 60",
+    "test-validator.js: Parameter 'issue' has an implicit 'any' type at line 103",
+    "test-validator.js: Parameter 'index' has an implicit 'any' type at line 103",
+    "test-validator.js: Parameter 'issue' has an implicit 'any' type at line 119",
+    "test-validator.js: Parameter 'index' has an implicit 'any' type at line 119",
+    "test-validator.js: Parameter 'issue' has an implicit 'any' type at line 129",
+    "test-validator.js: Parameter 'index' has an implicit 'any' type at line 129",
+    "test-validator.js: Parameter 'results' has an implicit 'any' type at line 234",
+    "test-validator.js: Parameter 'error' has an implicit 'any' type at line 296"
+  ],
+  "warnings": [
+    "any-type-examples.ts: Unused variable 'userData' should be prefixed with underscore at line 9",
+    "any-type-examples.ts: Unused variable 'processUser' should be prefixed with underscore at line 12",
+    "any-type-examples.ts: Unused variable 'fetchData' should be prefixed with underscore at line 18",
+    "any-type-examples.ts: Unused variable 'items' should be prefixed with underscore at line 23",
+    "any-type-examples.ts: Unused variable 'calculateTotal' should be prefixed with underscore at line 33",
+    "any-type-examples.ts: Unused variable 'tryOperation' should be prefixed with underscore at line 60",
+    "any-type-examples.ts: Unused variable 'processUserSafely' should be prefixed with underscore at line 77",
+    "any-type-examples.ts: Unused variable 'fetchDataSafely' should be prefixed with underscore at line 86",
+    "any-type-examples.ts: Unused variable 'typedItems' should be prefixed with underscore at line 91",
+    "any-type-examples.ts: Unused variable 'calculateTotalTyped' should be prefixed with underscore at line 106",
+    "any-type-examples.ts: Unused variable 'tryOperationSafely' should be prefixed with underscore at line 133"
+  ],
+  "fixable": [
+    "any-type-examples.ts: Prefix unused variable 'userData' with underscore at line 9",
+    "any-type-examples.ts: Prefix unused variable 'processUser' with underscore at line 12",
+    "any-type-examples.ts: Prefix unused variable 'fetchData' with underscore at line 18",
+    "any-type-examples.ts: Prefix unused variable 'items' with underscore at line 23",
+    "any-type-examples.ts: Prefix unused variable 'calculateTotal' with underscore at line 33",
+    "any-type-examples.ts: Prefix unused variable 'tryOperation' with underscore at line 60",
+    "any-type-examples.ts: Prefix unused variable 'processUserSafely' with underscore at line 77",
+    "any-type-examples.ts: Prefix unused variable 'fetchDataSafely' with underscore at line 86",
+    "any-type-examples.ts: Prefix unused variable 'typedItems' with underscore at line 91",
+    "any-type-examples.ts: Prefix unused variable 'calculateTotalTyped' with underscore at line 106",
+    "any-type-examples.ts: Prefix unused variable 'tryOperationSafely' with underscore at line 133"
+  ],
+  "anyTypeIssues": [
+    {
+      "file": "C:\\Users\\CyberHand\\Documents\\Web Development\\cyber-hand.com\\mcp-servers\\style-validator\\test\\any-type-examples.ts",
+      "issues": [
+        {
+          "line": 9,
+          "character": 17,
+          "type": "anyType",
+          "severity": "error",
+          "message": "'any' type detected in variable 'userData'",
+          "context": "const userData: any = { name: \"John\", age: 30 };",
+          "recommendation": "Create a specific interface or type for 'userData' instead of using 'any'"
+        },
+        {
+          "line": 12,
+          "character": 28,
+          "type": "anyType",
+          "severity": "error",
+          "message": "'any' type detected in parameter 'user'",
+          "context": "function processUser(user: any) {",
+          "recommendation": "Define a proper type for parameter 'user'"
+        },
+        {
+          "line": 18,
+          "character": 23,
+          "type": "anyType",
+          "severity": "error",
+          "message": "'any' type detected in return type of 'fetchData'",
+          "context": "function fetchData(): any {",
+          "recommendation": "Specify a return type for 'fetchData'"
+        },
+        {
+          "line": 23,
+          "character": 14,
+          "type": "anyType",
+          "severity": "error",
+          "message": "'any' type detected in variable 'items'",
+          "context": "const items: any[] = [1, \"two\", { three: true }];",
+          "recommendation": "Create a specific interface or type for 'items' instead of using 'any'"
+        },
+        {
+          "line": 29,
+          "character": 12,
+          "type": "anyType",
+          "severity": "error",
+          "message": "'any' type detected in property 'options'",
+          "context": "options: any; // Should be a specific interface",
+          "recommendation": "Define a specific type for 'options'"
+        },
+        {
+          "line": 33,
+          "character": 25,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'price' has an implicit 'any' type",
+          "context": "function calculateTotal(price, quantity) {",
+          "recommendation": "Add an explicit type annotation for 'price'"
+        },
+        {
+          "line": 33,
+          "character": 32,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'quantity' has an implicit 'any' type",
+          "context": "function calculateTotal(price, quantity) {",
+          "recommendation": "Add an explicit type annotation for 'quantity'"
+        },
+        {
+          "line": 38,
+          "character": 21,
+          "type": "anyType",
+          "severity": "error",
+          "message": "'any' type detected in code",
+          "context": "class DataStore<T = any> {",
+          "recommendation": "Replace with a specific interface or type"
+        },
+        {
+          "line": 53,
+          "character": 9,
+          "type": "anyType",
+          "severity": "error",
+          "message": "'any' type detected in property 'data'",
+          "context": "data: any; // Should be a specific type",
+          "recommendation": "Define a specific type for 'data'"
+        },
+        {
+          "line": 57,
+          "character": 33,
+          "type": "anyType",
+          "severity": "error",
+          "message": "'any' type detected in code",
+          "context": "type Result = string | number | any;",
+          "recommendation": "Replace with a specific interface or type"
+        },
+        {
+          "line": 63,
+          "character": 19,
+          "type": "anyType",
+          "severity": "error",
+          "message": "'any' type detected in variable 'error'",
+          "context": "} catch (error: any) {",
+          "recommendation": "Create a specific interface or type for 'error' instead of using 'any'"
+        }
+      ],
+      "recommendations": [
+        {
+          "line": 9,
+          "character": 17,
+          "message": "'any' type detected in variable 'userData'",
+          "recommendation": "Create a specific interface or type for 'userData' instead of using 'any'\nConsider using typeof: `type const userData any = typeof { name: \"John\", age: 30 }`",
+          "severity": "error"
+        },
+        {
+          "line": 12,
+          "character": 28,
+          "message": "'any' type detected in parameter 'user'",
+          "recommendation": "Define a proper type for parameter 'user'",
+          "severity": "error"
+        },
+        {
+          "line": 18,
+          "character": 23,
+          "message": "'any' type detected in return type of 'fetchData'",
+          "recommendation": "Specify a return type for 'fetchData'",
+          "severity": "error"
+        },
+        {
+          "line": 23,
+          "character": 14,
+          "message": "'any' type detected in variable 'items'",
+          "recommendation": "Create a specific interface or type for 'items' instead of using 'any'\nConsider using typeof: `type const items any[] = typeof [1, \"two\", { three: true }]`",
+          "severity": "error"
+        },
+        {
+          "line": 29,
+          "character": 12,
+          "message": "'any' type detected in property 'options'",
+          "recommendation": "Define a specific type for 'options'",
+          "severity": "error"
+        },
+        {
+          "line": 33,
+          "character": 25,
+          "message": "Parameter 'price' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'price'\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 33,
+          "character": 32,
+          "message": "Parameter 'quantity' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'quantity'\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 38,
+          "character": 21,
+          "message": "'any' type detected in code",
+          "recommendation": "Replace with a specific interface or type\nConsider using typeof: `type class DataStore<T = typeof any> {`",
+          "severity": "error"
+        },
+        {
+          "line": 53,
+          "character": 9,
+          "message": "'any' type detected in property 'data'",
+          "recommendation": "Define a specific type for 'data'",
+          "severity": "error"
+        },
+        {
+          "line": 57,
+          "character": 33,
+          "message": "'any' type detected in code",
+          "recommendation": "Replace with a specific interface or type\nConsider using typeof: `type type Result = typeof string | number | any`",
+          "severity": "error"
+        },
+        {
+          "line": 63,
+          "character": 19,
+          "message": "'any' type detected in variable 'error'",
+          "recommendation": "Create a specific interface or type for 'error' instead of using 'any'",
+          "severity": "error"
+        }
+      ]
+    },
+    {
+      "file": "C:\\Users\\CyberHand\\Documents\\Web Development\\cyber-hand.com\\mcp-servers\\style-validator\\test\\test-validator.js",
+      "issues": [
+        {
+          "line": 19,
+          "character": 9,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'text' has an implicit 'any' type",
+          "context": "red: (text) => `\\x1b[31m${text}\\x1b[0m`,",
+          "recommendation": "Add an explicit type annotation for 'text'"
+        },
+        {
+          "line": 20,
+          "character": 11,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'text' has an implicit 'any' type",
+          "context": "green: (text) => `\\x1b[32m${text}\\x1b[0m`,",
+          "recommendation": "Add an explicit type annotation for 'text'"
+        },
+        {
+          "line": 21,
+          "character": 12,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'text' has an implicit 'any' type",
+          "context": "yellow: (text) => `\\x1b[33m${text}\\x1b[0m`,",
+          "recommendation": "Add an explicit type annotation for 'text'"
+        },
+        {
+          "line": 22,
+          "character": 10,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'text' has an implicit 'any' type",
+          "context": "blue: (text) => `\\x1b[34m${text}\\x1b[0m`,",
+          "recommendation": "Add an explicit type annotation for 'text'"
+        },
+        {
+          "line": 23,
+          "character": 10,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'text' has an implicit 'any' type",
+          "context": "gray: (text) => `\\x1b[90m${text}\\x1b[0m`",
+          "recommendation": "Add an explicit type annotation for 'text'"
+        },
+        {
+          "line": 37,
+          "character": 22,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'filename' has an implicit 'any' type",
+          "context": "function saveResults(filename, results) {",
+          "recommendation": "Add an explicit type annotation for 'filename'"
+        },
+        {
+          "line": 37,
+          "character": 32,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'results' has an implicit 'any' type",
+          "context": "function saveResults(filename, results) {",
+          "recommendation": "Add an explicit type annotation for 'results'"
+        },
+        {
+          "line": 48,
+          "character": 33,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'issues' has an implicit 'any' type",
+          "context": "function formatValidationIssues(issues, type = 'error') {",
+          "recommendation": "Add an explicit type annotation for 'issues'"
+        },
+        {
+          "line": 48,
+          "character": 41,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'type' has an implicit 'any' type",
+          "context": "function formatValidationIssues(issues, type = 'error') {",
+          "recommendation": "Add an explicit type annotation for 'type'"
+        },
+        {
+          "line": 54,
+          "character": 22,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'issue' has an implicit 'any' type",
+          "context": "return issues.map((issue, i) => {",
+          "recommendation": "Add an explicit type annotation for 'issue'"
+        },
+        {
+          "line": 54,
+          "character": 29,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'i' has an implicit 'any' type",
+          "context": "return issues.map((issue, i) => {",
+          "recommendation": "Add an explicit type annotation for 'i'"
+        },
+        {
+          "line": 60,
+          "character": 22,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'message' has an implicit 'any' type",
+          "context": "function handleError(message, error) {",
+          "recommendation": "Add an explicit type annotation for 'message'"
+        },
+        {
+          "line": 60,
+          "character": 31,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'error' has an implicit 'any' type",
+          "context": "function handleError(message, error) {",
+          "recommendation": "Add an explicit type annotation for 'error'"
+        },
+        {
+          "line": 103,
+          "character": 37,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'issue' has an implicit 'any' type",
+          "context": "issues.slice(0, 5).forEach((issue, index) => {",
+          "recommendation": "Add an explicit type annotation for 'issue'"
+        },
+        {
+          "line": 103,
+          "character": 44,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'index' has an implicit 'any' type",
+          "context": "issues.slice(0, 5).forEach((issue, index) => {",
+          "recommendation": "Add an explicit type annotation for 'index'"
+        },
+        {
+          "line": 119,
+          "character": 59,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'issue' has an implicit 'any' type",
+          "context": "singleFileResults.namingConventionIssues.forEach((issue, index) => {",
+          "recommendation": "Add an explicit type annotation for 'issue'"
+        },
+        {
+          "line": 119,
+          "character": 66,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'index' has an implicit 'any' type",
+          "context": "singleFileResults.namingConventionIssues.forEach((issue, index) => {",
+          "recommendation": "Add an explicit type annotation for 'index'"
+        },
+        {
+          "line": 129,
+          "character": 52,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'issue' has an implicit 'any' type",
+          "context": "singleFileResults.unusedVarIssues.forEach((issue, index) => {",
+          "recommendation": "Add an explicit type annotation for 'issue'"
+        },
+        {
+          "line": 129,
+          "character": 59,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'index' has an implicit 'any' type",
+          "context": "singleFileResults.unusedVarIssues.forEach((issue, index) => {",
+          "recommendation": "Add an explicit type annotation for 'index'"
+        },
+        {
+          "line": 234,
+          "character": 32,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'results' has an implicit 'any' type",
+          "context": "const formatMcpResponse = (results) => {",
+          "recommendation": "Add an explicit type annotation for 'results'"
+        },
+        {
+          "line": 296,
+          "character": 18,
+          "type": "implicitAny",
+          "severity": "error",
+          "message": "Parameter 'error' has an implicit 'any' type",
+          "context": "runTests().catch(error => {",
+          "recommendation": "Add an explicit type annotation for 'error'"
+        }
+      ],
+      "recommendations": [
+        {
+          "line": 19,
+          "character": 9,
+          "message": "Parameter 'text' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'text'\nConsider using typeof: `type red (text) = typeof > `\\x1b[31m${text}\\x1b[0m`,`\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 20,
+          "character": 11,
+          "message": "Parameter 'text' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'text'\nConsider using typeof: `type green (text) = typeof > `\\x1b[32m${text}\\x1b[0m`,`\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 21,
+          "character": 12,
+          "message": "Parameter 'text' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'text'\nConsider using typeof: `type yellow (text) = typeof > `\\x1b[33m${text}\\x1b[0m`,`\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 22,
+          "character": 10,
+          "message": "Parameter 'text' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'text'\nConsider using typeof: `type blue (text) = typeof > `\\x1b[34m${text}\\x1b[0m`,`\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 23,
+          "character": 10,
+          "message": "Parameter 'text' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'text'\nConsider using typeof: `type gray (text) = typeof > `\\x1b[90m${text}\\x1b[0m``\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 37,
+          "character": 22,
+          "message": "Parameter 'filename' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'filename'\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 37,
+          "character": 32,
+          "message": "Parameter 'results' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'results'\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 48,
+          "character": 33,
+          "message": "Parameter 'issues' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'issues'\nConsider using typeof: `type function formatValidationIssues(issues, type = typeof 'error') {`\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 48,
+          "character": 41,
+          "message": "Parameter 'type' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'type'\nConsider using typeof: `type function formatValidationIssues(issues, type = typeof 'error') {`\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 54,
+          "character": 22,
+          "message": "Parameter 'issue' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'issue'\nConsider using typeof: `type return issues.map((issue, i) = typeof > {`\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 54,
+          "character": 29,
+          "message": "Parameter 'i' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'i'\nConsider using typeof: `type return issues.map((issue, i) = typeof > {`\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 60,
+          "character": 22,
+          "message": "Parameter 'message' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'message'\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 60,
+          "character": 31,
+          "message": "Parameter 'error' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'error'\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 103,
+          "character": 37,
+          "message": "Parameter 'issue' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'issue'\nConsider using typeof: `type issues.slice(0, 5).forEach((issue, index) = typeof > {`\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 103,
+          "character": 44,
+          "message": "Parameter 'index' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'index'\nConsider using typeof: `type issues.slice(0, 5).forEach((issue, index) = typeof > {`\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 119,
+          "character": 59,
+          "message": "Parameter 'issue' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'issue'\nConsider using typeof: `type singleFileResults.namingConventionIssues.forEach((issue, index) = typeof > {`\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 119,
+          "character": 66,
+          "message": "Parameter 'index' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'index'\nConsider using typeof: `type singleFileResults.namingConventionIssues.forEach((issue, index) = typeof > {`\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 129,
+          "character": 52,
+          "message": "Parameter 'issue' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'issue'\nConsider using typeof: `type singleFileResults.unusedVarIssues.forEach((issue, index) = typeof > {`\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 129,
+          "character": 59,
+          "message": "Parameter 'index' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'index'\nConsider using typeof: `type singleFileResults.unusedVarIssues.forEach((issue, index) = typeof > {`\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 234,
+          "character": 32,
+          "message": "Parameter 'results' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'results'\nConsider using typeof: `type const formatMcpResponse = typeof (results)`\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        },
+        {
+          "line": 296,
+          "character": 18,
+          "message": "Parameter 'error' has an implicit 'any' type",
+          "recommendation": "Add an explicit type annotation for 'error'\nConsider using typeof: `type runTests().catch(error = typeof > {`\nFor API data, consider creating an interface that matches the expected structure",
+          "severity": "error"
+        }
+      ]
+    }
+  ],
+  "sizeLimitIssues": [],
+  "namingConventionIssues": [],
+  "unusedVarIssues": [
+    {
+      "file": "C:\\Users\\CyberHand\\Documents\\Web Development\\cyber-hand.com\\mcp-servers\\style-validator\\test\\any-type-examples.ts",
+      "issues": [
+        {
+          "line": 9,
+          "character": 7,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'userData' should be prefixed with underscore",
+          "context": "const userData: any = { name: \"John\", age: 30 };",
+          "recommendation": "Rename to '_userData'"
+        },
+        {
+          "line": 12,
+          "character": 10,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'processUser' should be prefixed with underscore",
+          "context": "function processUser(user: any) {",
+          "recommendation": "Rename to '_processUser'"
+        },
+        {
+          "line": 18,
+          "character": 10,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'fetchData' should be prefixed with underscore",
+          "context": "function fetchData(): any {",
+          "recommendation": "Rename to '_fetchData'"
+        },
+        {
+          "line": 23,
+          "character": 7,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'items' should be prefixed with underscore",
+          "context": "const items: any[] = [1, \"two\", { three: true }];",
+          "recommendation": "Rename to '_items'"
+        },
+        {
+          "line": 33,
+          "character": 10,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'calculateTotal' should be prefixed with underscore",
+          "context": "function calculateTotal(price, quantity) {",
+          "recommendation": "Rename to '_calculateTotal'"
+        },
+        {
+          "line": 60,
+          "character": 10,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'tryOperation' should be prefixed with underscore",
+          "context": "function tryOperation() {",
+          "recommendation": "Rename to '_tryOperation'"
+        },
+        {
+          "line": 77,
+          "character": 10,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'processUserSafely' should be prefixed with underscore",
+          "context": "function processUserSafely(user: unknown): UserData {",
+          "recommendation": "Rename to '_processUserSafely'"
+        },
+        {
+          "line": 86,
+          "character": 10,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'fetchDataSafely' should be prefixed with underscore",
+          "context": "function fetchDataSafely(): { status: string; data: unknown[] } {",
+          "recommendation": "Rename to '_fetchDataSafely'"
+        },
+        {
+          "line": 91,
+          "character": 7,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'typedItems' should be prefixed with underscore",
+          "context": "const typedItems: (number | string | { three: boolean })[] = [1, \"two\", { three: true }];",
+          "recommendation": "Rename to '_typedItems'"
+        },
+        {
+          "line": 106,
+          "character": 10,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'calculateTotalTyped' should be prefixed with underscore",
+          "context": "function calculateTotalTyped(price: number, quantity: number): number {",
+          "recommendation": "Rename to '_calculateTotalTyped'"
+        },
+        {
+          "line": 133,
+          "character": 10,
+          "type": "unusedVariable",
+          "severity": "warning",
+          "message": "Unused variable 'tryOperationSafely' should be prefixed with underscore",
+          "context": "function tryOperationSafely() {",
+          "recommendation": "Rename to '_tryOperationSafely'"
+        }
+      ]
+    }
+  ],
+  "fileCount": 2,
+  "summary": "Style validation for test:\n- Found 32 style errors and 11 warnings\n- TypeScript safety issues: 32 'any' type usages detected\n- Module size issues: 0 files exceed the 500 line limit\n- Naming convention issues: 0 instances detected\n- Unused variables without underscore: 11 instances detected\n\nCode has style issues that should be addressed to comply with Cyber Hand standards."
+}

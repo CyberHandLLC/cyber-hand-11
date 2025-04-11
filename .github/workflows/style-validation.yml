@@ -1,0 +1,112 @@
+name: Style Validation
+
+on:
+  push:
+    branches: [main, development]
+  pull_request:
+    branches: [main, development]
+  # Enable manual triggering
+  workflow_dispatch:
+
+jobs:
+  validate-styles:
+    name: Validate Code Style
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build style validator Docker image
+        run: |
+          cd mcp-servers/style-validator
+          docker build -t cyber-hand/style-validator:latest .
+
+      - name: Validate entire project
+        run: |
+          # Create a results directory
+          mkdir -p style-validation-results
+
+          # Run style validation on key directories using Docker
+          docker run --rm -v $(pwd):/app/project -e MCP_DEBUG=true cyber-hand/style-validator:latest node standalone-server.js <<EOF
+          {
+            "id": "ci-validation-1",
+            "type": "request",
+            "name": "style_check",
+            "params": {
+              "path": "/app/project/app",
+              "options": {
+                "verbose": true,
+                "includeTypeChecking": true,
+                "checkNaming": true, 
+                "checkUnusedVars": true,
+                "fileSize": true
+              }
+            }
+          }
+          EOF > style-validation-results/app-report.json
+
+          # Add additional directories as needed
+          docker run --rm -v $(pwd):/app/project -e MCP_DEBUG=true cyber-hand/style-validator:latest node standalone-server.js <<EOF
+          {
+            "id": "ci-validation-2",
+            "type": "request",
+            "name": "style_check",
+            "params": {
+              "path": "/app/project/components",
+              "options": {
+                "verbose": true,
+                "includeTypeChecking": true,
+                "checkNaming": true, 
+                "checkUnusedVars": true,
+                "fileSize": true
+              }
+            }
+          }
+          EOF > style-validation-results/components-report.json
+
+      - name: Check for critical errors
+        run: |
+          # Parse the JSON results and extract error counts
+          APP_ERRORS=$(cat style-validation-results/app-report.json | grep -o '"errors":\[[^]]*\]' | grep -o '"[^"]*"' | wc -l)
+          COMPONENT_ERRORS=$(cat style-validation-results/components-report.json | grep -o '"errors":\[[^]]*\]' | grep -o '"[^"]*"' | wc -l)
+          
+          TOTAL_ERRORS=$((APP_ERRORS + COMPONENT_ERRORS))
+          
+          echo "Found $TOTAL_ERRORS critical style errors"
+          
+          # Fail the build if critical errors are found
+          if [ $TOTAL_ERRORS -gt 0 ]; then
+            echo "❌ Style validation failed with $TOTAL_ERRORS critical errors"
+            exit 1
+          else
+            echo "✅ Style validation passed with no critical errors"
+          fi
+
+      - name: Upload validation reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: style-validation-reports
+          path: style-validation-results/
+          retention-days: 7
+
+      - name: Slack notification on failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: ci-alerts
+          SLACK_COLOR: danger
+          SLACK_ICON: https://github.com/rtCamp.png?size=48
+          SLACK_MESSAGE: 'Style validation failed on ${{ github.repository }}@${{ github.ref }}'
+          SLACK_TITLE: Style Validation Failed
+          SLACK_USERNAME: GitHub Actions

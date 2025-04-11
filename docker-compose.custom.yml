@@ -91,10 +91,18 @@ services:
     volumes:
       - ./:/app/project
       - orchestrator-logs:/app/logs
+      - /var/run/docker.sock:/var/run/docker.sock # Share Docker socket for direct validator execution
     environment:
       - NODE_ENV=production
       - MCP_DEBUG=true # Enable debug logging
       - PROJECT_ROOT=/app/project
+      - DEBUG=mcp:*,stream:*,net:*
+      - NODE_DEBUG=mcp,stream,net
+      # Add environment variables for validator discovery
+      - ARCHITECTURE_GUARD_IMAGE=cyber-hand/architecture-guard:latest
+      - DEPENDENCY_VALIDATOR_IMAGE=cyber-hand/dependency-validator:latest
+      - DOCS_VALIDATOR_IMAGE=cyber-hand/docs-validator:latest
+      - STYLE_VALIDATOR_IMAGE=cyber-hand/style-validator:latest
     restart: unless-stopped
     # No healthcheck for STDIN/STDOUT MCP servers
     healthcheck:

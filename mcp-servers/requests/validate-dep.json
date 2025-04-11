@@ -1,0 +1,9 @@
+{
+  "id": "request_2",
+  "type": "request",
+  "name": "dependency_check",
+  "parameters": {
+    "path": "./",
+    "options": {}
+  }
+}

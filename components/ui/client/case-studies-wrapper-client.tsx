@@ -6,7 +6,7 @@
  * This client component orchestrates the interactive filtering and display of case studies.
  * Following Next.js 15.2.4 best practices, it keeps client-side logic separate from
  * Server Components by managing state and interactions at the leaf nodes of the component tree.
- *
+ * 
  * Following Cyber Hand Project Rules:
  * - Proper client component naming with -client suffix
  * - TypeScript return type annotations
@@ -26,7 +26,7 @@ interface CaseStudiesWrapperClientProps {
 
 /**
  * Wrapper component for case studies filtering and display
- *
+ * 
  * @param {CaseStudiesWrapperClientProps} props - Component properties
  * @returns {ReactElement} Rendered component
  */
@@ -45,9 +45,15 @@ export function CaseStudiesWrapperClient({
 
   return (
     <div className="space-y-8 container-animate">
-      <CaseStudiesFilterClient categories={categories} onFilterChange={handleFilterChange} />
-
-      <CaseStudiesListClient caseStudies={caseStudies} filter={currentFilter} />
+      <CaseStudiesFilterClient 
+        categories={categories} 
+        onFilterChange={handleFilterChange} 
+      />
+      
+      <CaseStudiesListClient 
+        caseStudies={caseStudies} 
+        filter={currentFilter} 
+      />
     </div>
   );
 }

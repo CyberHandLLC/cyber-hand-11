@@ -1,0 +1,9 @@
+{
+  "id": "request_3",
+  "type": "request",
+  "name": "style_check",
+  "parameters": {
+    "path": "./",
+    "options": {}
+  }
+}

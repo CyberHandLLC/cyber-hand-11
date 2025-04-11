@@ -5,8 +5,6 @@ services:
     build:
       context: ./mcp-servers/architecture-guard
       dockerfile: Dockerfile
-    ports:
-      - "3901:3901"
     volumes:
       - ./:/app/project
       - architecture-guard-logs:/app/logs
@@ -14,19 +12,18 @@ services:
       - NODE_ENV=production
       - LOG_LEVEL=info
       - PROJECT_ROOT=/app/project
+      - MCP_DEBUG=true
     restart: unless-stopped
+    stdin_open: true  # Required for STDIN communication
+    tty: true         # Allocate a pseudo-TTY
+    # Explicitly disable healthcheck as we're using STDIN/STDOUT
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3901/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      disable: true
 
   dependency-guard:
     build:
       context: ./mcp-servers/dependency-validator
       dockerfile: Dockerfile
-    ports:
-      - "8002:8002"
     volumes:
       - ./:/app/project
       - dependency-guard-logs:/app/logs
@@ -34,19 +31,18 @@ services:
       - NODE_ENV=production
       - LOG_LEVEL=info
       - PROJECT_ROOT=/app/project
+      - MCP_DEBUG=true
     restart: unless-stopped
+    stdin_open: true  # Required for STDIN communication
+    tty: true         # Allocate a pseudo-TTY
+    # Explicitly disable healthcheck as we're using STDIN/STDOUT
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8002/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      disable: true
 
   style-validator:
     build:
       context: ./mcp-servers/style-validator
       dockerfile: Dockerfile
-    ports:
-      - "8003:8003"
     volumes:
       - ./:/app/project
       - style-validator-logs:/app/logs
@@ -54,12 +50,13 @@ services:
       - NODE_ENV=production
       - LOG_LEVEL=info
       - PROJECT_ROOT=/app/project
+      - MCP_DEBUG=true
     restart: unless-stopped
+    stdin_open: true  # Required for STDIN communication
+    tty: true         # Allocate a pseudo-TTY
+    # Explicitly disable healthcheck as we're using STDIN/STDOUT
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8003/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      disable: true
 
 volumes:
   architecture-guard-logs:
