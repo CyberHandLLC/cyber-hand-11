@@ -3,9 +3,13 @@ const nextConfig = {
   reactStrictMode: true,
   // Exclude backup directory from build process
   distDir: ".next",
-  // Exclude backup directory from file tracing (moved from experimental per Next.js 15.2.4)
+  // Exclude directories from file tracing (moved from experimental per Next.js 15.2.4)
   outputFileTracingExcludes: {
-    "*": ["./backup/**/*"],
+    "*": [
+      "./backup/**/*",
+      "./mcp-servers/**/*",
+      "./docs/**/*.md"
+    ],
   },
   images: {
     remotePatterns: [
@@ -97,6 +101,18 @@ const nextConfig = {
       // Enable tree shaking
       config.optimization.usedExports = true;
     }
+    
+    // Exclude MCP server files and test directories from build
+    config.externals = config.externals || [];
+    config.externals.push({
+      'mcp-servers': 'mcp-servers'
+    });
+    
+    // Add rule to ignore MCP server files
+    config.module.rules.push({
+      test: /mcp-servers/,
+      loader: 'ignore-loader',
+    });
 
     return config;
   },
