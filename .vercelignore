@@ -1,0 +1,25 @@
+# Ignore MCP server directories and files
+mcp-servers
+**/mcp-servers/**/*
+validate-arch.ps1
+validate-architecture.js
+test-orchestrator*.ps1
+orchestrator-*.json
+orchestrator-*.log
+request.json
+
+# Ignore documentation
+docs/*.md
+
+# Ignore test files
+**/test/**
+**/*.test.*
+**/__tests__/**
+
+# Default Vercel ignores (from .gitignore)
+node_modules
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
