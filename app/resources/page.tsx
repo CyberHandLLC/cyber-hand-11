@@ -14,41 +14,33 @@
 import { Suspense } from "react";
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
 import { ResourcesContent } from "./components/resources-content";
-import { HeadingSkeleton, TextSkeleton, Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ContentErrorBoundaryClient } from "@/components/ui/client/error-boundary-client";
+import dynamic from "next/dynamic";
+
+// Import loading components with dynamic import to maintain proper client/server separation
+// Using fully resolved absolute path to fix module resolution
+const LoadingWrapperClient = dynamic(
+  () => import("../../app/components/ui/client/loading-wrapper-client").then(mod => mod.LoadingWrapperClient),
+  { ssr: true }
+);
 
 /**
  * ResourcesContentSkeleton Component
- * Standardized skeleton UI for resources content while it's loading
+ * Enhanced loading UI with spinner for resources content while it's loading
  */
 function ResourcesContentSkeleton() {
   return (
     <div className="max-w-3xl mx-auto text-center">
-      <HeadingSkeleton level={1} width="60%" className="mx-auto mb-6" />
-      <div className="w-24 h-1 bg-gray-700 mx-auto mb-8"></div>
-      <TextSkeleton width="90%" className="mx-auto mb-8" />
-
-      <div className="rounded-lg border border-gray-800/30 bg-gray-900/30 p-8 mb-12">
-        <div className="flex items-center justify-center mb-6">
-          <Skeleton className="w-12 h-12 rounded-full mr-4" />
-          <HeadingSkeleton level={2} width="40%" />
-        </div>
-
-        <div className="space-y-4 text-left mb-8">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex items-start">
-              <Skeleton className="w-2 h-2 rounded-full mt-2 mr-3" animationDelay={`${i * 0.1}s`} />
-              <TextSkeleton className="w-11/12" animationDelay={`${i * 0.1}s`} />
-            </div>
-          ))}
-        </div>
-
-        <div className="text-center mt-8">
-          <TextSkeleton width="70%" className="mx-auto mb-4" />
-          <Skeleton className="h-10 w-40 mx-auto rounded-md" />
-        </div>
-      </div>
-
+      {/* Main content loading spinner */}
+      {/* We know the component accepts these props but TypeScript can't verify at compile time */}
+      <LoadingWrapperClient 
+        height="h-96" 
+        label="Loading resources..." 
+        spinnerSize={32}
+      />
+      
+      {/* Additional action buttons loading state */}
       <div className="flex flex-wrap justify-center gap-4 mt-8">
         <Skeleton className="h-10 w-32 rounded-md" />
         <Skeleton className="h-10 w-32 rounded-md" animationDelay="0.15s" />

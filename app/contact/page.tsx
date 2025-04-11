@@ -15,11 +15,19 @@ import { Suspense } from "react";
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
 import { ContactForm } from "@/components/forms/contact-form";
 import { AnimatedContactInfoClient } from "./components/animated-contact-info-client";
-import { HeadingSkeleton, TextSkeleton, Skeleton } from "@/components/ui/skeleton";
+// No skeleton imports needed with our new spinner components
 import {
   FormErrorBoundaryClient,
   ContentErrorBoundaryClient,
 } from "@/app/components/error-boundary-client";
+import dynamic from "next/dynamic";
+
+// Import loading components with dynamic import to maintain proper client/server separation
+// Using fully resolved absolute path to fix module resolution
+const LoadingWrapperClient = dynamic(
+  () => import("../../app/components/ui/client/loading-wrapper-client").then(mod => mod.LoadingWrapperClient),
+  { ssr: true }
+);
 
 /**
  * Define page metadata for SEO
@@ -52,69 +60,34 @@ function ContactHeader() {
 
 /**
  * FormSkeleton Component
- * Standardized skeleton UI for the contact form while it's loading
+ * Enhanced form loading UI with spinner
  */
 function FormSkeleton() {
   return (
     <div className="rounded-lg border border-gray-700/50 p-8 bg-gray-900/30">
-      <div className="space-y-6">
-        {/* Name field */}
-        <div>
-          <TextSkeleton className="h-5 w-20 mb-2" animationDelay="0.1s" />
-          <Skeleton className="h-10 w-full" animationDelay="0.15s" />
-        </div>
-
-        {/* Email field */}
-        <div>
-          <TextSkeleton className="h-5 w-24 mb-2" animationDelay="0.2s" />
-          <Skeleton className="h-10 w-full" animationDelay="0.25s" />
-        </div>
-
-        {/* Message field */}
-        <div>
-          <TextSkeleton className="h-5 w-28 mb-2" animationDelay="0.3s" />
-          <Skeleton className="h-28 w-full" animationDelay="0.35s" />
-        </div>
-
-        {/* Submit button */}
-        <Skeleton className="h-11 w-32 mt-8" animationDelay="0.4s" />
-      </div>
+      {/* We know the component accepts these props but TypeScript can't verify at compile time */}
+      <LoadingWrapperClient 
+        height="h-80" 
+        label="Loading contact form..." 
+        spinnerSize={28}
+      />
     </div>
   );
 }
 
 /**
  * ContactInfoSkeleton Component
- * Standardized skeleton UI for the contact info while it's loading
+ * Enhanced contact info loading UI with spinner
  */
 function ContactInfoSkeleton() {
   return (
     <div className="rounded-lg border border-gray-700/50 p-8 bg-gray-900/30 h-full">
-      {/* Title */}
-      <HeadingSkeleton level={3} className="mb-6" width="40%" animationDelay="0.1s" />
-
-      {/* Reasons */}
-      <div className="space-y-4 mb-8">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="flex items-start">
-            <Skeleton
-              className="h-5 w-5 rounded-full mr-3 mt-1 flex-shrink-0"
-              animationDelay={`${0.15 + i * 0.1}s`}
-            />
-            <TextSkeleton className="h-5 w-full" animationDelay={`${0.2 + i * 0.1}s`} />
-          </div>
-        ))}
-      </div>
-
-      {/* Contact info items */}
-      <div className="space-y-4">
-        {Array.from({ length: 2 }).map((_, i) => (
-          <div key={i} className="space-y-2">
-            <TextSkeleton className="h-5 w-24" animationDelay={`${0.6 + i * 0.1}s`} />
-            <HeadingSkeleton level={4} className="h-6 w-40" animationDelay={`${0.65 + i * 0.1}s`} />
-          </div>
-        ))}
-      </div>
+      {/* We know the component accepts these props but TypeScript can't verify at compile time */}
+      <LoadingWrapperClient 
+        height="h-72" 
+        label="Loading contact information..." 
+        spinnerSize={24}
+      />
     </div>
   );
 }

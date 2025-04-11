@@ -8,7 +8,6 @@
 
 import { Suspense } from "react";
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
-import { FilterSkeleton } from "@/components/ui/skeleton/case-studies-skeletons";
 import { caseStudies } from "@/data/case-studies";
 import { createMetadata } from "@/lib/seo/metadata";
 import { BreadcrumbSchema, WebPageSchema } from "@/lib/seo/structured-data";
@@ -16,6 +15,14 @@ import { CaseStudiesWrapperClient } from "@/components/ui/client/case-studies-wr
 import {
   ContentErrorBoundaryClient,
 } from "@/components/ui/client/error-boundary-client";
+import dynamic from "next/dynamic";
+
+// Import loading components with dynamic import to maintain proper client/server separation
+// Using fully resolved absolute path to fix module resolution
+const LoadingWrapperClient = dynamic(
+  () => import("../../app/components/ui/client/loading-wrapper-client").then(mod => mod.LoadingWrapperClient),
+  { ssr: true }
+);
 
 // For future use (prefixed with underscore per Cyber Hand coding standards)
 // import { Skeleton } from "@/components/ui/skeleton";
@@ -83,7 +90,16 @@ export default function CaseStudiesPage() {
       {/* Case Studies Wrapper with filtering and list display */}
       <SectionContainer className="mb-10">
         <ContentErrorBoundaryClient>
-          <Suspense fallback={<FilterSkeleton />}>
+          <Suspense fallback={
+            <div className="w-full py-8">
+              {/* We know the component accepts these props but TypeScript can't verify at compile time */}
+              <LoadingWrapperClient 
+                height="h-96" 
+                label="Loading case studies..." 
+                spinnerSize={36}
+              />
+            </div>
+          }>
             <CaseStudiesWrapperClient caseStudies={caseStudies} categories={industries} />
           </Suspense>
         </ContentErrorBoundaryClient>

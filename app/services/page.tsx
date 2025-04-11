@@ -13,47 +13,61 @@ import { Suspense } from "react";
 import { PageLayout, SectionContainer } from "@/components/custom/page-layout";
 import { services } from "@/data/services";
 import { ServicesGrid, ServicesMobile, ServicesCTA } from "./components";
-import {
-  HeadingSkeleton,
-  TextSkeleton,
-  CardGridSkeleton,
-  Skeleton,
-} from "@/components/ui/skeleton";
+// Only import what's being used (ContentErrorBoundaryClient)
 import { ContentErrorBoundaryClient } from "@/components/ui/client/error-boundary-client";
+import dynamic from "next/dynamic";
+
+// Import the new loading components with dynamic imports
+// Using fully resolved absolute path to fix module resolution
+const LoadingWrapperClient = dynamic(
+  () => import("../../app/components/ui/client/loading-wrapper-client").then(mod => mod.LoadingWrapperClient),
+  { ssr: true }
+);
 
 /**
- * Services Grid Loading Skeleton
+ * Services Grid Loading Skeleton with custom spinner
  */
 function ServicesGridSkeleton() {
-  return <CardGridSkeleton count={5} columns={3} className="mb-12" />;
-}
-
-/**
- * Services Mobile Loading Skeleton
- */
-function ServicesMobileSkeleton() {
   return (
-    <div className="space-y-4 mb-12">
-      <HeadingSkeleton level={3} width="60%" className="mx-auto" />
-      <div className="bg-gray-900/30 p-4 rounded-lg h-56"></div>
-      <div className="flex justify-center gap-2">
-        {[1, 2, 3].map((i) => (
-          <Skeleton key={i} className="w-2 h-2 rounded-full" animationDelay={`${i * 0.1}s`} />
-        ))}
-      </div>
+    <div className="mb-12">
+      {/* We know the component accepts these props but TypeScript can't verify at compile time */}
+      <LoadingWrapperClient 
+        height="h-72" 
+        label="Loading services..." 
+        spinnerSize={32}
+      />
     </div>
   );
 }
 
 /**
- * CTA Section Loading Skeleton
+ * Services Mobile Loading Skeleton with custom spinner
+ */
+function ServicesMobileSkeleton() {
+  return (
+    <div className="mb-12">
+      {/* We know the component accepts these props but TypeScript can't verify at compile time */}
+      <LoadingWrapperClient 
+        height="h-64" 
+        label="Loading services..." 
+        spinnerSize={28}
+      />
+    </div>
+  );
+}
+
+/**
+ * CTA Section Loading Skeleton with custom spinner
  */
 function CTASkeleton() {
   return (
     <div className="mt-16 p-8 rounded-xl bg-gray-900/30 border border-gray-800/50 text-center">
-      <HeadingSkeleton level={2} width="50%" className="mx-auto mb-4" />
-      <TextSkeleton width="70%" className="mx-auto mb-6" />
-      <Skeleton className="h-10 w-32 mx-auto" />
+      {/* We know the component accepts these props but TypeScript can't verify at compile time */}
+      <LoadingWrapperClient 
+        height="h-40" 
+        label="Loading more information..." 
+        spinnerSize={24}
+      />
     </div>
   );
 }

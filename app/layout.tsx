@@ -5,9 +5,6 @@ import { Providers } from "./providers";
 import { PerformanceWrapper } from "./performance-wrapper";
 import { BaseStructuredData } from "@/lib/seo/structured-data";
 import { getLocationData } from "@/lib/location/location-service";
-// Import new navigation components for smooth transitions
-import { NavigationEvents } from "./components/navigation-events";
-import { TransitionWrapper } from "./components/transition-wrapper";
 
 /**
  * Root Layout Component - Server Component
@@ -100,15 +97,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="antialiased text-body">
         {/* Apply performance optimizations and providers at the root level */}
         <Providers locationData={getLocationData()}>
-          {/* Client-side navigation event handler to optimize transitions */}
-          <NavigationEvents />
-          
           <PerformanceWrapper>
-            {/* TransitionWrapper prevents skeleton UI flashing during navigation */}
-            <TransitionWrapper>
-              {/* No Navbar on homepage, it will be included in each page except the landing page */}
-              {children}
-            </TransitionWrapper>
+            {/* No Navbar on homepage, it will be included in each page except the landing page */}
+            {children}
           </PerformanceWrapper>
         </Providers>
       </body>
