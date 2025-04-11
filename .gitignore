@@ -1,5 +1,6 @@
 # dependencies
-/node_modules
+node_modules/
+**/**/node_modules/
 /.pnp
 .pnp.js
 
@@ -34,3 +35,14 @@ next-env.d.ts
 
 # backups
 /backup
+
+# logs and results
+*.log
+orchestrator-result.json
+
+# local test files
+request.json
+
+# distribution files
+dist/
+build/
