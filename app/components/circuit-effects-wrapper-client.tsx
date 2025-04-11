@@ -12,7 +12,6 @@
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
-import { ContentErrorBoundaryClient } from "@/app/components/error-boundary-client";
 
 // Lazy-loaded circuit components for better performance
 const CircuitEffects = dynamic(
@@ -44,7 +43,8 @@ export function CircuitEffectsWrapperClient() {
     return null;
   }
 
-  // Use the imported error boundary component
+  // Import error boundary from error-boundary-client.tsx
+  const { ContentErrorBoundaryClient } = require("@/app/components/error-boundary-client");
 
   return (
     <ContentErrorBoundaryClient>
