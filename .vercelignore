@@ -1,12 +1,21 @@
-# Ignore MCP server directories and files
-mcp-servers
-**/mcp-servers/**/*
+# Absolutely exclude MCP server directories and all related files
+# These should never be part of the Vercel deployment
+mcp-servers/
+mcp-servers/**/*
+**/mcp-servers/**
+
+# Exclude test and validation scripts
 validate-arch.ps1
 validate-architecture.js
 test-orchestrator*.ps1
+check-architecture.js
+mcp-client.js
+
+# Exclude temporary and log files
 orchestrator-*.json
 orchestrator-*.log
 request.json
+.cascade-ai
 
 # Ignore documentation
 docs/*.md
