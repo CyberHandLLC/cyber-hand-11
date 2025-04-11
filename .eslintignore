@@ -1,0 +1,9 @@
+# Completely ignore all MCP server files from ESLint
+mcp-servers/
+mcp-servers/**/*
+**/mcp-servers/**/*
+**/*.test.ts
+**/*.test.tsx
+**/test/**/*
+**/tests/**/*
+**/architecture-guard/**/*

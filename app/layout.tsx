@@ -84,6 +84,10 @@ export const viewport: Viewport = {
   ],
 };
 
+// Import shared UI components for persistent layout elements
+import { SharedHeader } from "@/app/components/ui/shared-header";
+import { SharedFooter } from "@/app/components/ui/shared-footer";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${fontVariables.orbitron} ${fontVariables.inter}`}>
@@ -98,8 +102,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Apply performance optimizations and providers at the root level */}
         <Providers locationData={getLocationData()}>
           <PerformanceWrapper>
-            {/* No Navbar on homepage, it will be included in each page except the landing page */}
-            {children}
+            {/* Persistent header across page navigations */}
+            <SharedHeader />
+            
+            {/* Main content with transition wrapper */}
+            <main className="page-transition-container">
+              {children}
+            </main>
+            
+            {/* Persistent footer across page navigations */}
+            <SharedFooter />
           </PerformanceWrapper>
         </Providers>
       </body>

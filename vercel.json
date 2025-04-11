@@ -1,6 +1,9 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "ignoreCommand": "echo 'Skipping MCP validation during build'",
+  "buildCommand": "npm run build",
+  "installCommand": "npm ci --omit=dev --ignore-scripts",
   "github": {
     "silent": false,
     "autoJobCancelation": true
@@ -22,6 +25,15 @@
           "value": "1; mode=block"
         }
       ]
+    }
+  ],
+  "builds": [
+    {
+      "src": "next.config.js",
+      "use": "@vercel/next",
+      "config": {
+        "excludeFiles": "mcp-servers/**"
+      }
     }
   ]
 }
