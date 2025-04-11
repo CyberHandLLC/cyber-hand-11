@@ -28,6 +28,18 @@ export const metadata: Metadata = {
   authors: [{ name: "CyberHand Team" }],
   creator: "CyberHand",
   publisher: "CyberHand LLC",
+  
+  // Favicon configuration using CyberHand logo
+  icons: {
+    icon: [
+      { url: "/images/cyberhand-logo.png", sizes: "32x32", type: "image/png" },
+      { url: "/images/cyberhand-logo.png", sizes: "16x16", type: "image/png" }
+    ],
+    apple: [{ url: "/images/cyberhand-logo.png", sizes: "180x180", type: "image/png" }],
+    other: [
+      { rel: "mask-icon", url: "/images/cyberhand-logo.png" }
+    ]
+  },
   formatDetection: {
     email: false,
     telephone: false,
