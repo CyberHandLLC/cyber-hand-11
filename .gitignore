@@ -46,3 +46,9 @@ request.json
 # distribution files
 dist/
 build/
+
+# MCP servers
+mcp-servers/**/node_modules/
+mcp-servers/*/logs/
+mcp-servers/*/dist/
+mcp-servers/*/.env
