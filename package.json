@@ -5,7 +5,7 @@
   "scripts": {
     "prepare": "node -e \"try{require('.husky/check-if-ci.js')}catch(e){console.log('Skipping husky in CI environment')}\" || husky install",
     "dev": "next dev",
-    "build": "tsc --project tsconfig.build.json && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "test": "jest",

@@ -30,50 +30,32 @@ export interface TestDataItem {
  * interactive components as leaf nodes
  */
 const TestComponentContent = dynamic<{data: Array<TestDataItem>}>(() => 
-  import('@/app/components/test-component-content-client').then(mod => mod.TestComponentContent), {
+  import('./test-component-content-client').then(mod => mod.TestComponentContent), {
     ssr: true,
     loading: () => <TestComponentSkeleton />
   }
 )
 
 /**
- * Data fetching functions using React's cache() for deduplication
- * Each function separated to allow parallel data fetching and streaming
- * Following Cyber Hand Principle 2: Follow Next.js 15.2.4 Data Flow Patterns
+ * Data fetching function using React's cache() for deduplication
+ * 
+ * Follows Next.js 15.2.4 patterns with explicit opt-in caching
+ * using revalidation time and cache tags for invalidation
+ * 
+ * @returns {Promise<Array<{id: string, title: string}>>} Fetched data array
  */
-const getData1 = cache(async () => {
-  // Simulate primary data fetch (1 second)
-  await new Promise(resolve => setTimeout(resolve, 1000));
+const fetchData = cache(async () => {
+  // Simulated data fetch with proper Next.js 15.2.4 patterns
+  const res = await fetch('https://api.example.com/data', {
+    next: { revalidate: 60, tags: ['test-data'] }
+  })
   
-  return [
-    { id: '1', title: 'Section 1 - Item A' },
-    { id: '2', title: 'Section 1 - Item B' },
-  ];
-});
-
-const getData2 = cache(async () => {
-  // Simulate secondary data fetch (1.5 seconds)
-  await new Promise(resolve => setTimeout(resolve, 1500));
+  if (!res.ok) {
+    throw new Error('Failed to fetch data')
+  }
   
-  return [
-    { id: '3', title: 'Section 2 - Item C' },
-    { id: '4', title: 'Section 2 - Item D' },
-  ];
-});
-
-/**
- * Combined data fetch for client component
- * Uses Promise.all for parallel fetching per Cyber Hand principles
- */
-const getCombinedData = cache(async () => {
-  // Fetch data in parallel using Promise.all
-  const [data1, data2] = await Promise.all([
-    getData1(),
-    getData2()
-  ]);
-  
-  return [...data1, ...data2];
-});
+  return res.json()
+})
 
 /**
  * Server Component for data fetching and rendering
@@ -84,32 +66,17 @@ const getCombinedData = cache(async () => {
  * 
  * @returns {Promise<JSX.Element>} A server-rendered component with proper suspense boundaries
  */
-export default function TestComponent() {
+export default async function TestComponent() {
+  // Proper parallel data fetching
+  const data = await fetchData()
+  
   return (
-    <div className="bg-slate-900 p-6 rounded-lg shadow-lg contain-card">
-      <h2 className="text-xl font-bold mb-4 text-white">Test Component</h2>
-      <p className="text-gray-300 mb-4">
-        This component demonstrates proper Server/Client component separation and data fetching.
-      </p>
-      
-      {/* More strategic Suspense boundary using separate data streams */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* First data section with its own Suspense boundary */}
-        <Suspense fallback={<DataSectionSkeleton />}>
-          <DataSection1 />
-        </Suspense>
-        
-        {/* Second data section with its own Suspense boundary */}
-        <Suspense fallback={<DataSectionSkeleton />}>
-          <DataSection2 />
-        </Suspense>
-      </div>
-      
-      {/* Client component with its own Suspense boundary */}
+    <section className="test-component">
+      <h2>Test Component</h2>
       <Suspense fallback={<TestComponentSkeleton />}>
-        <TestComponentContentWrapper />
+        <TestComponentContent data={data} />
       </Suspense>
-    </div>
+    </section>
   )
 }
 
@@ -124,83 +91,12 @@ export default function TestComponent() {
  */
 function TestComponentSkeleton() {
   return (
-    <div className="animate-pulse mt-4 pt-4 border-t border-gray-800">
-      <div className="h-4 bg-gray-700 rounded w-3/4 mb-2"></div>
-      <div className="h-4 bg-gray-700 rounded w-1/2 mb-2"></div>
-      <div className="h-4 bg-gray-700 rounded w-5/6"></div>
+    <div className="animate-pulse">
+      <div className="h-6 bg-gray-200 rounded w-1/2 mb-4"></div>
+      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+      <div className="h-4 bg-gray-200 rounded w-1/2"></div>
     </div>
-  );
+  )
 }
 
-/**
- * Loading skeleton for data sections
- */
-function DataSectionSkeleton() {
-  return (
-    <div className="animate-pulse bg-gray-800 p-3 rounded-lg">
-      <div className="h-4 bg-gray-700 rounded w-1/2 mb-2"></div>
-      <div className="h-10 bg-gray-700 rounded w-full mb-2"></div>
-      <div className="h-10 bg-gray-700 rounded w-full"></div>
-    </div>
-  );
-}
 
-/**
- * DataSection1 Component - Server Component with its own data fetch
- * This follows the Next.js 15.2.4 data fetching pattern with proper streaming
- */
-async function DataSection1() {
-  // Fetch data using the cache function
-  const data = await getData1();
-  
-  return (
-    <div className="bg-gray-800 p-4 rounded-lg">
-      <h3 className="text-lg font-medium text-white mb-3">Section 1</h3>
-      <ul className="space-y-2">
-        {data.map(item => (
-          <li key={item.id} className="p-2 bg-gray-700 rounded text-gray-200">
-            {item.title}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-/**
- * DataSection2 Component - Server Component with its own data fetch
- * This allows content to stream in as it becomes available
- */
-async function DataSection2() {
-  // Fetch data using the cache function
-  const data = await getData2();
-  
-  return (
-    <div className="bg-gray-800 p-4 rounded-lg">
-      <h3 className="text-lg font-medium text-white mb-3">Section 2</h3>
-      <ul className="space-y-2">
-        {data.map(item => (
-          <li key={item.id} className="p-2 bg-gray-700 rounded text-gray-200">
-            {item.title}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-/**
- * TestComponentContentWrapper - Wrapper for client component with combined data
- * This ensures proper data fetching separation from UI rendering
- */
-async function TestComponentContentWrapper() {
-  // Fetch combined data for the client component
-  const combinedData = await getCombinedData();
-  
-  return (
-    <div className="mt-6 pt-4 border-t border-gray-800">
-      <h3 className="text-lg font-medium text-white mb-3">Interactive Content</h3>
-      <TestComponentContent data={combinedData} />
-    </div>
-  );
-}

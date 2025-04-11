@@ -5,6 +5,9 @@ import { Providers } from "./providers";
 import { PerformanceWrapper } from "./performance-wrapper";
 import { BaseStructuredData } from "@/lib/seo/structured-data";
 import { getLocationData } from "@/lib/location/location-service";
+// Import new navigation components for smooth transitions
+import { NavigationEvents } from "./components/navigation-events";
+import { TransitionWrapper } from "./components/transition-wrapper";
 
 /**
  * Root Layout Component - Server Component
@@ -84,10 +87,6 @@ export const viewport: Viewport = {
   ],
 };
 
-// Import shared UI components for persistent layout elements
-import { SharedHeader } from "@/app/components/ui/shared-header";
-import { SharedFooter } from "@/app/components/ui/shared-footer";
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${fontVariables.orbitron} ${fontVariables.inter}`}>
@@ -101,17 +100,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="antialiased text-body">
         {/* Apply performance optimizations and providers at the root level */}
         <Providers locationData={getLocationData()}>
+          {/* Client-side navigation event handler to optimize transitions */}
+          <NavigationEvents />
+          
           <PerformanceWrapper>
-            {/* Persistent header across page navigations */}
-            <SharedHeader />
-            
-            {/* Main content with transition wrapper */}
-            <main className="page-transition-container">
+            {/* TransitionWrapper prevents skeleton UI flashing during navigation */}
+            <TransitionWrapper>
+              {/* No Navbar on homepage, it will be included in each page except the landing page */}
               {children}
-            </main>
-            
-            {/* Persistent footer across page navigations */}
-            <SharedFooter />
+            </TransitionWrapper>
           </PerformanceWrapper>
         </Providers>
       </body>
