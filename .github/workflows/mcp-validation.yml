@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     
     services:
+      # Individual validators remain for backward compatibility
       architecture-guard:
         image: ghcr.io/cyberhandllc/architecture-guard:latest
         ports:
@@ -38,6 +39,21 @@ jobs:
         env:
           NODE_ENV: production
           PORT: 8003
+          PROJECT_ROOT: /github/workspace
+          
+      docs-validator:
+        image: ghcr.io/cyberhandllc/docs-validator:latest
+        env:
+          NODE_ENV: production
+          MCP_DEBUG: true
+          PROJECT_ROOT: /github/workspace
+      
+      # Orchestrator for more efficient validation
+      mcp-orchestrator:
+        image: ghcr.io/cyberhandllc/mcp-orchestrator:latest
+        env:
+          NODE_ENV: production
+          MCP_DEBUG: true
           PROJECT_ROOT: /github/workspace
 
     steps:
@@ -69,9 +85,46 @@ jobs:
             sleep 5
           done
       
-      - name: Validate Architecture
+      - name: Orchestrated Validation (Preferred Method)
+        id: orchestrated
         run: |
-          echo "Validating architecture..."
+          echo "Running orchestrated validation..."
+          # Create a request file with proper STDIN format for the orchestrator
+          echo '{"id":"gh-action-orchestrate","type":"request","name":"orchestrate_validation","params":{"path":"./","options":{"verbose":true,"includeArchitecture":true,"includeDependencies":true,"includeDocumentation":true,"includeStyle":true,"allowFailure":false}}}' > orchestrator-request.json
+          
+          # Execute the orchestrator via Docker
+          cat orchestrator-request.json | docker run -i --rm \
+            -v "$(pwd):/app/project" \
+            -e NODE_ENV=production \
+            -e MCP_DEBUG=true \
+            -e PROJECT_ROOT=/app/project \
+            ghcr.io/cyberhandllc/mcp-orchestrator:latest > orchestrator-results.json
+          
+          # Parse and display results
+          cat orchestrator-results.json | jq -r '.content[] | select(.type=="text") | .text'
+          
+          # Extract JSON content for further processing
+          cat orchestrator-results.json | jq -r '.content[] | select(.type=="json") | .json' > orchestrator-json.json
+          
+          # Check if validation passed
+          PASS_RATE=$(cat orchestrator-json.json | jq -r '.summary.passRate')
+          ERRORS=$(cat orchestrator-json.json | jq -r '.summary.errors')
+          
+          echo "Pass rate: $PASS_RATE%, Errors: $ERRORS"
+          
+          if [[ $(echo "$PASS_RATE < 100" | bc) -eq 1 || $ERRORS -gt 0 ]]; then
+            echo "::warning::Orchestrated validation detected issues (Pass rate: $PASS_RATE%, Errors: $ERRORS)"
+            echo "failed=true" >> $GITHUB_OUTPUT
+          else
+            echo "::notice::Orchestrated validation passed successfully!"
+            echo "failed=false" >> $GITHUB_OUTPUT
+          fi
+      
+      # Individual validations as fallback and for backward compatibility
+      - name: Validate Architecture
+        if: steps.orchestrated.outputs.failed == 'true' || failure()
+        run: |
+          echo "Validating architecture individually..."
           curl -s -X POST http://localhost:3901/v1 \
             -H "Content-Type: application/json" \
             -d '{"name":"architecture_check","tool_call_id":"gh-action-arch","arguments":{"path":"./","options":{"ci":true}}}' \
@@ -83,8 +136,9 @@ jobs:
           fi
       
       - name: Validate Dependencies
+        if: steps.orchestrated.outputs.failed == 'true' || failure()
         run: |
-          echo "Validating dependencies..."
+          echo "Validating dependencies individually..."
           curl -s -X POST http://localhost:8002/v1 \
             -H "Content-Type: application/json" \
             -d '{"name":"dependency_check","tool_call_id":"gh-action-dep","arguments":{"path":"./","options":{"ci":true}}}' \
@@ -96,8 +150,9 @@ jobs:
           fi
       
       - name: Validate Style
+        if: steps.orchestrated.outputs.failed == 'true' || failure()
         run: |
-          echo "Validating code style..."
+          echo "Validating code style individually..."
           curl -s -X POST http://localhost:8003/v1 \
             -H "Content-Type: application/json" \
             -d '{"name":"style_check","tool_call_id":"gh-action-style","arguments":{"path":"./","options":{"ci":true}}}' \
@@ -107,6 +162,24 @@ jobs:
             echo "::error::Style validation failed"
             exit 1
           fi
+          
+      - name: Validate Documentation
+        if: steps.orchestrated.outputs.failed == 'true' || failure()
+        run: |
+          echo "Validating documentation individually..."
+          # Create a request file with proper STDIN format for the docs validator
+          echo '{"id":"gh-action-docs","type":"request","name":"documentation_validate","params":{"path":"./","options":{"verbose":true,"validators":["freshness","consistency","best-practices","coverage"]}}}' > docs-request.json
+          
+          # Execute the docs validator via Docker
+          cat docs-request.json | docker run -i --rm \
+            -v "$(pwd):/app/project" \
+            -e NODE_ENV=production \
+            -e MCP_DEBUG=true \
+            -e PROJECT_ROOT=/app/project \
+            ghcr.io/cyberhandllc/docs-validator:latest > docs-results.json
+          
+          # Extract and display results
+          cat docs-results.json | jq -r '.content[] | select(.type=="text") | .text'
       
       - name: Upload validation results
         if: always()
@@ -114,9 +187,12 @@ jobs:
         with:
           name: validation-results
           path: |
+            orchestrator-results.json
+            orchestrator-json.json
             architecture-results.json
             dependency-results.json
             style-results.json
+            docs-results.json
       
       - name: Check TypeScript
         run: npx tsc --noEmit
@@ -129,6 +205,46 @@ jobs:
         run: |
           echo "## MCP Validation Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Orchestrated results (preferred)
+          if [[ -f orchestrator-json.json ]]; then
+            echo "### 🔄 Orchestrated Validation" >> $GITHUB_STEP_SUMMARY
+            PASS_RATE=$(cat orchestrator-json.json | jq -r '.summary.passRate')
+            PASSED=$(cat orchestrator-json.json | jq -r '.summary.passed')
+            TOTAL=$(( $(cat orchestrator-json.json | jq -r '.summary.passed') + $(cat orchestrator-json.json | jq -r '.summary.failed') ))
+            ERRORS=$(cat orchestrator-json.json | jq -r '.summary.errors')
+            WARNINGS=$(cat orchestrator-json.json | jq -r '.summary.warnings')
+            
+            if [[ $(echo "$PASS_RATE == 100" | bc) -eq 1 && $ERRORS -eq 0 ]]; then
+              echo "✅ **PASSED** - $PASSED/$TOTAL validations passed" >> $GITHUB_STEP_SUMMARY
+            elif [[ $ERRORS -eq 0 && $(echo "$PASS_RATE > 50" | bc) -eq 1 ]]; then
+              echo "⚠️ **PARTIAL PASS** - $PASSED/$TOTAL validations passed" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "❌ **FAILED** - $PASSED/$TOTAL validations passed with $ERRORS errors" >> $GITHUB_STEP_SUMMARY
+            fi
+            
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            if [[ $ERRORS -gt 0 ]]; then
+              echo "#### Errors" >> $GITHUB_STEP_SUMMARY
+              cat orchestrator-json.json | jq -r '.errors[] | "- [" + .validator + "] " + .message' >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+            
+            if [[ $WARNINGS -gt 0 ]]; then
+              echo "#### Warnings" >> $GITHUB_STEP_SUMMARY
+              cat orchestrator-json.json | jq -r '.warnings[] | "- [" + .validator + "] " + .message' >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+            
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "---" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Individual Validation Results" >> $GITHUB_STEP_SUMMARY
+            echo "_The following results are from individual validators and are provided for additional context._" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+          
           
           # Architecture
           if [[ -f architecture-results.json ]]; then

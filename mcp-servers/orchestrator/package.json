@@ -1,0 +1,17 @@
+{
+  "name": "mcp-orchestrator",
+  "version": "1.0.0",
+  "description": "Orchestrates multiple MCP validators for coordinated validation workflows",
+  "main": "standalone-server.js",
+  "scripts": {
+    "start": "node standalone-server.js",
+    "test": "node test-orchestrator.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.9.0",
+    "zod": "^3.24.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

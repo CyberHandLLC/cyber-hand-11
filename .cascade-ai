@@ -1,0 +1,25 @@
+{
+  "project": {
+    "name": "Cyber Hand",
+    "framework": "nextjs",
+    "version": "15.2.4"
+  },
+  "validation": {
+    "auto_orchestrate": true,
+    "paths": {
+      "components": ["app/components/**/*"],
+      "pages": ["app/**/*page.*"],
+      "layouts": ["app/**/*layout.*"]
+    },
+    "on_file_save": true,
+    "on_component_creation": true
+  },
+  "mcp": {
+    "preferred_server": "mcp-orchestrator",
+    "fallback_servers": ["architecture-guard", "docs-validator", "style-validator"]
+  },
+  "prompts": {
+    "component_creation": "Create a new component following our Next.js 15.2.4 architecture patterns with proper Server/Client boundaries, using React's cache() for data fetching, and implementing Suspense streaming patterns.",
+    "validation": "Orchestrate a validation on this code to ensure it follows our 10 Critical Principles, focusing on component boundaries, data flow patterns, and type safety."
+  }
+}

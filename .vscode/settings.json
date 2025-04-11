@@ -16,5 +16,21 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
+  },
+  
+  "cascade-ai.validation.auto": true,
+  "cascade-ai.validation.onSave": true,
+  "cascade-ai.validation.mcpServers": ["mcp-orchestrator"],
+  "cascade-ai.validation.preferOrchestration": true,
+  
+  "codeium.enableMCPValidation": true,
+  "codeium.mcpServerPreference": "mcp-orchestrator",
+  "codeium.customInstructions": "Follow Cyber Hand's 10 Critical Principles for development. Use Server Components for data fetching, React's cache() for deduplication, and ensure strict component boundaries. Maintain type safety and performance targets.",
+  
+  "ai-companion.suggestValidation": true,
+  "ai-companion.cyberdPrompts": {
+    "validateComponent": "Use the MCP orchestrator to validate this component against our Next.js 15.2.4 architecture standards",
+    "checkDataFetching": "Validate that this data fetching implementation follows our React's cache() patterns and maintains proper Suspense boundaries",
+    "validateTypes": "Check that this code maintains complete type safety according to our Critical Principles"
   }
 }

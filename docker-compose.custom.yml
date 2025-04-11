@@ -64,7 +64,45 @@ services:
       timeout: 10s
       retries: 3
 
+  docs-validator:
+    build:
+      context: ./mcp-servers/docs-validator
+      dockerfile: Dockerfile
+    stdin_open: true # Required for STDIN/STDOUT MCP communication
+    tty: true # Required for proper terminal handling
+    volumes:
+      - ./:/app/project
+      - docs-validator-logs:/app/logs
+    environment:
+      - NODE_ENV=production
+      - MCP_DEBUG=true # Enable debug logging
+      - PROJECT_ROOT=/app/project
+    restart: unless-stopped
+    # No healthcheck for STDIN/STDOUT MCP servers
+    healthcheck:
+      disable: true
+
+  mcp-orchestrator:
+    build:
+      context: ./mcp-servers/orchestrator
+      dockerfile: Dockerfile
+    stdin_open: true # CRITICAL for STDIN/STDOUT MCP communication
+    tty: true        # CRITICAL for proper terminal handling
+    volumes:
+      - ./:/app/project
+      - orchestrator-logs:/app/logs
+    environment:
+      - NODE_ENV=production
+      - MCP_DEBUG=true # Enable debug logging
+      - PROJECT_ROOT=/app/project
+    restart: unless-stopped
+    # No healthcheck for STDIN/STDOUT MCP servers
+    healthcheck:
+      disable: true
+
 volumes:
   architecture-guard-logs:
   dependency-guard-logs:
   style-validator-logs:
+  docs-validator-logs:
+  orchestrator-logs:
