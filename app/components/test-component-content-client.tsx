@@ -11,7 +11,15 @@
  */
 
 import { useState } from 'react';
-import { TestDataItem } from './test-component';
+
+/**
+ * Data item interface for type safety across components
+ * Following Cyber Hand's Principle 3: Enforce Complete Type Safety
+ */
+export interface TestDataItem {
+  id: string;
+  title: string;
+}
 
 /**
  * Props interface for TestComponentContent

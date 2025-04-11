@@ -12,7 +12,29 @@
 
 import { cache } from 'react'
 import { Suspense } from 'react'
-import { TestComponentContent } from './test-component-content-client'
+// Import client component using dynamic import with Next.js pattern
+import dynamic from 'next/dynamic'
+
+/**
+ * TypeScript interface for test data items
+ * Following Cyber Hand's Principle 3: Enforce Complete Type Safety
+ */
+export interface TestDataItem {
+  id: string;
+  title: string;
+}
+
+/**
+ * Dynamic import of client component following Next.js 15.2.4 best practices
+ * This enforces strict component boundaries (Principle 1) by keeping
+ * interactive components as leaf nodes
+ */
+const TestComponentContent = dynamic<{data: Array<TestDataItem>}>(() => 
+  import('./test-component-content-client').then(mod => mod.TestComponentContent), {
+    ssr: true,
+    loading: () => <TestComponentSkeleton />
+  }
+)
 
 /**
  * Data fetching function using React's cache() for deduplication
@@ -77,10 +99,4 @@ function TestComponentSkeleton() {
   )
 }
 
-/**
- * Export the interface for use in both server and client components
- */
-export interface TestDataItem {
-  id: string;
-  title: string;
-}
+
