@@ -148,14 +148,14 @@ function ContactInfoSection() {
     {
       icon: "Mail" as const, // Type assertion to ensure this is a valid icon
       label: "Email",
-      value: "info@cyber-hand.com",
-      href: "mailto:info@cyber-hand.com",
+      value: "support@cyber-hand.com",
+      href: "mailto:ap@cyber-hand.com",
     },
     {
       icon: "Phone" as const, // Type assertion to ensure this is a valid icon
       label: "Phone",
-      value: "+1 (234) 567-8900",
-      href: "tel:+12345678900",
+      value: "(740) 748-4263",
+      href: "tel:+17407484263",
     },
   ];
 
